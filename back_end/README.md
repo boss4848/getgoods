@@ -1,12 +1,12 @@
 # GETGOODS Backend API
 
-### Base URL
+## Base URL
 The base URL for the API is: 127.0.0.1:8000/api/v1/
 
-### Authentication
+## Authentication
 
-### Models
-#### Product Model
+## Models
+### Product Model
 | Field       | Type   | Description                                                                                                 |
 |-------------|--------|-------------------------------------------------------------------------------------------------------------|
 | shop_id     | String | A unique identifier for the shop that sells the product.                                                     |
@@ -21,8 +21,8 @@ The base URL for the API is: 127.0.0.1:8000/api/v1/
 | image       | Array  | Product image.                                                                                              |
 | rating      | Number | A rating value ranging from 0 to 5, representing the average rating of the product.                         |
 
-### Endpoints
-#### Get All Products
+## Endpoints
+### Get All Products
 - URL: /products
 - Method: GET
 - Description: 
@@ -146,7 +146,7 @@ The base URL for the API is: 127.0.0.1:8000/api/v1/
 }
 ```
 
-#### Filter Products
+### Filter Products
 - URL: /products?`filter parameters`
 = Method: GET
 = Description: Filters products based on specified query parameters.
@@ -211,7 +211,7 @@ products?price[gt]=150&category=medicinalPlant
 }
 ```
 
-#### Create Product
+### Create Product
 - URL: /products
 - Method: POST
 - Description: Creates a new product.
@@ -258,7 +258,7 @@ products?price[gt]=150&category=medicinalPlant
 }
 ```
 
-#### Update Product
+### Update Product
 - URL: /products/:id
 - Method: PATCH
 - Description: Updates an existing product by its ID.
