@@ -8,4 +8,7 @@ app.use((req, res, next) => {
     next();
 });
 
+//Routes
+app.use('/api/v1/products', require('./routes/productRoute'));
+
 module.exports = app;
