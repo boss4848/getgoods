@@ -2,7 +2,21 @@ const Product = require('../models/productModel');
 
 exports.getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find();
+        //Querying
+        const queryObj = { ...req.query };
+        const excludedFields = ['page', 'sort', 'limit', 'fields'];
+        excludedFields.forEach(el => delete queryObj[el]);
+
+        let queryStr = JSON.stringify(queryObj);
+        //Add $ to the query operators
+        // /?price[gte]=1000&price[lte]=2000
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+
+        const query = Product.find(
+            JSON.parse(queryStr)
+        );
+        //Execute query
+        const products = await query;
 
         res.status(200).json({
             status: 'success',
