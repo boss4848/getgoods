@@ -1,7 +1,14 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-
+    shop_id: {
+        type: String,
+        required: [true, 'A product must have a shop id']
+    },
+    discount: {
+        type: Number,
+        default: 0
+    },
     name: {
         type: String,
         required: [true, 'A product must have a name'],
@@ -21,7 +28,8 @@ const productSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        required: [true, 'A product must belong to a category']
+        enum: ["processed", "otop", "medicinalPlant", "driedGood"],
+        required: [true, 'A product must have a category']
     },
     quantity: {
         type: Number,
