@@ -19,6 +19,24 @@ exports.getAllProducts = async (req, res) => {
         });
     }
 }
+exports.getProduct = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                product
+            }
+        });
+    }
+    catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err.message
+        });
+    }
+}
 
 exports.createProduct = async (req, res) => {
     try {
