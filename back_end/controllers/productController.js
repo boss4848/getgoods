@@ -43,6 +43,7 @@ exports.updateProduct = async (req, res) => {
             req.body,
             {
                 new: true, // return the new updated product
+                runValidators: true // run the validator on the new value
             }
         )
 
@@ -74,6 +75,22 @@ exports.createProduct = async (req, res) => {
         });
     } catch (err) {
         res.status(400).json({
+            status: 'fail',
+            message: err.message
+        });
+    }
+}
+
+exports.deleteProduct = async (req, res) => {
+    try {
+        await Product.findByIdAndDelete(req.params.id);
+
+        res.status(204).json({
+            status: 'success',
+            data: null
+        });
+    } catch (err) {
+        res.status(404).json({
             status: 'fail',
             message: err.message
         });
