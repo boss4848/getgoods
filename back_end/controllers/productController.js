@@ -1,22 +1,18 @@
 const Product = require('../models/productModel');
-
+const APIFeatures = require('../utils/apiFeatures');
 exports.getAllProducts = async (req, res) => {
     try {
-        //Querying
-        const queryObj = { ...req.query };
-        const excludedFields = ['page', 'sort', 'limit', 'fields'];
-        excludedFields.forEach(el => delete queryObj[el]);
+        const features = new APIFeatures(
+            Product.find(),
+            req.query
+        )
+            .filter()
+            .sort()
+            .limitFields()
+            .paginate();
 
-        let queryStr = JSON.stringify(queryObj);
-        //Add $ to the query operators
-        // /?price[gte]=1000&price[lte]=2000
-        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-
-        const query = Product.find(
-            JSON.parse(queryStr)
-        );
         //Execute query
-        const products = await query;
+        const products = await features.query;
 
         res.status(200).json({
             status: 'success',
@@ -57,7 +53,7 @@ exports.updateProduct = async (req, res) => {
             req.body,
             {
                 new: true, // return the new updated product
-                runValidators: true // run the validator on the new value
+                // runValidators: true // run the validator on the new value
             }
         )
 
@@ -101,7 +97,7 @@ exports.deleteProduct = async (req, res) => {
 
         res.status(204).json({
             status: 'success',
-            data: null
+            message: 'Product deleted',
         });
     } catch (err) {
         res.status(404).json({
