@@ -11,8 +11,7 @@ exports.getAllProducts = async (req, res) => {
                 products
             }
         });
-    }
-    catch (err) {
+    } catch (err) {
         res.status(404).json({
             status: 'fail',
             message: err.message
@@ -29,14 +28,39 @@ exports.getProduct = async (req, res) => {
                 product
             }
         });
-    }
-    catch (err) {
+    } catch (err) {
         res.status(404).json({
             status: 'fail',
             message: err.message
         });
     }
 }
+
+exports.updateProduct = async (req, res) => {
+    try {
+        const product = await Product.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true, // return the new updated product
+            }
+        )
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                product
+            }
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err.message
+        });
+    }
+}
+
+
 
 exports.createProduct = async (req, res) => {
     try {
