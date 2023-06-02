@@ -7,18 +7,19 @@ The base URL for the API is: 127.0.0.1:8000/api/v1/
 
 ### Models
 #### Product Model
-##### Fields
-- String shop_id: A unique identifier for the shop that sells the product.
-- Number discount: The discount amount (in percentage) applied to the product. Defaults to 0 if no discount is available.
-- String name: The name of the product. (Max length 40)
-- String slug: Used for generating product URLs.
-- Number price: The price of the product.
-- String description: Description of the product.
-- Array category: The category to which the product belongs. Can be one of the following: *proceed, otop, medicinalPlant, or driedGood*.
-- Number quantity: The quantity of the product available in stock.
-- Number sold: The number of units sold for the product.
-- Array image: Product image.
-- Number rating: A rating value ranging from 0 to 5, representing the average rating of the product.
+| Field       | Type   | Description                                                                                                 |
+|-------------|--------|-------------------------------------------------------------------------------------------------------------|
+| shop_id     | String | A unique identifier for the shop that sells the product.                                                     |
+| discount    | Number | The discount amount (in percentage) applied to the product. Defaults to 0 if no discount is available.     |
+| name        | String | The name of the product. (Max length 40)                                                                    |
+| slug        | String | Used for generating product URLs.                                                                           |
+| price       | Number | The price of the product.                                                                                   |
+| description | String | Description of the product.                                                                                 |
+| category    | Array  | The category to which the product belongs. Can be one of the following: *processed, otop, medicinalPlant, driedGood*. |
+| quantity    | Number | The quantity of the product available in stock.                                                             |
+| sold        | Number | The number of units sold for the product.                                                                   |
+| image       | Array  | Product image.                                                                                              |
+| rating      | Number | A rating value ranging from 0 to 5, representing the average rating of the product.                         |
 
 ### Endpoints
 #### Get All Products
