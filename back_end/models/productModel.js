@@ -51,6 +51,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
-}, { timestamps: true });
+},
+    { timestamps: true },
+    this.collection = 'products',
+
+);
 
 module.exports = mongoose.model('Product', productSchema);
