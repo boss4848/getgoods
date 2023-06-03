@@ -21,7 +21,8 @@ const sendErrorDev = (err, res) => {
     res.status(err.statusCode).json({
         status: err.status,
         message: err.message,
-        // stack: err.stack //stack trace
+        error: err,
+        stack: err.stack //stack trace
     });
 }
 const sendErrorProd = (err, res) => {
