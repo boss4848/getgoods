@@ -3,10 +3,12 @@ const router = express.Router();
 
 //Controllers
 const productController = require('../controllers/productController');
+const authController = require('../controllers/authController');
 
+//Routes
 router
     .route('/')
-    .get(productController.getAllProducts)
+    .get(authController.protect, productController.getAllProducts)
     .post(productController.createProduct);
 
 router
