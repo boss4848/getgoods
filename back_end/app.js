@@ -16,6 +16,7 @@ app.use((req, res, next) => {
 
 //Routes
 app.use('/api/v1/products', require('./routes/productRoute'));
+app.use('/api/v1/users', require('./routes/userRoute'));
 
 //Handle undefined routes
 app.all('*', (req, res, next) => {
