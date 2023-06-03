@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 //Routes
 app.use('/api/v1/products', require('./routes/productRoute'));
 app.use('/api/v1/users', require('./routes/userRoute'));
-
+app.use('/api/v1/reviews', require('./routes/reviewRoute'));
 //Handle undefined routes
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
