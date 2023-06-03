@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const chalk = require('chalk');
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
 
 app.use(express.json());
 
@@ -17,10 +19,10 @@ app.use('/api/v1/products', require('./routes/productRoute'));
 
 //Handle undefined routes
 app.all('*', (req, res, next) => {
-    console.log(` ${chalk.yellowBright("|")} ${chalk.red.bold(req.method)} ${req.url} - ${chalk.yellowBright(new Date().toLocaleTimeString())}`);
-    res.status(404).json({
-        status: 'fail',
-        message: `Can't find ${req.originalUrl} on this server!`
-    });
+    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
+
+//Error handling middleware
+app.use(globalErrorHandler);
+
 module.exports = app;
