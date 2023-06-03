@@ -8,7 +8,9 @@ const productSchema = new mongoose.Schema({
     },
     discount: {
         type: Number,
-        default: 0
+        default: 0,
+        min: [0, 'Discount must be above 0'],
+        max: [100, 'Discount must be below 100']
     },
     name: {
         type: String,
@@ -20,12 +22,14 @@ const productSchema = new mongoose.Schema({
     slug: String,
     price: {
         type: Number,
-        required: [true, 'A product must have a price']
+        required: [true, 'A product must have a price'],
+        min: [0, 'Price must be above 0']
     },
     description: {
         type: String,
         trim: true,
-        required: [true, 'A product must have a description']
+        required: [true, 'A product must have a description'],
+        maxlength: [200, 'A product description must have less or equal then 200 characters'],
     },
     category: {
         type: String,
@@ -38,7 +42,8 @@ const productSchema = new mongoose.Schema({
     },
     sold: {
         type: Number,
-        default: 0
+        default: 0,
+        min: [0, 'Sold must be above 0']
     },
     images: {
         type: Array,
@@ -58,12 +63,13 @@ const productSchema = new mongoose.Schema({
     // },
     ratings: {
         type: Number,
-        default: 0
+        default: 0,
+        min: [0, 'Rating must be above 0'],
+        max: [5, 'Rating must be below 5'],
     }
 },
     { timestamps: true },
     this.collection = 'products',
-
 );
 
 // Convert name to slug
