@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { toThaiSlug } = require('../utils/toThaiSlug');
 
 const productSchema = new mongoose.Schema({
     shop_id: {
@@ -64,5 +65,12 @@ const productSchema = new mongoose.Schema({
     this.collection = 'products',
 
 );
+
+// Convert name to slug
+// Craete middleware
+productSchema.pre('save', function (next) {
+    this.slug = toThaiSlug(this.name);
+    next();
+});
 
 module.exports = mongoose.model('Product', productSchema);
