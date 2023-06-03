@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         maxlength: [20, 'A user password must have less or equal then 20 characters'],
         minlength: [8, 'A user password must have more or equal then 8 characters'],
+        select: false
     },
     // role: {
     //     type: String,
@@ -68,5 +69,9 @@ userSchema.pre('save', function (next) {
     this.password = bcrypt.hashSync(this.password, 10);
     next();
 });
+
+userSchema.methods.correctPassword = function (candidatePassword, userPassword) {
+    return bcrypt.compareSync(candidatePassword, userPassword);
+};
 
 module.exports = mongoose.model('User', userSchema);
