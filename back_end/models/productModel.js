@@ -59,11 +59,22 @@ const productSchema = new mongoose.Schema({
     //     type: String,
     //     enum: ['Apple', 'Samsung', 'Microsoft', 'Lenovo', 'ASUS']
     // },
-    ratings: {
+    // ratings: {
+    //     type: Number,
+    //     default: 0,
+    //     min: [0, 'Rating must be above 0'],
+    //     max: [5, 'Rating must be below 5'],
+    // },
+    ratingsAverage: {
         type: Number,
         default: 0,
-        min: [0, 'Rating must be above 0'],
-        max: [5, 'Rating must be below 5'],
+        min: [1, 'Rating must be above 1.0'],
+        max: [5, 'Rating must be below 5.0'],
+        set: val => Math.round(val * 10) / 10 // 4.666666, 46.6666, 47, 4.7
+    },
+    ratingsQuantity: {
+        type: Number,
+        default: 0
     },
     // reviews: [
     //     {
@@ -80,6 +91,8 @@ const productSchema = new mongoose.Schema({
     },
     this.collection = 'products',
 );
+productSchema.index({ price: 1, ratingsAverage: -1 });
+productSchema.index({ slug: 1 });
 
 // Convert name to slug
 // Craete middleware
