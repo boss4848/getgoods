@@ -58,7 +58,11 @@ const userSchema = new mongoose.Schema({
     },
     passwordChangedAt: Date,
 },
-    { timestamps: true },
+    {
+        timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
+    },
     this.collection = 'users'
 );
 
