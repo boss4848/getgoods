@@ -4,6 +4,10 @@ const router = express.Router();
 //Controllers
 const productController = require('../controllers/productController');
 const authController = require('../controllers/authController');
+const reviewRouter = require('./reviewRoute');
+
+//Nested routes
+router.use('/:productId/reviews', reviewRouter);
 
 //Routes
 router
