@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     //     enum: ['user', 'admin'],
     //     default: 'user'
     // },
-    avatar: {
+    photo: {
         type: String,
         default: 'https://res.cloudinary.com/dxkufsejm/image/upload/v1620078033/avatars/default_avatar.png'
     },
@@ -60,8 +60,8 @@ const userSchema = new mongoose.Schema({
 },
     {
         timestamps: true,
-        toJSON: { virtuals: true },
-        toObject: { virtuals: true }
+        // toJSON: { virtuals: true },
+        // toObject: { virtuals: true }
     },
     this.collection = 'users'
 );
