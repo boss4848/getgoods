@@ -1,10 +1,11 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 //Controllers
 const productController = require('../controllers/productController');
 const authController = require('../controllers/authController');
 const reviewRouter = require('./reviewRoute');
+const shopController = require('../controllers/shopController');
 
 //Nested routes
 router.use('/:productId/reviews', reviewRouter);
@@ -13,7 +14,15 @@ router.use('/:productId/reviews', reviewRouter);
 router
     .route('/')
     .get(authController.protect, productController.getAllProducts)
-    .post(productController.createProduct);
+    .post(
+        authController.protect,
+        productController.setShopIds,
+        shopController.restrictToOwner,
+        productController.createProduct
+    );
+
+router.use(authController.protect);
+router.use(shopController.restrictToOwner);
 
 router
     .route('/:id')
