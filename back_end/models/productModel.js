@@ -14,8 +14,6 @@ const productSchema = new mongoose.Schema({
         default: []
     },
     slug: String,
-
-
     description: {
         type: String,
         trim: true,
@@ -67,7 +65,7 @@ const productSchema = new mongoose.Schema({
     // },
     ratingsAverage: {
         type: Number,
-        default: 0,
+        default: 5,
         min: [1, 'Rating must be above 1.0'],
         max: [5, 'Rating must be below 5.0'],
         set: val => Math.round(val * 10) / 10 // 4.666666, 46.6666, 47, 4.7
@@ -76,12 +74,18 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    shop: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Shop',
+        required: [true, 'A product must belong to a shop']
+    },
     // reviews: [
     //     {
     //         type: mongoose.Schema.Types.ObjectId,
     //         ref: 'Review'
     //     }
     // ],
+
 
 },
     {
