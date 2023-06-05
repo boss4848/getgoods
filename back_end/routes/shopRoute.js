@@ -10,11 +10,11 @@ const productRouter = require('./productRoute');
 //Nested routes
 router.use('/:shopId/products', productRouter);
 
-//After this middleware, all routes will be protected
-router.use(authController.protect);
+
 router
     .route('/')
     .post(
+        authController.protect,
         shopController.setShopUserIds,
         shopController.createShop
     );
