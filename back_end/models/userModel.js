@@ -57,6 +57,10 @@ const userSchema = new mongoose.Schema({
         default: []
     },
     passwordChangedAt: Date,
+    shop: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Shop',
+    },
 },
     {
         timestamps: true,
