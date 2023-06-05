@@ -26,12 +26,12 @@ const shopSchema = new mongoose.Schema({
         ref: 'User',
         required: [true, 'A shop must have an owner'],
     },
-    products: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product',
-        },
-    ],
+    // products: [
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'Product',
+    //     },
+    // ],
 },
     {
         timestamps: true,
@@ -44,6 +44,12 @@ const shopSchema = new mongoose.Schema({
 shopSchema.pre('save', function (next) {
     this.slug = toThaiSlug(this.name);
     next();
+});
+
+shopSchema.virtual('products', {
+    ref: 'Product',
+    foreignField: 'shop',
+    localField: '_id'
 });
 
 module.exports = mongoose.model('Shop', shopSchema);
