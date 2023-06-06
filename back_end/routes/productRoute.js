@@ -32,6 +32,11 @@ router
         productController.resizeProductImages,
         productController.updateProduct
     )
-    .delete(productController.deleteProduct);
+    .delete(
+        authController.protect,
+        productController.setShopIds,
+        shopController.restrictToOwner,
+        productController.deleteProduct,
+    );
 
 module.exports = router;
