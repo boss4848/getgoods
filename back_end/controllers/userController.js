@@ -9,7 +9,6 @@ dotenv.config({ path: './config.env' });
 const multerStorage = multer.memoryStorage();
 const multerFilter = (req, file, cb) => {
     //Only accept image files
-    console.log(file);
     if (file.mimetype.startsWith('image')) {
         cb(null, true);
     } else {
@@ -23,34 +22,31 @@ const upload = multer({
 });
 
 const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
-// Create a container if it doesn't exist
-const createContainer = async (containerName) => {
-    const containerClient = blobServiceClient.getContainerClient(containerName);
-    const exists = await containerClient.exists();
 
-    if (!exists) {
-        await containerClient.create();
-    }
-};
-// Call the createContainer function before using the container
-createContainer('user-photos');
 exports.uploadUserPhoto = upload.single('photo');
+
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
     if (!req.file) return next();
     req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
-    // Upload the image to Azure Blob Storage
+    // Resize the image to 400x400
+    const resizedImageBuffer = await sharp(req.file.buffer)
+        .resize(400, 400)
+        .toBuffer();
+
+    // Upload the resized image to Azure Blob Storage
     const containerClient = blobServiceClient.getContainerClient('user-photos');
     const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename);
 
-    await blockBlobClient.uploadData(req.file.buffer, {
+    await blockBlobClient.uploadData(resizedImageBuffer, {
         blobHTTPHeaders: {
-            blobContentType: 'image/jpeg'
-        }
+            blobContentType: 'image/jpeg',
+        },
     });
 
     next();
 });
+
 
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {};
