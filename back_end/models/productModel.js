@@ -9,6 +9,11 @@ const productSchema = new mongoose.Schema({
         maxlength: [40, 'A product name must have less or equal then 40 characters'],
         // minlength: [10, 'A product name must have more or equal then 10 characters']
     },
+    imageCover: {
+        type: String,
+        // default: 'default.jpg'
+        required: [true, 'A product must have a cover image']
+    },
     images: {
         type: Array,
         default: []

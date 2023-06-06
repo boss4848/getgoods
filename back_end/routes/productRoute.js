@@ -21,13 +21,17 @@ router
         productController.createProduct
     );
 
-router.use(authController.protect);
-router.use(shopController.restrictToOwner);
-
 router
     .route('/:id')
     .get(productController.getProduct)
-    .patch(productController.updateProduct)
+    .patch(
+        authController.protect,
+        productController.setShopIds,
+        shopController.restrictToOwner,
+        productController.uploadProductImages,
+        productController.resizeProductImages,
+        productController.updateProduct
+    )
     .delete(productController.deleteProduct);
 
 module.exports = router;
