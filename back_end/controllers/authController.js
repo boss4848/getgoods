@@ -49,9 +49,9 @@ exports.login = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
         token,
-        // data: {
-        //     user
-        // }
+        data: {
+            user
+        }
     });
 });
 
@@ -82,5 +82,6 @@ exports.protect = catchAsync(async (req, res, next) => {
         return next(new AppError('User recently changed password! Please log in again.', 401));
     }
     //Grant access to protected route
+    req.user = freshUser;
     next();
 });
