@@ -24,14 +24,14 @@ class _MyWidgetState extends State<MainPage> {
         backgroundColor: Colors.green,
         body: IndexedStack(
           index: _selectedIndex,
-          children: const [
+          children: [
             HomePage(
-                // MediaQuery.of(context).size,
-                // MediaQuery.of(context).padding.bottom,
-                ),
-            CategoryPage(),
-            MessagesPage(),
-            ProfilePage(),
+              MediaQuery.of(context).size,
+              MediaQuery.of(context).padding.bottom,
+            ),
+            const CategoryPage(),
+            const MessagesPage(),
+            const ProfilePage(),
           ],
         ),
         bottomNavigationBar: Container(
