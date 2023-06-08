@@ -31,6 +31,9 @@ class _BannerSliderState extends State<BannerSection> {
     "assets/images/banner_1.jpg",
     "assets/images/banner_1.jpg",
     "assets/images/banner_1.jpg",
+    "assets/images/banner_1.jpg",
+    "assets/images/banner_1.jpg",
+
     // "assets/images/banner_1.jpg",
     // "assets/images/banner_2.jpg",
     // "assets/images/banner_3.jpg",
@@ -53,24 +56,17 @@ class _BannerSliderState extends State<BannerSection> {
     return Stack(
       children: [
         _buildBanner(),
-        // _buildIndicator(),
+        _buildIndicator(),
       ],
     );
   }
 
-  Container _buildBanner() {
-    return Container(
-      // margin: const EdgeInsets.only(bottom: 56),
-      width: double.infinity,
-      child: CarouselSlider(
-        items: _imageList
-            .map((item) => Image.asset(
-                  item,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ))
-            .toList(),
-        options: CarouselOptions(
+  Container _buildBanner() => Container(
+        width: double.infinity,
+        // height: 200,
+        // margin: const EdgeInsets.only(bottom: 65),
+        child: CarouselSlider(
+          options: CarouselOptions(
             aspectRatio: 1.873,
             viewportFraction: 1.0,
             autoPlay: true,
@@ -78,28 +74,44 @@ class _BannerSliderState extends State<BannerSection> {
               setState(() {
                 _currentImageIndex = index;
               });
-            }),
-      ),
-    );
-  }
-
-  _buildIndicator() {
+            },
+          ),
+          items: _imageList
+              .map(
+                (item) => Image.asset(
+                  item,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
+              )
+              .toList(),
+        ),
+      );
+  int index = 0;
+  Positioned _buildIndicator() {
     return Positioned(
-      bottom: 15,
+      bottom: 10,
       left: 8,
       child: Row(
-        children: _imageList.map((url) {
-          int index = _imageList.indexOf(url);
+        children: _imageList.map((image) {
+          if (index > 7) {
+            index = 0;
+          }
+          index++;
+          // print(index);
           return Container(
             width: 8,
-            height: _currentImageIndex == index ? 8 : 1,
+            height: (_currentImageIndex + 1) == index ? 8 : 1,
             margin: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
+              color: (_currentImageIndex + 1) == index
+                  ? Colors.white
+                  : Colors.grey.shade400,
               border: Border.all(color: Colors.white),
-              shape: _currentImageIndex == index
+              shape: (_currentImageIndex + 1) == index
                   ? BoxShape.circle
                   : BoxShape.rectangle,
-              color: Colors.transparent,
+              // color: Colors.transparent,
             ),
           );
         }).toList(),

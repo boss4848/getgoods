@@ -2,6 +2,7 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'coupon.dart';
 import 'banner_slider.dart';
 import 'product_load_more.dart';
 
@@ -56,8 +57,10 @@ class _ContentState extends State<Content> {
         child: Column(
           children: [
             const BannerSlider(),
+            // _buildDivider(),
+            const Coupon(),
             _buildDivider(),
-            ProductLoadMore(),
+            const ProductLoadMore(),
           ],
         ),
       ),
@@ -65,7 +68,7 @@ class _ContentState extends State<Content> {
   }
 
   Container _buildDivider() => Container(
-        height: 14,
+        height: 8,
         color: Colors.grey[200],
       );
 }

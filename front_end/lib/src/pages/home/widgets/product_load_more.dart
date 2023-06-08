@@ -1,25 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/services/api_service.dart';
 import '../../../models/product_model.dart';
 import '../../../utils/format.dart';
-import '../../../viewmodels/product_viewmodel.dart';
 
-class ProductLoadMore extends StatelessWidget {
-  final List<ProductModel> _productViewModel = ProductViewModel().getProduct();
+class ProductLoadMore extends StatefulWidget {
+  // final List<ProductModel> _productViewModel = ProductViewModel().getProduct();
 
-  ProductLoadMore({super.key});
+  const ProductLoadMore({super.key});
+
+  @override
+  State<ProductLoadMore> createState() => _ProductLoadMoreState();
+}
+
+class _ProductLoadMoreState extends State<ProductLoadMore> {
+  late List<ProductModel>? products = [];
+  @override
+  void initState() {
+    super.initState();
+    _getProduct();
+  }
+
+  _getProduct() async {
+    products = await ApiService().getProducts();
+    // productViewModel = await ProductViewModel().getProduct();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[200],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildHeader(),
-          _buildProductList(),
-        ],
-      ),
-    );
+    return products == null || products!.isEmpty
+        // return true
+        ? Container(
+            color: Colors.white,
+            height: 600,
+            child: const Center(
+              child: CircularProgressIndicator(
+                color: Colors.green,
+              ),
+            ),
+          )
+        : Container(
+            color: Colors.grey[200],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildHeader(),
+                _buildProductList(),
+              ],
+            ),
+          );
   }
 
   _buildHeader() => Container(
@@ -41,7 +70,7 @@ class ProductLoadMore extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: _productViewModel.length,
+            itemCount: products!.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: 0.75,
               crossAxisCount: 2,
@@ -51,7 +80,7 @@ class ProductLoadMore extends StatelessWidget {
               // crossAxisSpacing: 6,
             ),
             itemBuilder: (BuildContext context, int index) {
-              return ProductItemCard(_productViewModel[index]);
+              return ProductItemCard(products![index]);
             },
           ),
           false ? const SizedBox(height: 150) : BottomLoader(),
@@ -152,6 +181,7 @@ class ProductItemCard extends StatelessWidget {
   Padding _buildProductInfo() => Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildName(),
             const SizedBox(height: 12),
@@ -168,6 +198,10 @@ class ProductItemCard extends StatelessWidget {
 
   Text _buildName() => Text(
         product.name,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       );
