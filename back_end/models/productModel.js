@@ -12,6 +12,7 @@ const productSchema = new mongoose.Schema({
     imageCover: {
         type: String,
         // default: 'default.jpg'
+        default: 'default.jpeg',
         required: [true, 'A product must have a cover image']
     },
     images: {
