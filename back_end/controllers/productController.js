@@ -91,7 +91,31 @@ exports.setShopIds = async (req, res, next) => {
     next();
 };
 
-exports.getAllProducts = factory.getAll(Product);
+exports.getAllProducts = catchAsync(async (req, res, next) => {
+    const products = await Product.find();
+
+    // Retrieve the image from Azure Blob Storage
+    // https://getgoods.blob.core.windows.net/product-photos/product-647e11342c024208eb1d9a15-cover.jpeg
+    // if (products.imageCover === undefined) {
+    //     products.imageCover = `https://getgoods.blob.core.windows.net/product-photos/default-product-cover.jpeg`;
+    // }
+    const filesUrl = products.map((product) => {
+        return `https://getgoods.blob.core.windows.net/product-photos/${product.imageCover}`;
+    });
+    // Replace the imageCover property with the file URL
+    products.forEach((product, i) => {
+        product.imageCover = filesUrl[i];
+    });
+
+    res.status(200).json({
+        status: 'success',
+        results: products.length,
+        data: {
+            products
+        }
+    });
+});
+
 exports.getProduct = catchAsync(async (req, res, next) => {
     const product = await Product.findById(req.params.id).populate('reviews');
 
