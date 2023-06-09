@@ -89,4 +89,11 @@ reviewSchema.post('save', function () {
     this.constructor.calcAverageRatings(this.product);
 });
 
+// Reverse populate with virtuals
+reviewSchema.virtual('users', {
+    ref: 'User',
+    foreignField: 'users', // field in the Review model
+    localField: '_id' // field in the Product model
+});
+
 module.exports = mongoose.model('Review', reviewSchema);
