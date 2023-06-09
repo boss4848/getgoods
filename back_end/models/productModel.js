@@ -119,6 +119,13 @@ productSchema.virtual('reviews', {
     localField: '_id' // field in the Product model
 });
 
+// Reverse populate with virtuals
+productSchema.virtual('shops', {
+    ref: 'Shop',
+    foreignField: 'products', // field in the Review model
+    localField: '_id' // field in the Product model
+});
+
 
 
 module.exports = mongoose.model('Product', productSchema);
