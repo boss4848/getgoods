@@ -1,61 +1,138 @@
-class ProductModel {
-  final int discountPercentage;
-  final String slug;
+class ProductDetail {
+  final String id;
+  final String name;
+  final List<String> images;
   final String description;
   final String category;
   final int quantity;
-  final double ratingsAverage;
-  final double ratingsQuantity;
-  final String image;
-  final String name;
   final double price;
+  final double discount;
   final int sold;
-  final List<String> images;
-  final String shop;
-  final String createdAt;
-  final String updatedAt;
-  final String id;
+  final double ratingsAverage;
+  final int ratingsQuantity;
+  final Shop shop;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String slug;
+  final String imageCover;
 
-  ProductModel({
-    this.discountPercentage = 0,
-    required this.slug,
+  ProductDetail({
+    required this.id,
+    required this.name,
+    required this.images,
     required this.description,
     required this.category,
     required this.quantity,
+    required this.price,
+    required this.discount,
+    required this.sold,
     required this.ratingsAverage,
     required this.ratingsQuantity,
-    required this.price,
-    this.name =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    required this.image,
-    this.sold = 0,
-    required this.images,
     required this.shop,
     required this.createdAt,
     required this.updatedAt,
-    required this.id,
+    required this.slug,
+    required this.imageCover,
   });
-// type '(dynamic) => ProductModel' is not a subtype of type '(String, dynamic) => MapEntry<dynamic, dynamic>' of 'transform'
-  // factory ProductModel.fromJson(Map<String, dynamic> json) {
-  //   return ProductModel(
-  //     image: json['imageCover'] ?? "",
-  //     images: json['images'] ?? [""],
-  //     slug: json['slug'] ?? "",
-  //     description: json['description'] ?? "",
-  //     category: json['category'] ?? "",
-  //     quantity: json['quantity'] ?? 0,
-  //     price: json['price'] ?? 0.0,
-  //     discountPercentage: json['discount'] ?? 0,
-  //     name: json['name'] ?? "",
-  //     sold: json['sold'] ?? 0,
-  //     ratingsAverage: json['ratingsAverage'] ?? 0.0,
-  //     shop: json['shop'] ?? "",
-  //     createdAt: json['createdAt'] ?? "",
-  //     updatedAt: json['updatedAt'] ?? "",
-  //     id: json['_id'] ?? "",
-  //     ratingsQuantity: json['ratingsQuantity'] ?? 0,
-  //   );
-  // }
+
+  factory ProductDetail.empty() {
+    return ProductDetail(
+      id: '',
+      name: '',
+      images: [],
+      description: '',
+      category: '',
+      quantity: 0,
+      price: 0.0,
+      discount: 0.0,
+      sold: 0,
+      ratingsAverage: 0.0,
+      ratingsQuantity: 0,
+      shop: Shop.empty(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      slug: '',
+      imageCover: '',
+    );
+  }
+
+  factory ProductDetail.fromJson(Map<String, dynamic> json) {
+    return ProductDetail(
+      id: json['_id'],
+      name: json['name'],
+      images: List<String>.from(json['images']),
+      description: json['description'],
+      category: json['category'],
+      quantity: json['quantity'],
+      price: json['price'].toDouble(),
+      discount: json['discount'].toDouble(),
+      sold: json['sold'],
+      ratingsAverage: json['ratingsAverage'].toDouble(),
+      ratingsQuantity: json['ratingsQuantity'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+      slug: json['slug'],
+      imageCover: json['imageCover'],
+      shop: Shop.fromJson(
+        json['shop'] ??
+            {
+              // 'name': '',
+              // 'location': '',
+            },
+      ),
+    );
+  }
 }
 
-class ReviewModel {}
+class Shop {
+  final String name;
+  final String location;
+
+  Shop({
+    required this.name,
+    required this.location,
+  });
+
+  factory Shop.fromJson(Map<String, dynamic> json) {
+    return Shop(
+      name: json['name'] ?? '',
+      location: json['location'] ?? '',
+    );
+  }
+
+  factory Shop.empty() {
+    return Shop(
+      name: '',
+      location: '',
+    );
+  }
+}
+
+class Product {
+  final String name;
+  final double price;
+  final int discount;
+  final int sold;
+  final String imageCover;
+  final String id;
+
+  Product({
+    required this.name,
+    required this.price,
+    required this.discount,
+    required this.sold,
+    this.imageCover = '',
+    required this.id,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      name: json['name'] ?? '',
+      price: json['price'].toDouble() ?? 0.0,
+      discount: json['discount'].toInt() ?? 0,
+      sold: json['sold'] ?? 0,
+      imageCover: json['imageCover'] ?? '',
+      id: json['_id'] ?? '',
+    );
+  }
+}

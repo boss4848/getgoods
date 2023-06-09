@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     // },
     photo: {
         type: String,
-        default: 'https://res.cloudinary.com/dxkufsejm/image/upload/v1620078033/avatars/default_avatar.png'
+        default: 'default.png'
     },
     phone: {
         type: String,
@@ -64,8 +64,8 @@ const userSchema = new mongoose.Schema({
 },
     {
         timestamps: true,
-        // toJSON: { virtuals: true },
-        // toObject: { virtuals: true }
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
     },
     this.collection = 'users'
 );

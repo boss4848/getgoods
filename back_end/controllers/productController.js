@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const catchAsync = require('../utils/catchAsync');
 const sharp = require('sharp');
 const AppError = require('../utils/appError');
+const APIFeatures = require('../utils/apiFeatures');
 
 dotenv.config({ path: './config.env' });
 
@@ -92,7 +93,13 @@ exports.setShopIds = async (req, res, next) => {
 };
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-    const products = await Product.find();
+    // const products = await Product.find();
+    const features = new APIFeatures(Product.find(), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate();
+    const products = await features.query;
 
     // Retrieve the image from Azure Blob Storage
     // https://getgoods.blob.core.windows.net/product-photos/product-647e11342c024208eb1d9a15-cover.jpeg
@@ -117,7 +124,13 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
 });
 
 exports.getProduct = catchAsync(async (req, res, next) => {
-    const product = await Product.findById(req.params.id).populate('reviews');
+    const product = await Product.findById(req.params.id)
+        .populate('reviews')
+        //populate the shop field with the name and location
+        .populate({
+            path: 'shop',
+            select: 'name location'
+        });
 
     // Retrieve the image from Azure Blob Storage
     // https://getgoods.blob.core.windows.net/product-photos/product-647e11342c024208eb1d9a15-cover.jpeg

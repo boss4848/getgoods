@@ -71,7 +71,7 @@ class _HeaderState extends State<Header> {
         width: 0,
       ),
       borderRadius: BorderRadius.all(
-        Radius.circular(4.0),
+        Radius.circular(6),
       ),
     );
     return Expanded(

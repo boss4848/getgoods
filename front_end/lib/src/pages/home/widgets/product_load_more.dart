@@ -1,35 +1,40 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:getgoods/src/services/api_service.dart';
+// import 'package:getgoods/src/services/api_service.dart';
 import '../../../models/product_model.dart';
 import '../../../utils/format.dart';
+import '../../../viewmodels/product_viewmodel.dart';
+import '../../product_detail/product_detail_page.dart';
 
 class ProductLoadMore extends StatefulWidget {
-  // final List<ProductModel> _productViewModel = ProductViewModel().getProduct();
-
-  const ProductLoadMore({super.key});
+  const ProductLoadMore({Key? key}) : super(key: key);
 
   @override
   State<ProductLoadMore> createState() => _ProductLoadMoreState();
 }
 
 class _ProductLoadMoreState extends State<ProductLoadMore> {
-  late List<ProductModel>? products = [];
+  late List<Product> products;
+  late ProductViewModel productViewModel;
+
   @override
   void initState() {
     super.initState();
+    productViewModel = ProductViewModel();
+    products = productViewModel.products;
     _getProduct();
   }
 
   _getProduct() async {
-    products = await ApiService().getProducts();
-    // productViewModel = await ProductViewModel().getProduct();
-    setState(() {});
+    await productViewModel.fetchProducts();
+    setState(() {
+      products = productViewModel.products;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return products == null || products!.isEmpty
-        // return true
+    return productViewModel.state == ProductState.loading
         ? Container(
             color: Colors.white,
             height: 600,
@@ -51,11 +56,11 @@ class _ProductLoadMoreState extends State<ProductLoadMore> {
           );
   }
 
-  _buildHeader() => Container(
+  Widget _buildHeader() => Container(
         color: Colors.white,
         padding: const EdgeInsets.all(12),
         child: const Text(
-          "Recommeded",
+          "Recommended",
           style: TextStyle(
             color: Colors.green,
             fontWeight: FontWeight.bold,
@@ -64,23 +69,21 @@ class _ProductLoadMoreState extends State<ProductLoadMore> {
         ),
       );
 
-  Column _buildProductList() => Column(
+  Widget _buildProductList() => Column(
         children: [
           GridView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: products!.length,
+            itemCount: products.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: 0.75,
               crossAxisCount: 2,
               mainAxisSpacing: 15,
               crossAxisSpacing: 15,
-              // mainAxisSpacing: 6,
-              // crossAxisSpacing: 6,
             ),
             itemBuilder: (BuildContext context, int index) {
-              return ProductItemCard(products![index]);
+              return ProductItemCard(products[index]);
             },
           ),
           false ? const SizedBox(height: 150) : BottomLoader(),
@@ -89,62 +92,89 @@ class _ProductLoadMoreState extends State<ProductLoadMore> {
 }
 
 class ProductItemCard extends StatelessWidget {
-  final ProductModel product;
+  final Product product;
 
-  const ProductItemCard(this.product, {super.key});
+  const ProductItemCard(this.product, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4,
-                spreadRadius: 1,
-              )
-            ],
-          ),
-          child: Column(
-            children: [
-              _buildProductImage(constraints.maxHeight),
-              _buildProductInfo(),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailPage(productId: product.id),
           ),
         );
       },
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  spreadRadius: 1,
+                )
+              ],
+            ),
+            child: Column(
+              children: [
+                _buildProductImage(constraints.maxHeight),
+                _buildProductInfo(),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Stack _buildProductImage(double maxHeight) {
+  Widget _buildProductImage(double maxHeight) {
     return Stack(
       children: [
-        Container(
-          height: maxHeight - 82,
+        SizedBox(
+          height: maxHeight - 72,
           width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(14),
-              topRight: Radius.circular(14),
+          child: CachedNetworkImage(
+            imageBuilder: (context, imageProvider) {
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(14),
+                    topRight: Radius.circular(14),
+                  ),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              );
+            },
+            imageUrl: product.imageCover,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => const Center(
+              child: CircularProgressIndicator(
+                color: Colors.green,
+              ),
             ),
-            image: DecorationImage(
-              image: NetworkImage(product.image),
-              fit: BoxFit.cover,
-            ),
+            errorWidget: (context, url, error) {
+              print(url);
+              print(error);
+              return const Center(
+                child: Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 40,
+                ),
+              );
+            },
           ),
         ),
-        // Image.network(
-        //   product.image,
-        //   height: maxHeight - 82,
-        //   width: double.infinity,
-        //   fit: BoxFit.cover,
-        // ),
-        if (product.discountPercentage != 0) _buildDiscount(),
-        // if (product.shopRecommended) _buildShopRecommended(),
+        if (product.discount != 0) _buildDiscount(),
       ],
     );
   }
@@ -158,7 +188,7 @@ class ProductItemCard extends StatelessWidget {
             children: [
               const SizedBox(height: 3),
               Text(
-                "${product.discountPercentage}%",
+                "${product.discount}%",
                 style: const TextStyle(
                   color: Colors.green,
                   fontWeight: FontWeight.bold,
@@ -184,7 +214,7 @@ class ProductItemCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildName(),
-            const SizedBox(height: 12),
+            const SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
