@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/user_model.dart';
+import 'package:getgoods/src/pages/login/login_page.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
-import '../login/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
