@@ -18,7 +18,7 @@ const shopSchema = new mongoose.Schema({
         maxlength: [200, 'A shop description must have less or equal then 200 characters'],
     },
     location: {
-        type: String,
+        type: Object,
         // required: [true, 'A shop must have a location']
     },
     owner: {
