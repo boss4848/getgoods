@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final String res = await _userViewModel.login(email, password);
     if (res != 'success') {
+      // ignore: use_build_context_synchronously
       showDialog(
         context: capturedContext,
         builder: (context) {
@@ -46,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     } else {
       log('Login successful');
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     }
   }
