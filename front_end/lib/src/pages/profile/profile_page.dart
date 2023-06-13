@@ -219,7 +219,9 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const MyStorePage(),
+                                builder: (context) => MyStorePage(
+                                  shopId: userDetail.shop.id,
+                                ),
                               ),
                             );
                           }
