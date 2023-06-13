@@ -57,3 +57,5 @@ exports.createShop = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.updateShop = factory.updateOne(Shop);
+

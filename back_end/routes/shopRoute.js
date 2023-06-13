@@ -22,6 +22,12 @@ router
 // Routes
 router.route('/:id')
     .get(shopController.getShop)
+    .patch(
+        authController.protect,
+        // shopController.checkIfShopExists,
+        shopController.updateShop
+
+    )
 
 
 
