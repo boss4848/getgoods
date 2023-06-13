@@ -1,7 +1,7 @@
 class Shop {
   final String id;
   final String name;
-  final String location;
+  final Location location;
 
   Shop({
     required this.id,
@@ -13,7 +13,7 @@ class Shop {
     return Shop(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
-      location: json['location'] ?? '',
+      location: Location.fromJson(json['location'] ?? {}),
     );
   }
 
@@ -21,7 +21,7 @@ class Shop {
     return Shop(
       id: '',
       name: '',
-      location: '',
+      location: Location.empty(),
     );
   }
 }
@@ -29,7 +29,7 @@ class Shop {
 class ShopDetail {
   final String id;
   final String name;
-  final String location;
+  final Location location;
   final String description;
 
   ShopDetail({
@@ -43,7 +43,7 @@ class ShopDetail {
     return ShopDetail(
       id: json['_id'] ?? '',
       name: json['name'] ?? '',
-      location: json['location'] ?? '',
+      location: Location.fromJson(json['location'] ?? {}),
       description: json['description'] ?? '',
     );
   }
@@ -52,8 +52,52 @@ class ShopDetail {
     return ShopDetail(
       id: '',
       name: '',
-      location: '',
+      location: Location.empty(),
       description: '',
+    );
+  }
+}
+
+class Location {
+  final String provinceTh;
+  final String provinceEn;
+  final String districtTh;
+  final String districtEn;
+  final String subDistrictTh;
+  final String subDistrictEn;
+  final String postCode;
+
+  Location({
+    required this.provinceTh,
+    required this.provinceEn,
+    required this.districtTh,
+    required this.districtEn,
+    required this.subDistrictTh,
+    required this.subDistrictEn,
+    required this.postCode,
+  });
+
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
+      provinceTh: json['province_th'] ?? '',
+      provinceEn: json['province_en'] ?? '',
+      districtTh: json['district_th'] ?? '',
+      districtEn: json['district_en'] ?? '',
+      subDistrictTh: json['subDistrict_th'] ?? '',
+      subDistrictEn: json['subDistrict_en'] ?? '',
+      postCode: json['postCode'] ?? '',
+    );
+  }
+
+  factory Location.empty() {
+    return Location(
+      provinceTh: '',
+      provinceEn: '',
+      districtTh: '',
+      districtEn: '',
+      subDistrictTh: '',
+      subDistrictEn: '',
+      postCode: '',
     );
   }
 }
