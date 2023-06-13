@@ -16,6 +16,7 @@ router
     .post(
         authController.protect,
         shopController.setShopUserIds,
+        shopController.checkIfShopExists,
         shopController.createShop
     );
 // Routes
