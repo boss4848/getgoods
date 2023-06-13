@@ -4,7 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:getgoods/src/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/district_model.dart';
+import '../models/province_model.dart';
 import '../models/shop_model.dart';
+import '../models/sub_district_model.dart';
 
 enum ShopState {
   success,
@@ -56,11 +59,12 @@ class ShopViewModel {
 
     try {
       final response = await _dio.get(fetchShopUrl);
-
-      final data = response.data['data']['shop'];
+      // log(response.toString());
+      final data = response.data['data']['data'];
       shop = ShopDetail.fromJson(data);
 
       state = ShopState.success;
+      // log('test: ${response.data}');
       return 'success';
     } on DioException catch (e) {
       // print('Error fetching shop: ${e.message}');
@@ -68,7 +72,7 @@ class ShopViewModel {
       // print('Error response data: ${e.response?.data}');
       // print('Error response headers: ${e.response?.headers}');
       state = ShopState.error;
-      return e;
+      return e.message.toString();
     }
   }
 
@@ -82,5 +86,44 @@ class ShopViewModel {
       throw Exception('No token found');
     }
     _dio.options.headers['Authorization'] = 'Bearer $token';
+  }
+
+  Future<String> addAddress(
+    Province province,
+    District district,
+    SubDistrict subDistrict,
+    String shopId,
+  ) async {
+    state = ShopState.loading;
+    try {
+      final String? token = await _getToken();
+      _setAuthToken(token);
+      final response = await _dio.patch(
+        '${ApiConstants.baseUrl}/shops/$shopId',
+        data: {
+          'location': {
+            //th
+            'province_th': province.nameTh,
+            'district_th': district.nameTh,
+            'subDistrict_th': subDistrict.nameTh,
+            //en
+            'province_en': province.nameEn,
+            'district_en': district.nameEn,
+            'subDistrict_en': subDistrict.nameEn,
+
+            'postCode': subDistrict.zipCode,
+          }
+        },
+      );
+      log(response.toString());
+      return 'success';
+    } on DioException catch (e) {
+      print('Error fetching shop: ${e.message}');
+      print('Error response status code: ${e.response?.statusCode}');
+      print('Error response data: ${e.response?.data}');
+      print('Error response headers: ${e.response?.headers}');
+      state = ShopState.error;
+      return e.message.toString();
+    }
   }
 }
