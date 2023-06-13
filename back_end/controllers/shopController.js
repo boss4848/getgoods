@@ -22,6 +22,15 @@ exports.restrictToOwner = catchAsync(async (req, res, next) => {
     }
     next();
 });
+exports.checkIfShopExists = catchAsync(async (req, res, next) => {
+    const existingShop = await Shop.findOne({ owner: req.user.id });
+    if (existingShop) {
+        return next(
+            new AppError('You already own a shop. You cannot create more than one.', 409)
+        );
+    }
+    next();
+});
 exports.setShopUserIds = (req, res, next) => {
     //Allow nested routes
     console.log(req.user);
@@ -29,5 +38,22 @@ exports.setShopUserIds = (req, res, next) => {
     next();
 };
 exports.getShop = factory.getOne(Shop, { path: 'products' });
-exports.createShop = factory.createOne(Shop);
+// exports.createShop = factory.createOne(Shop);
+exports.createShop = catchAsync(async (req, res, next) => {
+    const owner = req.user.id;
+    const { name, description } = req.body;
+    const newShop = await Shop.create(
+        {
+            name,
+            description,
+            owner,
+        },
+    );
+    res.status(201).json({
+        status: 'success',
+        data: {
+            data: newShop
+        }
+    });
+});
 
