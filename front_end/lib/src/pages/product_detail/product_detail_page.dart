@@ -268,6 +268,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 300),
                       // Container(
                       //   color: Colors.red,
                       //   height: 1000,
