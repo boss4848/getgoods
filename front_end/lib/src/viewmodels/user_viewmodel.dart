@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/constants.dart';
@@ -24,9 +25,11 @@ class UserViewModel {
       _setAuthToken(token);
       updateState(UserState.loading);
       final response = await _dio.get('${ApiConstants.baseUrl}/users/me');
+      log(response.toString());
       userDetail = UserDetail.fromJson(response.data['data']['user']);
       updateState(UserState.success);
     } on DioException catch (e) {
+      log(e.message!);
       print('Error fetching user: $e');
       updateState(UserState.error);
     }

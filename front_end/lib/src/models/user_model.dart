@@ -1,3 +1,5 @@
+import 'shop_model.dart';
+
 class User {
   final String photo;
   final String name;
@@ -24,14 +26,16 @@ class User {
 }
 
 class UserDetail {
+  final String id;
   final String photo;
   final String name;
   final String email;
   final String phone;
   final String address;
-  final String shop;
+  final ShopDetail shop;
 
   UserDetail({
+    required this.id,
     required this.photo,
     required this.name,
     required this.email,
@@ -41,24 +45,35 @@ class UserDetail {
   });
 
   factory UserDetail.fromJson(Map<String, dynamic> json) {
+    var shopJson = json['shop'];
+    ShopDetail shop;
+    if (shopJson == null || shopJson.isEmpty) {
+      shop = ShopDetail.empty();
+    } else if (shopJson is List) {
+      shop = ShopDetail.fromJson(shopJson.first as Map<String, dynamic>);
+    } else {
+      shop = ShopDetail.fromJson(shopJson as Map<String, dynamic>);
+    }
     return UserDetail(
-      photo: json['photo'] ?? '',
+      id: json['_id'] ?? '',
       name: json['name'] ?? '',
       email: json['email'] ?? '',
+      photo: json['photo'] ?? '',
       phone: json['phone'] ?? '',
       address: json['address'] ?? '',
-      shop: json['shop'] ?? '',
+      shop: shop,
     );
   }
 
   factory UserDetail.empty() {
     return UserDetail(
+      id: '',
       photo: '',
       name: '',
       email: '',
       phone: '',
       address: '',
-      shop: '',
+      shop: ShopDetail.empty(),
     );
   }
 }

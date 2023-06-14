@@ -87,7 +87,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 exports.getMe = catchAsync(async (req, res, next) => {
     // Get the current user
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id).populate('shop');
 
     // Retrieve the file URL from Azure Blob Storage
     const fileUrl = `https://getgoods.blob.core.windows.net/user-photos/${user.photo}`;
@@ -99,7 +99,8 @@ exports.getMe = catchAsync(async (req, res, next) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                photo: fileUrl // Add the file URL to the response
+                photo: fileUrl, // Add the file URL to the response
+                shop: user.shop,
             }
         }
     });
