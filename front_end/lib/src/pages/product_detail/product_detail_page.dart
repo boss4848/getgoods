@@ -191,7 +191,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                           ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            product.shop.location,
+                                            '${product.shop.location.provinceEn}, ${product.shop.location.districtEn}',
                                             style: const TextStyle(
                                               fontSize: 14,
                                               color: Color(0xFF9B9B9B),
