@@ -2,15 +2,16 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/models/shop_model.dart';
 import 'package:getgoods/src/viewmodels/address_viewmodel.dart';
 
 import '../../constants/colors.dart';
 import '../../models/district_model.dart';
 import '../../models/province_model.dart';
-import '../../models/shop_model.dart';
 import '../../models/sub_district_model.dart';
 import '../../viewmodels/shop_viewmodel.dart';
 import '../../viewmodels/user_viewmodel.dart';
+import '../add_product/add_product.dart';
 import '../register_shop/widgets/input_field.dart';
 
 class MyStorePage extends StatefulWidget {
@@ -195,7 +196,20 @@ class _MyStorePageState extends State<MyStorePage> {
 
   @override
   Widget build(BuildContext context) {
+    ShopDetail shop = shopViewModel.shop;
+    ShopState shopState = shopViewModel.state;
+
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AddProductPage(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
         title: const Text('My Store'),
       ),
@@ -355,7 +369,7 @@ class _MyStorePageState extends State<MyStorePage> {
                     const SizedBox(height: 12),
                     _buildStep(
                       title: 'Warehouse Address',
-                      isSubmit: false,
+                      isSubmit: shopViewModel.shop.location.postCode == '',
                       switchLanguage: true,
                       onSwitchLanguage: _onSwitchLanguage,
                       language: language,
@@ -364,8 +378,7 @@ class _MyStorePageState extends State<MyStorePage> {
                       onSubmit: () {
                         onAddAddress();
                       },
-                      inputFields: shopViewModel.shop.location ==
-                              Location.empty()
+                      inputFields: shopViewModel.shop.location.postCode == ''
                           ? [
                               Row(
                                 mainAxisAlignment:
@@ -626,7 +639,7 @@ class _MyStorePageState extends State<MyStorePage> {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
