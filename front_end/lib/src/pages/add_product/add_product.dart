@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/viewmodels/category_viewmodel.dart';
 
 import '../../constants/colors.dart';
-import 'widgets/input_field.dart';
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
