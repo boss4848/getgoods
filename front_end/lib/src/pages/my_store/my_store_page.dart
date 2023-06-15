@@ -269,7 +269,6 @@ class _MyStorePageState extends State<MyStorePage> {
                     name,
                     style: const TextStyle(
                       fontSize: 16,
-                      color: primaryTextColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
