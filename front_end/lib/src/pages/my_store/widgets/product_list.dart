@@ -24,6 +24,7 @@ class _ProductListState extends State<ProductList> {
                 'Products',
                 style: TextStyle(
                   fontSize: 16,
+                  color: primaryTextColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -113,6 +114,7 @@ class _ProductListState extends State<ProductList> {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
+                  color: primaryTextColor,
                 ),
               ),
               const SizedBox(height: 4),
