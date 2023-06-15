@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
-
+const http = require('http');
+const socketIO = require('socket.io');
 //Handle uncaught exceptions
 process.on('uncaughtException', err => {
     console.log(err.name, err.message);
@@ -24,9 +25,29 @@ mongoose.connect(DB, {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const server = http.createServer(app);
+const io = socketIO(server);
+
+// Socket.IO integration
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('chat message', (message) => {
+        console.log('Message received:', message);
+        io.emit('chat message', message);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
+    });
+});
+
+server.listen(port, () => {
     console.log(`App running on port ${port}...`);
 });
+// app.listen(port, () => {
+//     console.log(`App running on port ${port}...`);
+// });
 
 //Handle unhandled rejections
 process.on('unhandledRejection', err => {
