@@ -8,6 +8,9 @@ import 'package:getgoods/src/models/user_model.dart';
 import 'package:getgoods/src/pages/login/login_page.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 
+import '../my_store/my_store_page.dart';
+import '../register_shop/register_shop_page.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -52,6 +55,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
     UserState userState = userViewModel.state;
     log(userState.toString());
     log(userDetail.email.toString());
+    log(userDetail.shop.name.toString());
 
     if (userState == UserState.loading) {
       return const Center(
@@ -201,48 +205,73 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 16,
-                        ),
-                        width: double.infinity,
-                        color: primaryBGColor,
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.storefront_rounded,
-                              color: primaryColor,
-                              size: 28,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'My Store',
-                              style: TextStyle(
-                                color: primaryTextColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: () {
+                          if (userDetail.shop.name.toString() == '') {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RegisterShopPage(),
+                                )).then(
+                              (_) => _getUserDetail(),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyStorePage(
+                                  shopId: userDetail.shop.id,
+                                ),
                               ),
-                            ),
-                            Spacer(),
-                            Text(
-                              'Free Registration',
-                              style: TextStyle(
+                            );
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 16,
+                          ),
+                          width: double.infinity,
+                          color: primaryBGColor,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.storefront_rounded,
+                                color: primaryColor,
+                                size: 28,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text(
+                                'My Store',
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                userDetail.shop.name.toString() == ''
+                                    ? 'Free Registration'
+                                    : userDetail.shop.name,
+                                style: const TextStyle(
+                                  color: grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios_rounded,
                                 color: grey,
-                                fontSize: 12,
+                                size: 16,
                               ),
-                            ),
-                            SizedBox(
-                              width: 4,
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: grey,
-                              size: 16,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       ElevatedButton(

@@ -16,11 +16,18 @@ router
     .post(
         authController.protect,
         shopController.setShopUserIds,
+        shopController.checkIfShopExists,
         shopController.createShop
     );
 // Routes
 router.route('/:id')
     .get(shopController.getShop)
+    .patch(
+        authController.protect,
+        // shopController.checkIfShopExists,
+        shopController.updateShop
+
+    )
 
 
 

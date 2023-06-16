@@ -18,8 +18,8 @@ const shopSchema = new mongoose.Schema({
         maxlength: [200, 'A shop description must have less or equal then 200 characters'],
     },
     location: {
-        type: String,
-        required: [true, 'A shop must have a location']
+        type: Object,
+        // required: [true, 'A shop must have a location']
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
@@ -32,6 +32,12 @@ const shopSchema = new mongoose.Schema({
     //         ref: 'Product',
     //     },
     // ],
+    // bankAccount: {
+    //     type: String,
+    //     trim: true,
+    //     required: [true, 'A shop must have a bank account'],
+    //     maxlength: [20, 'A shop bank account must have less or equal then 20 characters'],
+
 },
     {
         timestamps: true,

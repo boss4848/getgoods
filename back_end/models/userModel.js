@@ -57,10 +57,10 @@ const userSchema = new mongoose.Schema({
     //     default: []
     // },
     passwordChangedAt: Date,
-    shop: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Shop',
-    },
+    // shop: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Shop',
+    // },
 },
     {
         timestamps: true,
@@ -69,6 +69,12 @@ const userSchema = new mongoose.Schema({
     },
     this.collection = 'users'
 );
+
+userSchema.virtual('shop', {
+    ref: 'Shop',
+    localField: '_id',
+    foreignField: 'owner'
+});
 
 userSchema.pre('save', function (next) {
     // Only run this function if password was actually modified
