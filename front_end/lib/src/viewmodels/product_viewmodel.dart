@@ -23,6 +23,7 @@ class ProductViewModel {
     try {
       final response = await _dio.get(getProductsUrl);
       final data = response.data['data']['products'];
+      print(data);
 
       products = List<Product>.from(data.map((product) {
         return Product.fromJson(product);
