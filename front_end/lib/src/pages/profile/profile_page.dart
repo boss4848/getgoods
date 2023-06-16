@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/user_model.dart';
 import 'package:getgoods/src/pages/login/login_page.dart';
+import 'package:getgoods/src/pages/signup/signup_page.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 
 import '../my_store/my_store_page.dart';
@@ -96,7 +97,14 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpPage(),
+                        ),
+                      );
+                    },
                     child: const Text('Sign up'),
                   ),
                   ElevatedButton(

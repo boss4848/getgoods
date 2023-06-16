@@ -91,7 +91,7 @@ class _LoginFormState extends State<LoginForm> {
   void _navigateToSignUpPage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SignUpPage()),
+      MaterialPageRoute(builder: (context) => const SignUpPage()),
     );
   }
 
@@ -104,8 +104,10 @@ class _LoginFormState extends State<LoginForm> {
           TextFormField(
             focusNode: myFocusNode,
             controller: _usernameController,
+            style:
+                const TextStyle(color: Colors.white, fontFamily: 'SFTHONBURI'),
             decoration: InputDecoration(
-              labelText: 'Username',
+              labelText: 'Email',
               labelStyle: TextStyle(
                   color: myFocusNode.hasFocus ? Colors.white : secondaryColor),
               border: OutlineInputBorder(
@@ -115,7 +117,7 @@ class _LoginFormState extends State<LoginForm> {
                   borderRadius: BorderRadius.circular(20.0),
                   borderSide: const BorderSide(color: Colors.white)),
               prefixIcon: const Icon(
-                Icons.person,
+                Icons.email_rounded,
                 color: secondaryColor,
               ),
             ),
@@ -129,6 +131,8 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 16.0),
           TextFormField(
             controller: _passwordController,
+            style:
+                const TextStyle(color: Colors.white, fontFamily: 'SFTHONBURI'),
             decoration: InputDecoration(
               focusColor: Colors.white,
               labelText: 'Password',
