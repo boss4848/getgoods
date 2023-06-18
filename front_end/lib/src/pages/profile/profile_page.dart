@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/user_model.dart';
 import 'package:getgoods/src/pages/login/login_page.dart';
+import 'package:getgoods/src/pages/my_purchase/my_purchase_page.dart';
 import 'package:getgoods/src/pages/signup/signup_page.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 
@@ -119,6 +120,17 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                       ); // Fetch user details again after logging in
                     },
                     child: const Text('Log in'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MyPurchasePage(),
+                        ),
+                      );
+                    },
+                    child: const Text('My purchase'),
                   ),
                 ],
               ),
