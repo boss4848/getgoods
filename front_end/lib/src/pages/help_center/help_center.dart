@@ -1,0 +1,107 @@
+import 'package:flutter/material.dart';
+import 'package:getgoods/src/pages/help_center/widgets/IssueType.dart';
+
+class HelpCenter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HelpCenterPage(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.green,
+      )),
+    );
+  }
+}
+
+class HelpCenterPage extends StatefulWidget {
+  const HelpCenterPage({super.key});
+
+  @override
+  _HelpCenterState createState() => _HelpCenterState();
+}
+
+class _HelpCenterState extends State<HelpCenterPage> {
+  String buttonText = 'Tap Me';
+  String updatedText = 'Initial Text';
+
+  void updateText() {
+    setState(() {
+      updatedText = 'Text Updated!';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pop(context); // Handles the back button press
+            },
+          ),
+          title: const Text('GetGoods Help Center'),
+        ),
+        body: Column(
+          children: [
+            _FQA(),
+            const SizedBox(
+              height: 10,
+            ),
+            _ContactUs(),
+          ],
+        ));
+  }
+
+  Container _FQA() {
+    return Container(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "FAQ",
+                style: TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20),
+              ),
+              const SizedBox(height: 10,),
+              IssueTypeWidget(),
+            ],
+          ),
+        ));
+  }
+
+  Container _ContactUs() {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Contact Us",
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 20)),
+              SizedBox(height: 15,),
+              Row(
+                children: [
+                  Icon(Icons.call),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text("0643285827", style: TextStyle(fontSize: 18),)
+                ],
+              )
+            ]),
+      ),
+    );
+  }
+
+}
