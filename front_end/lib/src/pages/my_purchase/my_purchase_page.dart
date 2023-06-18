@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/pages/my_purchase/widgets/completed.dart';
+import 'package:getgoods/src/pages/my_purchase/widgets/to_receive.dart';
 import 'package:getgoods/src/pages/my_purchase/widgets/to_ship.dart';
 import 'package:getgoods/src/pages/my_purchase/widgets/unpaid_list.dart';
 
@@ -46,8 +47,8 @@ class MyPurchasePage extends StatelessWidget {
                 body: const TabBarView(children: [
                   const UnpaidList(),
                   const ToShipList(),
-                  Text('To receive'),
-                  const CompletedOrder()
+                  const ToReceiveList(),
+                  const CompletedList()
                   
                 ]))));
   }

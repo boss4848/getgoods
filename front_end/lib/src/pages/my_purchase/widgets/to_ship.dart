@@ -20,13 +20,12 @@ class _ToShipListState extends State<ToShipList> {
         children: [
           const SizedBox(height: 6),
           _buildToShip(
-            shop: 'Trakasarn', 
-            name: 'Product', 
-            order: '4567ujf38h833fh', 
-            date: DateFormat.yMd().add_jm(), 
-            amount: 2,
-            payment: 1000
-            )
+              shop: 'Trakasarn',
+              name: 'Product name',
+              order: '4567ujf38h833fh',
+              date: DateFormat.yMd().add_jm(),
+              amount: 2,
+              payment: 1000)
         ],
       ),
     );
@@ -47,23 +46,25 @@ Container _buildToShip({
       borderRadius: BorderRadius.circular(8),
     ),
     padding: EdgeInsets.all(10),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(width: 10,),
-        Text(
-          shop,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+    margin: EdgeInsets.only(bottom: 20),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const SizedBox(
+        width: 10,
+      ),
+      Text(
+        shop,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
         ),
-        Row(
-          children: [
-            SizedBox(
-              height: 45,
-              width: 45,
-              child: CachedNetworkImage(
+      ),
+      SizedBox(height: 5),
+      Row(
+        children: [
+          SizedBox(
+            height: 48,
+            width: 48,
+            child: CachedNetworkImage(
               imageUrl: 'https://picsum.photos/200/300',
               fit: BoxFit.cover,
               placeholder: (context, url) => const Center(
@@ -93,20 +94,20 @@ Container _buildToShip({
                   ),
                 );
               },
-              ),
             ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  ),
+          ),
+          const SizedBox(width: 5),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
                 ),
-                const SizedBox(height: 4),
+              ),
+              const SizedBox(height: 4),
               Text(
                 'Order ID: $order',
                 style: const TextStyle(
@@ -122,37 +123,41 @@ Container _buildToShip({
                   color: secondaryTextColor,
                 ),
               ),
-              ],
-            )
-          ],),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Amount: $amount',
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: secondaryTextColor,
-                ),
-              ),
-              Text(
-                'Total payment: $payment',
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: secondaryTextColor,
-                ),
-              )
-            ],),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.green),
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white)
-              ),
-              onPressed: () {},
-              child: Text(
-                'Pay Now'
-              ),
-            )
-      ]),
+            ],
+          )
+        ],
+      ),
+      const SizedBox(height: 8),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Amount: $amount',
+            style: const TextStyle(
+              fontSize: 13,
+              color: secondaryTextColor,
+            ),
+          ),
+          Text(
+            'Total payment: ฿$payment',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+            ),
+          )
+        ],
+      ),
+      const SizedBox(height: 5),
+      Align(
+        alignment: Alignment.bottomRight,
+        child: TextButton(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.green),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),),
+        onPressed: () {},
+        child: Text('Contact Seller'),
+      )
+      )
+    ]),
   );
 }

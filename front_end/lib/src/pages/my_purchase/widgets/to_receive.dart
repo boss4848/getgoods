@@ -4,14 +4,14 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/colors.dart';
 
-class CompletedList extends StatefulWidget {
-  const CompletedList({super.key});
+class ToReceiveList extends StatefulWidget {
+  const ToReceiveList({super.key});
 
   @override
-  State<CompletedList> createState() => _CompletedListState();
+  State<ToReceiveList> createState() => _ToReceiveListState();
 }
 
-class _CompletedListState extends State<CompletedList> {
+class _ToReceiveListState extends State<ToReceiveList> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,27 +19,28 @@ class _CompletedListState extends State<CompletedList> {
       child: Column(
         children: [
           const SizedBox(height: 6),
-          _buildCompleted(
-            shop: 'Trakasarn',
-            name: 'Product name',
-            order: '4567ujf38h833fh',
-            date: DateFormat.yMd().add_jm(),
-            amount: 2,
-            payment: 1000,
-          )
+          _buildToShip(
+              shop: 'Trakasarn',
+              name: 'Product name',
+              order: '4567ujf38h833fh',
+              date: DateFormat.yMd().add_jm(),
+              amount: 2,
+              payment: 1000,
+              parcel: '4567ujf38h833fh'),
         ],
       ),
     );
   }
 }
 
-Container _buildCompleted({
+Container _buildToShip({
   required String shop,
   required String name,
   required String order,
   required DateFormat date,
   required int amount,
   required double payment,
+  required String parcel,
 }) {
   return Container(
     decoration: BoxDecoration(
@@ -112,7 +113,7 @@ Container _buildCompleted({
               Text(
                 'Order ID: $order',
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   color: secondaryTextColor,
                 ),
               ),
@@ -120,7 +121,7 @@ Container _buildCompleted({
               Text(
                 '$date',
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   color: secondaryTextColor,
                 ),
               ),
@@ -150,29 +151,28 @@ Container _buildCompleted({
       ),
       const SizedBox(height: 5),
       Row(
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          OutlinedButton(
-            onPressed: () {},
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.green)
-            ),
-            child: Text(
-              'Review',
-              style: TextStyle(color: Colors.green),
+          Text(
+            'Parcel no: $parcel',
+            style: const TextStyle(
+              fontSize: 13,
+              color: secondaryTextColor,
             ),
           ),
-          const SizedBox(width: 10,),
+          const Spacer(),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              
+            },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.green),
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            ),
-            child: Text('Buy Again'),
+            backgroundColor: MaterialStateProperty.all(Colors.green),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),),
+            child: Text('Order Received'),
           )
         ],
       )
     ]),
   );
 }
+
+
