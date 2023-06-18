@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/pages/category/widgets/filter.dart';
+import 'package:getgoods/src/pages/category/widgets/product.dart';
 import 'package:getgoods/src/pages/category/widgets/searchbar.dart';
 
 class CategoryPage extends StatelessWidget {
@@ -8,7 +10,11 @@ class CategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(children: const [MySearchBar()]),
+      body: Column(children: const [
+        SearchBar(),
+        ProductFilter(),
+        ShowProduct(),
+      ]),
     );
   }
 }
