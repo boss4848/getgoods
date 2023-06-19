@@ -76,7 +76,9 @@ class StoreDetailPage extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return Container(
-                    height: 500,
+                    //full screen height
+                    height: 800,
+                    // height: MediaQuery.of(context).size.height * 0.5,
                     color: Colors.white,
                     padding: const EdgeInsets.all(12),
                     child: Column(
@@ -90,11 +92,28 @@ class StoreDetailPage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'This account number will be used for receiving money from the sale of your products.',
+                          style: TextStyle(
+                            color: secondaryTextColor,
+                            fontSize: 14,
+                            // fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         InputField(
                           name: 'Account Number',
                           isRequired: true,
                           controller: TextEditingController(),
-                          isUnderline: false,
+                          isUnderline: true,
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            child: const Text('Save'),
+                          ),
                         ),
                       ],
                     ),

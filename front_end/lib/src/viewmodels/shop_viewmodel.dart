@@ -20,12 +20,21 @@ class ShopViewModel {
   ShopDetail shop = ShopDetail.empty();
   ShopState state = ShopState.loading;
 
-  Future<String> createShop(String name, String description) async {
+  Future<String> createShop(
+    String name,
+    String description,
+    Location location,
+  ) async {
     final String createShopUrl = '${ApiConstants.baseUrl}/shops';
 
     state = ShopState.loading;
     print('name: $name');
     print('description: $description');
+    print('location: ${location.provinceTh}');
+    print('location: ${location.districtTh}');
+    print('location: ${location.subDistrictTh}');
+    print('location: ${location.postCode}');
+
     try {
       final String? token = await _getToken();
       _setAuthToken(token);
@@ -33,6 +42,15 @@ class ShopViewModel {
       await _dio.post(createShopUrl, data: {
         'name': name,
         'description': description,
+        'location': {
+          'province_th': location.provinceTh,
+          'district_th': location.districtTh,
+          'sub_district_th': location.subDistrictTh,
+          'province_en': location.provinceEn,
+          'district_en': location.districtEn,
+          'sub_district_en': location.subDistrictEn,
+          'post_code': location.postCode,
+        }
       });
       // final data = response.data['data']['shop'];
 
