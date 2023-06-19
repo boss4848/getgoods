@@ -5,8 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/user_model.dart';
+import 'package:getgoods/src/pages/login/login_page.dart';
+import 'package:getgoods/src/pages/my_purchase/my_purchase_page.dart';
+import 'package:getgoods/src/pages/signup/signup_page.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
-import '../login/login_page.dart';
+
 import '../my_store/my_store_page.dart';
 import '../register_shop/register_shop_page.dart';
 
@@ -95,7 +98,14 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpPage(),
+                        ),
+                      );
+                    },
                     child: const Text('Sign up'),
                   ),
                   ElevatedButton(
@@ -110,6 +120,17 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                       ); // Fetch user details again after logging in
                     },
                     child: const Text('Log in'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MyPurchasePage(),
+                        ),
+                      );
+                    },
+                    child: const Text('My purchase'),
                   ),
                 ],
               ),
@@ -256,6 +277,60 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                                 userDetail.shop.name.toString() == ''
                                     ? 'Free Registration'
                                     : userDetail.shop.name,
+                                style: const TextStyle(
+                                  color: grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: grey,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MyPurchasePage(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 16,
+                          ),
+                          width: double.infinity,
+                          color: primaryBGColor,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.storefront_rounded,
+                                color: primaryColor,
+                                size: 28,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text(
+                                'My Purchases',
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Spacer(),
+                              const Text(
+                                'Order history',
                                 style: const TextStyle(
                                   color: grey,
                                   fontSize: 12,

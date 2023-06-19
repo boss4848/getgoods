@@ -12,9 +12,11 @@ dependencies:
   cupertino_icons: ^1.0.5
   custom_refresh_indicator: ^2.0.1
   dio: ^5.2.0+1
+  fl_chart: ^0.62.0
   flutter:
     sdk: flutter
   flutter_spinkit: ^5.2.0
+  flutter_svg: ^2.0.5
   http: ^0.13.6
   intl: ^0.18.1
   percent_indicator: ^4.2.3
@@ -29,5 +31,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    # - assets/icons/
-    # - assets/fonts/
+  fonts:
+  - family: SFTHONBURI
+    fonts:
+     - asset: assets/fonts/SFTHONBURI-REGULAR.TTF
+     - asset: assets/fonts/SFTHONBURI-SEMIBOLD.TTF
+       weight: 400
+     - asset: assets/fonts/SFTHONBURI-BOLD.TTF
+       weight: 700
