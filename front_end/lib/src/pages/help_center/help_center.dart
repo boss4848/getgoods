@@ -58,19 +58,19 @@ class _HelpCenterState extends State<HelpCenterPage> {
   Container _FQA() {
     return Container(
         color: Colors.white,
-        child: Padding(
+        child: const Padding(
           padding: EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "FAQ",
                 style: TextStyle(
                     color: Colors.green,
                     fontWeight: FontWeight.w800,
                     fontSize: 20),
               ),
-              const SizedBox(height: 10,),
+              SizedBox(height: 10,),
               IssueTypeWidget(),
             ],
           ),
@@ -92,11 +92,21 @@ class _HelpCenterState extends State<HelpCenterPage> {
               SizedBox(height: 15,),
               Row(
                 children: [
-                  Icon(Icons.call),
+                  Icon(Icons.call, size: 20,),
                   SizedBox(
                     width: 10,
                   ),
-                  Text("0643285827", style: TextStyle(fontSize: 18),)
+                  Text("0643285827", style: TextStyle(fontSize: 16),)
+                ],
+              ),
+              SizedBox(height: 15,),
+              Row(
+                children: [
+                  Icon(Icons.email, size : 20),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text("getgoods@goose.com", style: TextStyle(fontSize: 16),)
                 ],
               )
             ]),

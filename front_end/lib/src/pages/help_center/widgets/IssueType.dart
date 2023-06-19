@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/pages/help_center/widgets/ProblemDetail.dart';
 
 class IssueTypeWidget extends StatefulWidget {
   const IssueTypeWidget({super.key});
@@ -8,29 +9,7 @@ class IssueTypeWidget extends StatefulWidget {
 }
 
 class _IssueTypeWidgetState extends State<IssueTypeWidget> {
-  List<Widget> widgets = [
-    Container(
-      color: Colors.red,
-      child: Center(child: Text('Widget 1')),
-    ),
-    Container(
-      color: Colors.green,
-      child: Center(child: Text('Widget 2w')),
-    ),
-    Container(
-      color: Colors.blue,
-      child: Center(child: Text('Widget 3')),
-    ),
-    Container(
-      color: Colors.blue,
-      child: Center(child: Text('Widget 4')),
-    ),
-    Container(
-      color: Colors.blue,
-      child: Center(child: Text('Widget 5')),
-    ),
-  ];
-
+  late List<Widget> widgets;
   int activeIndex = 0;
 
   void setActiveState(int index) {
@@ -40,6 +19,17 @@ class _IssueTypeWidgetState extends State<IssueTypeWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    widgets = [
+      ProblemDetailWidget(typeP: "Hot Issues"),
+      ProblemDetailWidget(typeP: "Payment Methods"),
+      ProblemDetailWidget(typeP: "Store Usage"),
+      ProblemDetailWidget(typeP: "Order Tracking"),
+      ProblemDetailWidget(typeP: "About GetGoods"),
+    ];
+  }
+
   Widget build(BuildContext context) {
     return Column(
         children: [
@@ -53,29 +43,29 @@ class _IssueTypeWidgetState extends State<IssueTypeWidget> {
               ),
               SizedBox(width: 12,),
               WidgetButton(
-                onPressed: () => setActiveState(2),
-                isActive: activeIndex == 2,
+                onPressed: () => setActiveState(1),
+                isActive: activeIndex == 1,
                 buttonText: 'Payment\nMethods',
                 icon: Icon(Icons.account_balance_wallet),
               ),
               SizedBox(width: 12,),
               WidgetButton(
-                onPressed: () => setActiveState(3),
-                isActive: activeIndex == 3,
+                onPressed: () => setActiveState(2),
+                isActive: activeIndex == 2,
                 buttonText: 'Store\nUsage',
                 icon: Icon(Icons.store),
               ),
               SizedBox(width: 12,),
               WidgetButton(
-                onPressed: () => setActiveState(4),
-                isActive: activeIndex == 4,
+                onPressed: () => setActiveState(3),
+                isActive: activeIndex == 3,
                 buttonText: 'Order\nTracking',
                 icon: Icon(Icons.local_shipping),
               ),
               SizedBox(width: 12,),
               WidgetButton(
-                onPressed: () => setActiveState(1),
-                isActive: activeIndex == 1,
+                onPressed: () => setActiveState(4),
+                isActive: activeIndex == 4,
                 buttonText: 'About\nGetGoods',
                 icon: Icon(Icons.info_rounded),
               ),
