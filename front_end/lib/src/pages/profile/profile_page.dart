@@ -294,6 +294,60 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MyPurchasePage(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 16,
+                          ),
+                          width: double.infinity,
+                          color: primaryBGColor,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.storefront_rounded,
+                                color: primaryColor,
+                                size: 28,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text(
+                                'My Purchases',
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Spacer(),
+                              const Text(
+                                'Order history',
+                                style: const TextStyle(
+                                  color: grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: grey,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       ElevatedButton(
                         onPressed: () async {
                           await userViewModel.logout();

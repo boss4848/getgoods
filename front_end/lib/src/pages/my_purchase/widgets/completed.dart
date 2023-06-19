@@ -21,6 +21,7 @@ class _CompletedListState extends State<CompletedList> {
         children: [
           const SizedBox(height: 6),
           _buildCompleted(
+            context: context,
             shop: 'Trakasarn',
             name: 'Product name',
             order: '4567ujf38h833fh',
@@ -35,6 +36,7 @@ class _CompletedListState extends State<CompletedList> {
 }
 
 Container _buildCompleted({
+  required BuildContext context,
   required String shop,
   required String name,
   required String order,
@@ -155,7 +157,11 @@ Container _buildCompleted({
         children: [
           OutlinedButton(
             onPressed: () {
-              
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReviewPage(),
+                  ));
             },
             style:
                 OutlinedButton.styleFrom(side: BorderSide(color: Colors.green)),
