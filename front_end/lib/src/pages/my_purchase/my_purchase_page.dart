@@ -17,11 +17,19 @@ class MyPurchasePage extends StatelessWidget {
             child: Scaffold(
                 appBar: AppBar(
                   backgroundColor: Colors.green,
+                  actions: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios_new_rounded),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
                   elevation: 0,
                   title: const Text(
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 25,
+                          fontSize: 24,
                           fontWeight: FontWeight.w700,
                           fontFamily: 'SFTHONBURI'),
                       'My purchases'),
@@ -49,7 +57,6 @@ class MyPurchasePage extends StatelessWidget {
                   const ToShipList(),
                   const ToReceiveList(),
                   const CompletedList()
-                  
                 ]))));
   }
 }

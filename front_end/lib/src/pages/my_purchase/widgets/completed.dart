@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/pages/review/review_page.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/colors.dart';
@@ -153,16 +154,19 @@ Container _buildCompleted({
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           OutlinedButton(
-            onPressed: () {},
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.green)
-            ),
+            onPressed: () {
+              
+            },
+            style:
+                OutlinedButton.styleFrom(side: BorderSide(color: Colors.green)),
             child: Text(
               'Review',
               style: TextStyle(color: Colors.green),
             ),
           ),
-          const SizedBox(width: 10,),
+          const SizedBox(
+            width: 10,
+          ),
           TextButton(
             onPressed: () {},
             style: ButtonStyle(
