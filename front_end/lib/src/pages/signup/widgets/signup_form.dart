@@ -16,7 +16,14 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  FocusNode myFocusNode = new FocusNode();
+  FocusNode usernameFocusNode = FocusNode();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
+  FocusNode cfpasswordFocusNode = FocusNode();
+  bool isUsernameFocused = false;
+  bool isEmailFocused = false;
+  bool isPasswordFocused = false;
+  bool iscfPasswordFocused = false;
   bool _obscurePassword = true;
   bool _obscureCfPassword = true;
 
@@ -26,7 +33,47 @@ class _SignUpFormState extends State<SignUpForm> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    usernameFocusNode.removeListener(_onFocusChange);
+    usernameFocusNode.dispose();
+    emailFocusNode.removeListener(_onEmailFocusChange);
+    emailFocusNode.dispose();
+    passwordFocusNode.removeListener(_onPasswordFocusChange);
+    passwordFocusNode.dispose();
+    cfpasswordFocusNode.removeListener(_onPasswordFocusChange);
+    cfpasswordFocusNode.dispose();
     super.dispose();
+  }
+
+  void initState() {
+    super.initState();
+    usernameFocusNode.addListener(_onFocusChange);
+    emailFocusNode.addListener(_onEmailFocusChange);
+    passwordFocusNode.addListener(_onPasswordFocusChange);
+    cfpasswordFocusNode.addListener(_onCfPasswordFocusChange);
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      isUsernameFocused = usernameFocusNode.hasFocus;
+    });
+  }
+
+  void _onEmailFocusChange() {
+    setState(() {
+      isEmailFocused = emailFocusNode.hasFocus;
+    });
+  }
+
+  void _onPasswordFocusChange() {
+    setState(() {
+      isPasswordFocused = passwordFocusNode.hasFocus;
+    });
+  }
+
+  void _onCfPasswordFocusChange() {
+    setState(() {
+      iscfPasswordFocused = cfpasswordFocusNode.hasFocus;
+    });
   }
 
   void _submitSignUpForm() {
@@ -54,7 +101,7 @@ class _SignUpFormState extends State<SignUpForm> {
       child: Column(
         children: [
           TextFormField(
-            focusNode: myFocusNode,
+            focusNode: usernameFocusNode,
             controller: _usernameController,
             style: const TextStyle(
                 color: secondaryColor, fontFamily: 'SFTHONBURI'),
@@ -62,8 +109,11 @@ class _SignUpFormState extends State<SignUpForm> {
               filled: true,
               fillColor: Colors.white,
               labelText: 'Username',
-              labelStyle: const TextStyle(
-                  color: secondaryColor, fontFamily: 'SFTHONBURI'),
+              labelStyle: TextStyle(
+                  color: isUsernameFocused
+                      ? Colors.white.withOpacity(0)
+                      : secondaryColor,
+                  fontFamily: 'SFTHONBURI'),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
                 borderSide: BorderSide.none,
@@ -84,6 +134,7 @@ class _SignUpFormState extends State<SignUpForm> {
             height: defaultpadding,
           ),
           TextFormField(
+            focusNode: emailFocusNode,
             controller: _emailController,
             style: const TextStyle(
                 color: secondaryColor, fontFamily: 'SFTHONBURI'),
@@ -91,8 +142,11 @@ class _SignUpFormState extends State<SignUpForm> {
               filled: true,
               fillColor: Colors.white,
               labelText: 'Email',
-              labelStyle: const TextStyle(
-                  color: secondaryColor, fontFamily: 'SFTHONBURI'),
+              labelStyle: TextStyle(
+                  color: isEmailFocused
+                      ? Colors.white.withOpacity(0)
+                      : secondaryColor,
+                  fontFamily: 'SFTHONBURI'),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
                 borderSide: BorderSide.none,
@@ -113,6 +167,7 @@ class _SignUpFormState extends State<SignUpForm> {
             height: defaultpadding,
           ),
           TextFormField(
+            focusNode: passwordFocusNode,
             controller: _passwordController,
             style: const TextStyle(
                 color: secondaryColor, fontFamily: 'SFTHONBURI'),
@@ -120,8 +175,11 @@ class _SignUpFormState extends State<SignUpForm> {
               filled: true,
               fillColor: Colors.white,
               labelText: 'Password',
-              labelStyle: const TextStyle(
-                  color: secondaryColor, fontFamily: 'SFTHONBURI'),
+              labelStyle: TextStyle(
+                  color: isPasswordFocused
+                      ? Colors.white.withOpacity(0)
+                      : secondaryColor,
+                  fontFamily: 'SFTHONBURI'),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
                 borderSide: BorderSide.none,
@@ -158,6 +216,7 @@ class _SignUpFormState extends State<SignUpForm> {
             height: defaultpadding,
           ),
           TextFormField(
+            focusNode: cfpasswordFocusNode,
             controller: _confirmPasswordController,
             style: const TextStyle(
                 color: secondaryColor, fontFamily: 'SFTHONBURI'),
@@ -165,8 +224,11 @@ class _SignUpFormState extends State<SignUpForm> {
               filled: true,
               fillColor: Colors.white,
               labelText: 'Confirm Password',
-              labelStyle: const TextStyle(
-                  color: secondaryColor, fontFamily: 'SFTHONBURI'),
+              labelStyle: TextStyle(
+                  color: iscfPasswordFocused
+                      ? Colors.white.withOpacity(0)
+                      : secondaryColor,
+                  fontFamily: 'SFTHONBURI'),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
                 borderSide: BorderSide.none,
