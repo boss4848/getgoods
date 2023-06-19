@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/pages/shopping_cart/widgets/bottom_bar.dart';
 import 'package:getgoods/src/pages/shopping_cart/widgets/cart.dart';
-import 'package:getgoods/src/pages/shopping_cart/widgets/header.dart';
 
 class ShoppingCart extends StatelessWidget {
   const ShoppingCart({super.key});
@@ -9,11 +9,20 @@ class ShoppingCart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text(
+          'Shopping Cart',
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: Column(
-        children: const [
-          ShoppingCartHeader(),
-          ProductInCart(),
-        ],
+        children: const [ProductInCart()],
+      ),
+      bottomNavigationBar: const BottomAppBar(
+        child: BottomBar(),
       ),
     );
   }
