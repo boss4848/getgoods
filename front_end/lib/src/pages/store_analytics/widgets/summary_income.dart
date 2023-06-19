@@ -34,7 +34,7 @@ class SummaryIncomeInfo extends StatelessWidget {
             SizedBox(
               height: defaultpadding / 2,
             ),
-            Borderline(),
+            horizontalBorderline(),
             SizedBox(
               height: defaultpadding / 2,
             ),
@@ -119,8 +119,8 @@ class detailInfo extends StatelessWidget {
   }
 }
 
-class Borderline extends StatelessWidget {
-  const Borderline({super.key});
+class horizontalBorderline extends StatelessWidget {
+  const horizontalBorderline({super.key});
 
   @override
   Widget build(BuildContext context) {

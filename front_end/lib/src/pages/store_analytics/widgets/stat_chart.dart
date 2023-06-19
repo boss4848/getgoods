@@ -42,7 +42,7 @@ class _LineChart extends StatelessWidget {
   LineTouchData get lineTouchData1 => LineTouchData(
         handleBuiltInTouches: true,
         touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+          tooltipBgColor: Colors.blueGrey,
         ),
       );
 
@@ -94,9 +94,10 @@ class _LineChart extends StatelessWidget {
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
+        color: primaryTextColor,
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+        fontFamily: 'SFTHONBURI');
     String text;
     switch (value.toInt()) {
       case 1:
@@ -118,7 +119,7 @@ class _LineChart extends StatelessWidget {
         return Container();
     }
 
-    return Text(text, style: style, textAlign: TextAlign.center);
+    return Text(text, style: style, textAlign: TextAlign.right);
   }
 
   SideTitles leftTitles() => SideTitles(
@@ -130,19 +131,32 @@ class _LineChart extends StatelessWidget {
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
+        color: primaryTextColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+        fontFamily: 'SFTHONBURI');
     Widget text;
     switch (value.toInt()) {
-      case 2:
-        text = const Text('SEPT', style: style);
+      case 1:
+        text = const Text('MON', style: style);
+        break;
+      case 3:
+        text = const Text('TUE', style: style);
+        break;
+      case 5:
+        text = const Text('WED', style: style);
         break;
       case 7:
-        text = const Text('OCT', style: style);
+        text = const Text('THU', style: style);
         break;
-      case 12:
-        text = const Text('DEC', style: style);
+      case 9:
+        text = const Text('FRI', style: style);
+        break;
+      case 11:
+        text = const Text('SAT', style: style);
+        break;
+      case 13:
+        text = const Text('SUN', style: style);
         break;
       default:
         text = const Text('');
@@ -187,8 +201,8 @@ class _LineChart extends StatelessWidget {
           FlSpot(3, 1.5),
           FlSpot(5, 1.4),
           FlSpot(7, 3.4),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
+          FlSpot(9, 2),
+          FlSpot(11, 2.2),
           FlSpot(13, 1.8),
         ],
       );
@@ -207,8 +221,8 @@ class _LineChart extends StatelessWidget {
           FlSpot(1, 1),
           FlSpot(3, 2.8),
           FlSpot(7, 1.2),
-          FlSpot(10, 2.8),
-          FlSpot(12, 2.6),
+          FlSpot(9, 2.8),
+          FlSpot(11, 2.6),
           FlSpot(13, 3.9),
         ],
       );
@@ -221,7 +235,7 @@ class _LineChart extends StatelessWidget {
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
         spots: const [
-          FlSpot(1, 2.8),
+          FlSpot(1, 4),
           FlSpot(3, 1.9),
           FlSpot(6, 3),
           FlSpot(10, 1.3),

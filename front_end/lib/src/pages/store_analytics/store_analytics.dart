@@ -4,7 +4,7 @@ import 'package:getgoods/src/constants/constants.dart';
 import 'package:getgoods/src/pages/login/widgets/appbar.dart';
 import 'package:getgoods/src/pages/store_analytics/widgets/overall_bar.dart';
 import 'package:getgoods/src/pages/store_analytics/widgets/productrank_info.dart';
-import 'package:getgoods/src/pages/store_analytics/widgets/stat_chart.dart';
+import 'package:getgoods/src/pages/store_analytics/widgets/stat_chart2.dart';
 import 'package:getgoods/src/pages/store_analytics/widgets/summary_income.dart';
 
 class StoreAnalyticsPage extends StatelessWidget {
@@ -76,7 +76,7 @@ class StoreAnalyticsPage extends StatelessWidget {
                           height: defaultpadding,
                         ),
                         const Text(
-                          'Revenue Today Accumulated',
+                          'Weekly Revenue Accumulated',
                           style: TextStyle(
                             color: primaryTextColor,
                             fontSize: 20,
@@ -84,7 +84,7 @@ class StoreAnalyticsPage extends StatelessWidget {
                             fontFamily: 'SFTHONBURI',
                           ),
                         ),
-                        const MyCustomLineChart(),
+                        const LineChartSample2(),
                         const SizedBox(
                           height: defaultpadding,
                         ),

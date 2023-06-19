@@ -9,14 +9,22 @@ class ProductRankInfo extends StatefulWidget {
 
 class _ProductRankInfoState extends State<ProductRankInfo> {
   String selectedRank = '';
-  Map<String, List<String>> productRank = {
-    'Revenue (Baht)': ['Product1 - 250', 'Product2 - 200', 'Product3 - 150'],
-    'Visitors (Visitors)': [
-      'Product1 - 1258',
-      'Product2 - 1035',
-      'Product3 - 755'
+  final productRank = {
+    'Revenue (Baht)': [
+      {'name': 'Song 1 - Rock', 'unit': 300},
+      {'name': 'Song 2 - Rock', 'unit': 200},
+      {'name': 'Song 3 - Rock', 'unit': 100},
     ],
-    'Unit Sold (Units)': ['Product1 - 100', 'Product2 - 70', 'Product3 - 50'],
+    'Visitors (Visitors)': [
+      {'name': 'Song 1 - Jazz', 'unit': 30},
+      {'name': 'Song 2 - Jazz', 'unit': 20},
+      {'name': 'Song 3 - Jazz', 'unit': 10},
+    ],
+    'Unit Sold (Units)': [
+      {'name': 'Song 1 - Pop', 'unit': 0.89},
+      {'name': 'Song 2 - Pop', 'unit': 0.69},
+      {'name': 'Song 3 - Pop', 'unit': 1.99},
+    ],
   };
 
   Widget _buildRankDropdown() {
@@ -63,28 +71,42 @@ class _ProductRankInfoState extends State<ProductRankInfo> {
     if (selectedRank.isEmpty) {
       return Container();
     } else {
-      List<String> productLists = productRank[selectedRank]!;
+      //List<String> productLists = productRank[selectedRank]!;
       return Expanded(
         child: ListView.builder(
-          itemCount: productLists.length,
+          itemCount: productRank[selectedRank]!.length,
           itemBuilder: (context, index) {
+            final productLists = productRank[selectedRank]![index];
             if (index < 3) {
               return ListTile(
                 leading: _buildMedalIcon(index),
-                title: Text(
-                  productLists[index],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'SFTHONBURI',
-                  ),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      productLists['name'].toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'SFTHONBURI',
+                      ),
+                    ),
+                    Text(productLists['unit'].toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'SFTHONBURI',
+                        )),
+                  ],
                 ),
+                //subtitle: Text('\$${productLists['price']}'),
               );
             } else {
               return ListTile(
                 title: Text(
-                  productLists[index],
+                  productLists['name'].toString(),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -106,15 +128,15 @@ class _ProductRankInfoState extends State<ProductRankInfo> {
 
     switch (index) {
       case 0:
-        iconData = Icons.circle;
+        iconData = Icons.filter_vintage_rounded;
         color = Colors.amber; // Customize the color for gold medal
         break;
       case 1:
-        iconData = Icons.circle;
+        iconData = Icons.filter_vintage_rounded;
         color = Colors.grey; // Customize the color for silver medal
         break;
       case 2:
-        iconData = Icons.circle;
+        iconData = Icons.filter_vintage_rounded;
         color = Colors.brown; // Customize the color for bronze medal
         break;
       default:
@@ -126,6 +148,7 @@ class _ProductRankInfoState extends State<ProductRankInfo> {
     return Icon(
       iconData,
       color: color,
+      size: 30,
     );
   }
 
