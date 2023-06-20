@@ -58,4 +58,14 @@ shopSchema.virtual('products', {
     localField: '_id'
 });
 
+//user
+shopSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'owner',
+        select: 'name email phone'
+    });
+    next();
+});
+
+
 module.exports = mongoose.model('Shop', shopSchema);
