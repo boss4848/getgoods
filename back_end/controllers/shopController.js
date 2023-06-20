@@ -41,12 +41,13 @@ exports.getShop = factory.getOne(Shop, { path: 'products' });
 // exports.createShop = factory.createOne(Shop);
 exports.createShop = catchAsync(async (req, res, next) => {
     const owner = req.user.id;
-    const { name, description } = req.body;
+    const { name, description, location } = req.body;
     const newShop = await Shop.create(
         {
             name,
             description,
             owner,
+            location,
         },
     );
     res.status(201).json({
