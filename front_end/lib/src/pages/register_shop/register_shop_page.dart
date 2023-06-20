@@ -32,6 +32,9 @@ class _RegisterShopPageState extends State<RegisterShopPage> {
   final _bankAccountController = TextEditingController();
   final _bankAccountNameController = TextEditingController();
 
+  //Address
+  final _locationDetailController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -118,16 +121,48 @@ class _RegisterShopPageState extends State<RegisterShopPage> {
     });
   }
 
+  void onError(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Invalid input'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   onSubmit() async {
-    print('clicked');
-    if (_storeNameController.text.isEmpty ||
-        _storeDescController.text.isEmpty ||
-        _bankNameController.text.isEmpty ||
-        _bankAccountController.text.isEmpty ||
-        _bankAccountNameController.text.isEmpty) {
+    if (_storeNameController.text == null ||
+        _storeNameController.text.isEmpty ||
+        _storeDescController.text == null ||
+        _storeDescController.text.isEmpty) {
+      onError('Please enter the store name and description');
       return;
     }
+
+    if (_locationDetailController.text == null ||
+        _locationDetailController.text.isEmpty ||
+        province.id == null ||
+        district.id == null ||
+        subDistrict.id == null) {
+      onError('Please enter the store address');
+      return;
+    }
+
+    print('clicked');
+
     Location location = Location(
+      detail: _locationDetailController.text,
       districtEn: district.nameEn,
       districtTh: district.nameTh,
       provinceEn: province.nameEn,
@@ -222,230 +257,166 @@ class _RegisterShopPageState extends State<RegisterShopPage> {
                     switchLanguage: true,
                     onSwitchLanguage: _onSwitchLanguage,
                     language: language,
-                    inputFields: shopViewModel.shop.location.postCode == ''
-                        ? [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Province *',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: secondaryTextColor,
-                                  ),
-                                ),
-                                PopupMenuButton(
-                                  child: const Text(
-                                    'Set >',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: grey,
+                    inputFields: [
+                      InputField(
+                        name: 'Location Detail',
+                        controller: _locationDetailController,
+                        isRequired: true,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Province *',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: secondaryTextColor,
+                            ),
+                          ),
+                          PopupMenuButton(
+                            child: const Text(
+                              'Set >',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: grey,
+                              ),
+                            ),
+                            onSelected: (province) {
+                              onProvinceSelected(province);
+                            },
+                            itemBuilder: (context) {
+                              return addressViewModel.provinces.map(
+                                (province) {
+                                  return PopupMenuItem(
+                                    value: province,
+                                    child: Text(language
+                                        ? province.nameEn
+                                        : province.nameTh),
+                                  );
+                                },
+                              ).toList();
+                            },
+                          ),
+                        ],
+                      ),
+                      Text(
+                        language ? province.nameEn : province.nameTh,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'District *',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: secondaryTextColor,
+                            ),
+                          ),
+                          PopupMenuButton(
+                            child: const Text(
+                              'Set >',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: grey,
+                              ),
+                            ),
+                            onSelected: (district) {
+                              onDistrictSelected(district);
+                              // onProvinceSelected(province);
+                            },
+                            itemBuilder: (context) {
+                              return addressViewModel.districts.map(
+                                (district) {
+                                  return PopupMenuItem(
+                                    value: district,
+                                    child: Text(
+                                      language
+                                          ? district.nameEn
+                                          : district.nameTh,
                                     ),
-                                  ),
-                                  onSelected: (province) {
-                                    onProvinceSelected(province);
-                                  },
-                                  itemBuilder: (context) {
-                                    return addressViewModel.provinces.map(
-                                      (province) {
-                                        return PopupMenuItem(
-                                          value: province,
-                                          child: Text(language
-                                              ? province.nameEn
-                                              : province.nameTh),
-                                        );
-                                      },
-                                    ).toList();
-                                  },
-                                ),
-                              ],
+                                  );
+                                },
+                              ).toList();
+                            },
+                          ),
+                        ],
+                      ),
+                      Text(
+                        language ? district.nameEn : district.nameTh,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Sub District *',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: secondaryTextColor,
                             ),
-                            Text(
-                              language ? province.nameEn : province.nameTh,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
+                          ),
+                          PopupMenuButton(
+                            child: const Text(
+                              'Set >',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: grey,
                               ),
                             ),
-                            const SizedBox(height: 12),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'District *',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: secondaryTextColor,
-                                  ),
-                                ),
-                                PopupMenuButton(
-                                  child: const Text(
-                                    'Set >',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: grey,
+                            onSelected: (subDistrict) {
+                              onSubDistrictSelected(subDistrict);
+                              // onProvinceSelected(province);
+                            },
+                            itemBuilder: (context) {
+                              return addressViewModel.subDistricts.map(
+                                (subDistrict) {
+                                  return PopupMenuItem(
+                                    value: subDistrict,
+                                    child: Text(
+                                      language
+                                          ? subDistrict.nameEn
+                                          : subDistrict.nameTh,
                                     ),
-                                  ),
-                                  onSelected: (district) {
-                                    onDistrictSelected(district);
-                                    // onProvinceSelected(province);
-                                  },
-                                  itemBuilder: (context) {
-                                    return addressViewModel.districts.map(
-                                      (district) {
-                                        return PopupMenuItem(
-                                          value: district,
-                                          child: Text(
-                                            language
-                                                ? district.nameEn
-                                                : district.nameTh,
-                                          ),
-                                        );
-                                      },
-                                    ).toList();
-                                  },
-                                ),
-                              ],
-                            ),
-                            Text(
-                              language ? district.nameEn : district.nameTh,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Sub District *',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: secondaryTextColor,
-                                  ),
-                                ),
-                                PopupMenuButton(
-                                  child: const Text(
-                                    'Set >',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: grey,
-                                    ),
-                                  ),
-                                  onSelected: (subDistrict) {
-                                    onSubDistrictSelected(subDistrict);
-                                    // onProvinceSelected(province);
-                                  },
-                                  itemBuilder: (context) {
-                                    return addressViewModel.subDistricts.map(
-                                      (subDistrict) {
-                                        return PopupMenuItem(
-                                          value: subDistrict,
-                                          child: Text(
-                                            language
-                                                ? subDistrict.nameEn
-                                                : subDistrict.nameTh,
-                                          ),
-                                        );
-                                      },
-                                    ).toList();
-                                  },
-                                ),
-                              ],
-                            ),
-                            Text(
-                              language
-                                  ? subDistrict.nameEn
-                                  : subDistrict.nameTh,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            const Text(
-                              'Postcode *',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: secondaryTextColor,
-                              ),
-                            ),
-                            Text(
-                              subDistrict.zipCode.toString(),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ]
-                        : [
-                            const Text(
-                              'Province',
-                              style: TextStyle(
-                                color: secondaryTextColor,
-                                fontSize: 13,
-                              ),
-                            ),
-                            Text(
-                              language
-                                  ? shopViewModel.shop.location.provinceEn
-                                  : shopViewModel.shop.location.provinceTh,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            const Text(
-                              'District',
-                              style: TextStyle(
-                                color: secondaryTextColor,
-                                fontSize: 13,
-                              ),
-                            ),
-                            Text(
-                              language
-                                  ? shopViewModel.shop.location.districtEn
-                                  : shopViewModel.shop.location.districtTh,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            const Text(
-                              'Sub District',
-                              style: TextStyle(
-                                color: secondaryTextColor,
-                                fontSize: 13,
-                              ),
-                            ),
-                            Text(
-                              language
-                                  ? shopViewModel.shop.location.subDistrictEn
-                                  : shopViewModel.shop.location.subDistrictTh,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            const Text(
-                              'Postcode',
-                              style: TextStyle(
-                                color: secondaryTextColor,
-                                fontSize: 13,
-                              ),
-                            ),
-                            Text(
-                              shopViewModel.shop.location.postCode.toString(),
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
+                                  );
+                                },
+                              ).toList();
+                            },
+                          ),
+                        ],
+                      ),
+                      Text(
+                        language ? subDistrict.nameEn : subDistrict.nameTh,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Postcode *',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: secondaryTextColor,
+                        ),
+                      ),
+                      Text(
+                        subDistrict.zipCode.toString(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 12),
                   _buildStep(
