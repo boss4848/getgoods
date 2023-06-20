@@ -43,6 +43,7 @@ class ShopViewModel {
         'name': name,
         'description': description,
         'location': {
+          'detail': location.detail,
           'province_th': location.provinceTh,
           'district_th': location.districtTh,
           'sub_district_th': location.subDistrictTh,
