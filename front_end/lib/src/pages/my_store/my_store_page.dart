@@ -75,9 +75,9 @@ class _MyStorePageState extends State<MyStorePage> {
             const OrderStatus(),
             _buildNavigation(
               name: 'Store Detail',
-              page: const StoreDetailPage(
-                  // shopId: widget.shopId,
-                  ),
+              page: StoreDetailPage(
+                shopId: widget.shopId,
+              ),
             ),
             _buildNavigation(
               name: 'Store Analytics',
