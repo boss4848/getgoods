@@ -31,8 +31,10 @@ class ShopDetail {
   final String name;
   final Location location;
   final String description;
+  final Owner owner;
 
   ShopDetail({
+    required this.owner,
     required this.id,
     required this.name,
     required this.location,
@@ -45,6 +47,7 @@ class ShopDetail {
       name: json['name'] ?? '',
       location: Location.fromJson(json['location'] ?? {}),
       description: json['description'] ?? '',
+      owner: Owner.fromJson(json['owner'] ?? {}),
     );
   }
 
@@ -54,6 +57,7 @@ class ShopDetail {
       name: '',
       location: Location.empty(),
       description: '',
+      owner: Owner.empty(),
     );
   }
 }
@@ -85,9 +89,9 @@ class Location {
       provinceEn: json['province_en'] ?? '',
       districtTh: json['district_th'] ?? '',
       districtEn: json['district_en'] ?? '',
-      subDistrictTh: json['subDistrict_th'] ?? '',
-      subDistrictEn: json['subDistrict_en'] ?? '',
-      postCode: json['postCode'] ?? '',
+      subDistrictTh: json['sub_district_th'] ?? '',
+      subDistrictEn: json['sub_district_en'] ?? '',
+      postCode: json['post_code'] ?? '',
       detail: json['detail'] ?? '',
     );
   }
@@ -102,6 +106,38 @@ class Location {
       subDistrictEn: '',
       postCode: '',
       detail: '',
+    );
+  }
+}
+
+class Owner {
+  final String id;
+  final String name;
+  final String email;
+  final String phoneNumber;
+
+  Owner({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phoneNumber,
+  });
+
+  factory Owner.fromJson(Map<String, dynamic> json) {
+    return Owner(
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
+    );
+  }
+
+  factory Owner.empty() {
+    return Owner(
+      id: '',
+      name: '',
+      email: '',
+      phoneNumber: '',
     );
   }
 }
