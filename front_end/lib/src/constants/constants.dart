@@ -1,11 +1,19 @@
-const defaultpadding = 20.0;
+import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+const defaultpadding = 12.0;
 
 class ApiConstants {
-  //ios simulator
-  static String baseUrl = 'http://127.0.0.1:8000/api/v1';
+  static String get baseUrl {
+    if (Platform.isIOS) {
+      return 'http://${dotenv.env['LOCAL_HOST']}:8000/api/v1';
+    } else if (Platform.isAndroid) {
+      return 'http://${dotenv.env['IP_ADDRESS']}:8000/api/v1';
+    } else {
+      return 'http://${dotenv.env['LOCAL_HOST']}:8000/api/v1';
+      // throw Exception('Unsupported platform');
+    }
+  }
 
-  //android emulator
-  /*static const String _ipAddress = '192.168.1.63';
-  static String baseUrl = 'http://$_ipAddress:8000/api/v1';
-  static String productsEndpoint = '/products';*/
+  static const String productsEndpoint = '/products';
 }
