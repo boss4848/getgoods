@@ -66,6 +66,7 @@ class Location {
   final String subDistrictTh;
   final String subDistrictEn;
   final String postCode;
+  final String detail;
 
   Location({
     required this.provinceTh,
@@ -75,6 +76,7 @@ class Location {
     required this.subDistrictTh,
     required this.subDistrictEn,
     required this.postCode,
+    required this.detail,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
@@ -86,6 +88,7 @@ class Location {
       subDistrictTh: json['subDistrict_th'] ?? '',
       subDistrictEn: json['subDistrict_en'] ?? '',
       postCode: json['postCode'] ?? '',
+      detail: json['detail'] ?? '',
     );
   }
 
@@ -98,6 +101,7 @@ class Location {
       subDistrictTh: '',
       subDistrictEn: '',
       postCode: '',
+      detail: '',
     );
   }
 }
