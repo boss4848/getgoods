@@ -1,13 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 
+import '../../common_widgets/error_page.dart';
+import '../../common_widgets/loading.dart';
+import '../../models/shop_model.dart';
+import '../../viewmodels/shop_viewmodel.dart';
 import '../register_shop/widgets/input_field.dart';
 
-class StoreDetailPage extends StatelessWidget {
-  const StoreDetailPage({super.key});
+class StoreDetailPage extends StatefulWidget {
+  final String shopId;
+  const StoreDetailPage({super.key, required this.shopId});
+
+  @override
+  State<StoreDetailPage> createState() => _StoreDetailPageState();
+}
+
+class _StoreDetailPageState extends State<StoreDetailPage> {
+  final ShopViewModel _shopViewModel = ShopViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchShopDetails();
+  }
+
+  Future<void> _fetchShopDetails() async {
+    await _shopViewModel.fetchShop(widget.shopId);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    final ShopDetail shop = _shopViewModel.shop;
+    if (_shopViewModel.state == ShopState.loading) {
+      return const Loading();
+    }
+
+    if (_shopViewModel.state == ShopState.error) {
+      return const ErrorPage(pageTitle: 'Store Detail');
+    }
     return Scaffold(
       backgroundColor: primaryBGColor,
       appBar: AppBar(
@@ -16,8 +47,8 @@ class StoreDetailPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildMerchantProfile(),
-            _buildWarehouseAddress(),
+            _buildMerchantProfile(shop),
+            _buildWarehouseAddress(shop),
             _buildBankAccount(context),
             const SizedBox(height: 200),
           ],
@@ -44,15 +75,33 @@ class StoreDetailPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 12, left: 12, right: 12),
-            child: Text(
-              'Bank Account',
-              style: TextStyle(
-                color: primaryTextColor,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+          Padding(
+            padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
+            child: Row(
+              children: [
+                const Text(
+                  'Bank Account',
+                  style: TextStyle(
+                    color: primaryTextColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    print('Edit');
+                  },
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 4),
@@ -70,81 +119,21 @@ class StoreDetailPage extends StatelessWidget {
           _buildSetInput(
             label: 'Account Number',
             value: '1234567890',
-            onSet: () {
-              // print('Set Account Number');
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return Container(
-                    //full screen height
-                    height: 800,
-                    // height: MediaQuery.of(context).size.height * 0.5,
-                    color: Colors.white,
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Set Account Number',
-                          style: TextStyle(
-                            color: primaryTextColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'This account number will be used for receiving money from the sale of your products.',
-                          style: TextStyle(
-                            color: secondaryTextColor,
-                            fontSize: 14,
-                            // fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        InputField(
-                          name: 'Account Number',
-                          isRequired: true,
-                          controller: TextEditingController(),
-                          isUnderline: true,
-                        ),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: const Text('Save'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'Account Name',
             value: 'บริษัท จำกัด',
-            onSet: () {
-              print('Set Account Name');
-            },
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'Bank Name',
             value: 'ธนาคาร กสิกรไทย จำกัด (มหาชน)',
-            onSet: () {
-              print('Set Bank Name');
-            },
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'Branch',
             value: 'สุขาภิบาล 5',
-            onSet: () {
-              print('Set Branch');
-            },
           ),
           const SizedBox(height: 12),
         ],
@@ -152,7 +141,7 @@ class StoreDetailPage extends StatelessWidget {
     );
   }
 
-  Container _buildWarehouseAddress() {
+  Container _buildWarehouseAddress(ShopDetail shop) {
     return Container(
       margin: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -170,23 +159,41 @@ class StoreDetailPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 12, left: 12, right: 12),
-            child: Text(
-              'Warehouse Address',
-              style: TextStyle(
-                color: primaryTextColor,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+            child: Row(
+              children: [
+                const Text(
+                  'Warehouse Address',
+                  style: TextStyle(
+                    color: primaryTextColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    print('Edit');
+                  },
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 4),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 8, left: 12, right: 12),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8, left: 12, right: 12),
             child: Text(
-              '19/1 หมู่ 2 ตำบล บางพูด อำเภอ พระประแดง จังหวัด สมุทรปราการ 10130',
-              style: TextStyle(
+              shop.location.detail,
+              style: const TextStyle(
                 color: grey,
                 fontSize: 14,
               ),
@@ -195,34 +202,22 @@ class StoreDetailPage extends StatelessWidget {
           _buildDivider(),
           _buildSetInput(
             label: 'Province',
-            value: 'Bangkok',
-            onSet: () {
-              print('Set Province');
-            },
+            value: shop.location.provinceEn,
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'District',
-            value: 'Bangkok',
-            onSet: () {
-              print('Set District');
-            },
+            value: shop.location.districtEn,
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'Sub-District',
-            value: 'Bangkok',
-            onSet: () {
-              print('Set Sub-District');
-            },
+            value: shop.location.subDistrictEn,
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'Postal Code',
-            value: '10130',
-            onSet: () {
-              print('Set Postal Code');
-            },
+            value: shop.location.postCode,
           ),
           const SizedBox(height: 12),
         ],
@@ -230,7 +225,7 @@ class StoreDetailPage extends StatelessWidget {
     );
   }
 
-  Container _buildMerchantProfile() {
+  Container _buildMerchantProfile(ShopDetail shop) {
     return Container(
       margin: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -248,15 +243,37 @@ class StoreDetailPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 12, left: 12, right: 12),
-            child: Text(
-              'Merchant Profile',
-              style: TextStyle(
-                color: primaryTextColor,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 12,
+              left: 12,
+              right: 12,
+            ),
+            child: Row(
+              children: [
+                const Text(
+                  'Merchant Profile',
+                  style: TextStyle(
+                    color: primaryTextColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    print('Edit');
+                  },
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 4),
@@ -273,18 +290,19 @@ class StoreDetailPage extends StatelessWidget {
           _buildDivider(),
           _buildSetInput(
             label: 'Name and Surname',
-            value: 'Passakorn Puttama',
-            onSet: () {
-              print('Set Name and Surname');
-            },
+            value: shop.owner.name,
+          ),
+          _buildDivider(),
+          _buildSetInput(
+            label: 'Email',
+            value: shop.owner.email,
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'Phone Number',
-            value: '0812345678',
-            onSet: () {
-              print('Set Phone Number');
-            },
+            value: shop.owner.phoneNumber == ''
+                ? 'Not Set'
+                : shop.owner.phoneNumber,
           ),
           const SizedBox(height: 12),
         ],
@@ -292,51 +310,35 @@ class StoreDetailPage extends StatelessWidget {
     );
   }
 
-  GestureDetector _buildSetInput({
+  _buildSetInput({
     required String label,
     required String value,
-    required Function onSet,
   }) {
-    return GestureDetector(
-      onTap: () => onSet(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 6,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    color: primaryTextColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    color: secondaryTextColor,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 6,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: primaryTextColor,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
-            const Text(
-              'Set >',
-              style: TextStyle(
-                color: grey,
-              ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: const TextStyle(
+              color: secondaryTextColor,
+              fontSize: 14,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
