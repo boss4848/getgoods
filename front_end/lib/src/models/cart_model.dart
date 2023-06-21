@@ -1,5 +1,6 @@
 class CartDetail {
   final String name;
+  final String shop;
   final String description;
   final int quantity;
   final double price;
@@ -7,6 +8,7 @@ class CartDetail {
 
   CartDetail({
     required this.name,
+    required this.shop,
     required this.description,
     required this.quantity,
     required this.price,

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-
 import '../../../constants/colors.dart';
 
-class BottomBar extends StatelessWidget {
-  const BottomBar({super.key});
+class CustomBar extends StatelessWidget {
+  const CustomBar({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: 60,
       width: double.infinity,
       decoration: BoxDecoration(
         boxShadow: [
@@ -18,87 +17,114 @@ class BottomBar extends StatelessWidget {
             blurRadius: 10,
           ),
         ],
-        // color: Colors.green,
       ),
       child: Row(
         children: [
-          Container(
-            height: 80,
-            color: primaryBGColor,
-            width: 200,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                SizedBox(width: 10),
-                // Checkbox(value: value, onChanged: onChanged),
-                Text(
-                  'Select All',
-                  style: TextStyle(
-                    color: primaryColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+          SelectAllButton(), // Use the custom SelectAllButton widget
+          const Expanded(
+            child: CheckOutButton(),
           ),
-          Expanded(
-            child: Container(
-              height: 80,
-              color: primaryColor,
-              child: const Center(
-                child: Text(
-                  'Check Out',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );
   }
 }
 
-class SelectAllButton extends StatelessWidget {
-  final bool isSelected;
-  final VoidCallback onPressed;
+class SelectAllButton extends StatefulWidget {
+  @override
+  _SelectAllButtonState createState() => _SelectAllButtonState();
+}
 
-  const SelectAllButton({
-    required this.isSelected,
-    required this.onPressed,
-  });
+class _SelectAllButtonState extends State<SelectAllButton> {
+  bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed,
+      onTap: () {
+        setState(() {
+          isSelected = !isSelected;
+        });
+      },
       child: Container(
         height: 80,
-        width: 200,
-        color: isSelected ? Colors.green : Colors.white,
+        width: 250,
+        color: isSelected ? primaryBGColor : Colors.white,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Checkbox(
-              value: isSelected,
-              onChanged: (value) => onPressed(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Checkbox(
+                    value: isSelected,
+                    onChanged: (value) {
+                      setState(() {
+                        isSelected = value ?? false;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  'Select All',
+                  style: TextStyle(
+                    color: isSelected ? primaryColor : Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            Text(
-              'Select All',
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.only(right: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                      '฿ 100'), //To show total price of all products that have been selected.
+                  Text('Total'),
+                ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CheckOutButton extends StatelessWidget {
+  const CheckOutButton({Key? key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 80,
+      width: 200,
+      color: primaryColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Text(
+            'Check Out',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            ' (' '0' ') ',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 19,
+              fontWeight: FontWeight.bold,
+            ),
+          ) //To show quantity of all products that have been selected
+        ],
       ),
     );
   }

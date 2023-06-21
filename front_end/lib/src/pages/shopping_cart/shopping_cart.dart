@@ -18,11 +18,9 @@ class ShoppingCart extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: const [ProductInCart()],
-      ),
+      body: const ProductInCart(),
       bottomNavigationBar: const BottomAppBar(
-        child: BottomBar(),
+        child: CustomBar(),
       ),
     );
   }
