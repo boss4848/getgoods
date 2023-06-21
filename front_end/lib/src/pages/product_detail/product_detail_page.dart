@@ -1,9 +1,11 @@
 import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/product_model.dart';
+
 import '../../common_widgets/custom_app_bar.dart';
 import '../../models/review_model.dart';
 import '../../utils/format.dart';
@@ -191,7 +193,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                           ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            product.shop.location,
+                                            '${product.shop.location.provinceEn}, ${product.shop.location.districtEn}',
                                             style: const TextStyle(
                                               fontSize: 14,
                                               color: Color(0xFF9B9B9B),
@@ -268,6 +270,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 300),
                       // Container(
                       //   color: Colors.red,
                       //   height: 1000,

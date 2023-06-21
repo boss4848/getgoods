@@ -26,7 +26,7 @@ class BannerSection extends StatefulWidget {
 class _BannerSliderState extends State<BannerSection> {
   final List<String> _imageList = [
     "assets/images/banner_1.jpg",
-    "assets/images/banner_1.jpg",
+    "assets/images/banner_2.jpg",
     "assets/images/banner_1.jpg",
     "assets/images/banner_1.jpg",
     "assets/images/banner_1.jpg",
@@ -63,7 +63,7 @@ class _BannerSliderState extends State<BannerSection> {
 
   Container _buildBanner() => Container(
         width: double.infinity,
-        // height: 200,
+        // height: 300,
         // margin: const EdgeInsets.only(bottom: 65),
         child: CarouselSlider(
           options: CarouselOptions(

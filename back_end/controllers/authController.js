@@ -29,7 +29,7 @@ exports.signup = catchAsync(async (req, res, next) => {
             user: newUser
         }
     });
-});
+}); 1
 
 exports.login = catchAsync(async (req, res, next) => {
     const email = req.body.email;
@@ -40,8 +40,14 @@ exports.login = catchAsync(async (req, res, next) => {
     }
     //Check if user exists && password is correct
     const user = await User.findOne({ email }).select('+password');
+
+    if (!user) {
+        return next(new AppError('Incorrect email or password', 401));
+    }
+
     const correct = await user.correctPassword(password, user.password);
-    if (!user || !correct) {
+
+    if (!correct) {
         return next(new AppError('Incorrect email or password', 401));
     }
     //If everything ok, send token to client
@@ -54,6 +60,7 @@ exports.login = catchAsync(async (req, res, next) => {
         }
     });
 });
+
 
 exports.protect = catchAsync(async (req, res, next) => {
     //Getting token and check if it's there

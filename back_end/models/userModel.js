@@ -48,19 +48,19 @@ const userSchema = new mongoose.Schema({
         maxlength: [100, 'A user address must have less or equal then 100 characters'],
         minlength: [10, 'A user address must have more or equal then 10 characters'],
     },
-    cart: {
-        type: Array,
-        default: []
-    },
-    history: {
-        type: Array,
-        default: []
-    },
+    // cart: {
+    //     type: Array,
+    //     default: []
+    // },
+    // history: {
+    //     type: Array,
+    //     default: []
+    // },
     passwordChangedAt: Date,
-    shop: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Shop',
-    },
+    // shop: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Shop',
+    // },
 },
     {
         timestamps: true,
@@ -69,6 +69,12 @@ const userSchema = new mongoose.Schema({
     },
     this.collection = 'users'
 );
+
+userSchema.virtual('shop', {
+    ref: 'Shop',
+    localField: '_id',
+    foreignField: 'owner'
+});
 
 userSchema.pre('save', function (next) {
     // Only run this function if password was actually modified

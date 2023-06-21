@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/constants/colors.dart';
 import '../Messages/messages_page.dart';
 import '../category/category_page.dart';
 import '../../models/menu_model.dart';
@@ -21,7 +22,8 @@ class _MyWidgetState extends State<MainPage> {
     return DefaultTabController(
       length: _menuViewModel.length,
       child: Scaffold(
-        backgroundColor: Colors.green,
+        // backgroundColor: Colors.green,
+        backgroundColor: secondaryBGColor,
         body: IndexedStack(
           index: _selectedIndex,
           children: [
