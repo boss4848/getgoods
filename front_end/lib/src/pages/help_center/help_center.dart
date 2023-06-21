@@ -44,14 +44,16 @@ class _HelpCenterState extends State<HelpCenterPage> {
           ),
           title: const Text('GetGoods Help Center'),
         ),
-        body: Column(
-          children: [
-            _FQA(),
-            const SizedBox(
-              height: 10,
-            ),
-            _ContactUs(),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              _FQA(),
+              const SizedBox(
+                height: 10,
+              ),
+              _ContactUs(),
+            ],
+          ),
         ));
   }
 
