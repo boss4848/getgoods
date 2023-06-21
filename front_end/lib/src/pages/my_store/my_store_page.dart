@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/common_widgets/error_page.dart';
+import 'package:getgoods/src/common_widgets/loading.dart';
 import 'package:getgoods/src/pages/my_store/widgets/order_status.dart';
 import 'package:getgoods/src/pages/my_store/widgets/product_list.dart';
 import 'package:getgoods/src/pages/store_analytics/store_analytics.dart';
@@ -41,9 +43,11 @@ class _MyStorePageState extends State<MyStorePage> {
 
   _getShopDetail() async {
     // print('fetching shop detail');
-    final res = await shopViewModel.fetchShop(
+    await shopViewModel.fetchShop(
       widget.shopId,
     );
+    setState(() {});
+    // print('fetching shop detail: ${shopViewModel.shop.products.length}');
     // log(res);
     // log(shopViewModel.shopDetail.name);
   }
@@ -51,15 +55,21 @@ class _MyStorePageState extends State<MyStorePage> {
   @override
   Widget build(BuildContext context) {
     // ShopDetail shop = shopViewModel.shop;
-    // ShopState shopState = shopViewModel.state;
-
+    if (shopViewModel.state == ShopState.loading) {
+      return const Loading();
+    }
+    if (shopViewModel.state == ShopState.error) {
+      return const ErrorPage(pageTitle: 'My Store');
+    }
     return Scaffold(
       backgroundColor: primaryBGColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const AddProductPage(),
+              builder: (context) => AddProductPage(
+                shopId: widget.shopId,
+              ),
             ),
           );
         },
@@ -84,7 +94,10 @@ class _MyStorePageState extends State<MyStorePage> {
               page: const StoreAnalyticsPage(),
               last: true,
             ),
-            const ProductList(),
+            ProductList(
+              products: shopViewModel.shop.products,
+              shopId: widget.shopId,
+            ),
             const SizedBox(height: 400),
           ],
         ),
