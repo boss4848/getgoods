@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 // import 'package:getgoods/src/services/api_service.dart';
+import '../../../constants/colors.dart';
 import '../../../models/product_model.dart';
 import '../../../utils/format.dart';
 import '../../../viewmodels/product_viewmodel.dart';
@@ -40,7 +41,7 @@ class _ProductLoadMoreState extends State<ShowProduct> {
             height: 600,
             child: const Center(
               child: CircularProgressIndicator(
-                color: Colors.green,
+                color: primaryColor,
               ),
             ),
           )
@@ -62,7 +63,7 @@ class _ProductLoadMoreState extends State<ShowProduct> {
         child: const Text(
           "Recommended",
           style: TextStyle(
-            color: Colors.green,
+            color: primaryColor,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -158,7 +159,7 @@ class ProductItemCard extends StatelessWidget {
             fit: BoxFit.cover,
             placeholder: (context, url) => const Center(
               child: CircularProgressIndicator(
-                color: Colors.green,
+                color: primaryColor,
               ),
             ),
             errorWidget: (context, url, error) {
@@ -190,7 +191,7 @@ class ProductItemCard extends StatelessWidget {
               Text(
                 "${product.discount}%",
                 style: const TextStyle(
-                  color: Colors.green,
+                  color: primaryColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 11,
                 ),
@@ -198,7 +199,7 @@ class ProductItemCard extends StatelessWidget {
               const Text(
                 "OFF",
                 style: TextStyle(
-                  color: Colors.green,
+                  color: primaryColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 10,
                 ),
@@ -240,7 +241,7 @@ class ProductItemCard extends StatelessWidget {
         text: TextSpan(
           text: '฿ ',
           style: const TextStyle(
-            color: Colors.green,
+            color: primaryColor,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
@@ -276,7 +277,7 @@ class BottomLoader extends StatelessWidget {
         child: Text(
           "Loading...",
           style: TextStyle(
-            color: Colors.green,
+            color: primaryColor,
             fontWeight: FontWeight.w500,
           ),
         ),

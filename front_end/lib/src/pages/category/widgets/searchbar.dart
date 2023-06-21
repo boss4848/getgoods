@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/constants/colors.dart';
 
 class SearchBar extends StatelessWidget {
   const SearchBar({super.key});
@@ -7,7 +8,7 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.green,
+      color: primaryColor,
       child: SafeArea(
         bottom: false,
         child: Padding(
@@ -50,7 +51,7 @@ class SearchBar extends StatelessWidget {
         child: const TextField(
           style: TextStyle(
             fontSize: 18,
-            color: Colors.green,
+            color: primaryColor,
           ),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(4),
@@ -60,11 +61,11 @@ class SearchBar extends StatelessWidget {
             hintText: "Getgoods",
             hintStyle: TextStyle(
               fontSize: 18,
-              color: Colors.green,
+              color: primaryColor,
             ),
             prefixIcon: Icon(
               CupertinoIcons.search,
-              color: Colors.green,
+              color: primaryColor,
             ),
             prefixIconConstraints: sizeIcon,
             filled: true,
