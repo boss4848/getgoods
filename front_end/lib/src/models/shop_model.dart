@@ -1,3 +1,5 @@
+import 'product_model.dart';
+
 class Shop {
   final String id;
   final String name;
@@ -32,6 +34,7 @@ class ShopDetail {
   final Location location;
   final String description;
   final Owner owner;
+  final List<Product> products;
 
   ShopDetail({
     required this.owner,
@@ -39,6 +42,7 @@ class ShopDetail {
     required this.name,
     required this.location,
     required this.description,
+    required this.products,
   });
 
   factory ShopDetail.fromJson(Map<String, dynamic> json) {
@@ -48,6 +52,14 @@ class ShopDetail {
       location: Location.fromJson(json['location'] ?? {}),
       description: json['description'] ?? '',
       owner: Owner.fromJson(json['owner'] ?? {}),
+      products: (json['products'] as List<dynamic>?)
+              ?.map((e) => Product.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      // products: (json['products'] as List<dynamic>?)
+      //         ?.map((e) => ProductDetail.fromJson(e as Map<String, dynamic>))
+      //         .toList() ??
+      //     [],
     );
   }
 
@@ -58,6 +70,7 @@ class ShopDetail {
       location: Location.empty(),
       description: '',
       owner: Owner.empty(),
+      products: [],
     );
   }
 }
@@ -115,12 +128,16 @@ class Owner {
   final String name;
   final String email;
   final String phoneNumber;
+  final String photo;
+  final String address;
 
   Owner({
     required this.id,
     required this.name,
     required this.email,
     required this.phoneNumber,
+    required this.photo,
+    required this.address,
   });
 
   factory Owner.fromJson(Map<String, dynamic> json) {
@@ -129,6 +146,8 @@ class Owner {
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
+      photo: json['photo'] ?? '',
+      address: json['address'] ?? '',
     );
   }
 
@@ -138,6 +157,8 @@ class Owner {
       name: '',
       email: '',
       phoneNumber: '',
+      photo: '',
+      address: '',
     );
   }
 }
