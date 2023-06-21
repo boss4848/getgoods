@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/viewmodels/category_viewmodel.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../constants/colors.dart';
 
 class ProductManage extends StatefulWidget {
@@ -36,76 +36,46 @@ class _ProductManagePageState extends State<ProductManage> {
   final _productPrice = TextEditingController();
   final _productQuantity = TextEditingController();
 
-  PickedFile? _pickedImage;
-  final _imagePicker = ImagePicker();
-  late String _tempImagePath;
-  Future<void> pickImage() async {
-    loadingDialog(context);
-    final pickedImage = await _imagePicker.pickImage(
+  //Sending image to server
+  String _imagePath = '';
+
+  Future<void> _getImageFromGallery() async {
+    final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
-      imageQuality: 50,
     );
-    if (pickedImage != null) {
-      final imageBytes = await pickedImage.readAsBytes();
-      final image = img.decodeImage(imageBytes);
-      final convertedImage = img.encodeJpg(
-        image!,
-        quality: 85,
-      ); // Convert to JPEG
-
+    if (pickedFile != null) {
       setState(() {
-        _pickedImage = PickedFile(pickedImage.path); // Update the picked file
+        _imagePath = pickedFile.path;
       });
-
-      // Save the converted image to a temporary file
-      final tempDir = await getTemporaryDirectory();
-      final tempPath = '${tempDir.path}/converted_image.jpg';
-      File(tempPath).writeAsBytesSync(convertedImage);
-
-      Navigator.pop(context);
-
-      print('_pickedImage: $_pickedImage'); // Debug statement
-
-      // Assign the temporary path to a member variable
-      _tempImagePath = tempPath;
-    } else {
-      print('No image picked'); // Debug statement
     }
   }
 
-  Future<void> uploadImageCover() async {
-    // Create Dio instance
-    Dio dio = Dio();
-
-    // Create FormData object and add the image file
-    FormData formData = FormData.fromMap({
-      'imageCover': await MultipartFile.fromFile(_tempImagePath,
-          filename: 'converted_image.jpg'),
-    });
-
-    try {
-      // final String? token = await _getToken();
-      // _setAuthToken(token);
-      // print('Token: $token');
-      // Auth
-      final String? token = await _getToken();
-
-      // Make POST request with FormData
-      Response response = await dio.patch(
-        options: Options(
-          headers: Map.fromEntries([
-            MapEntry('Authorization', 'Bearer $token'),
-          ]),
-        ),
+  Future<void> _uploadImage(File imageFile) async {
+    final String? token = await _getToken();
+    var request = http.MultipartRequest(
+      'PATCH',
+      Uri.parse(
         '${ApiConstants.baseUrl}/shops/${widget.shopId}/products/${widget.productId}',
-        data: formData,
-      );
-      // Handle the response as needed
-      print('Response: ${response.data}');
-    } on DioException catch (error) {
-      // Handle the error
-      print('Error: $error');
-      print('message: ${error.message}');
+      ),
+    );
+    request.headers['Authorization'] = 'Bearer $token';
+
+    request.files.add(await http.MultipartFile.fromPath(
+      'imageCover',
+      imageFile.path,
+      contentType: MediaType('image', 'jpeg'),
+    ));
+
+    var response = await request.send();
+    log(response.statusCode.toString());
+    // log(response.data.toString());
+    log(response.request.toString());
+    log(response.stream.toString());
+
+    if (response.statusCode == 200) {
+      print('Image uploaded successfully');
+    } else {
+      print('Image upload failed with status code ${response.statusCode}');
     }
   }
 
@@ -160,7 +130,7 @@ class _ProductManagePageState extends State<ProductManage> {
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        if (_pickedImage != null)
+                        if (_imagePath != '')
                           GestureDetector(
                             onTap: () {
                               showDialog(
@@ -168,7 +138,7 @@ class _ProductManagePageState extends State<ProductManage> {
                                 builder: (BuildContext context) {
                                   return Dialog(
                                     child: Image.file(
-                                      File(_pickedImage!.path),
+                                      File(_imagePath),
                                       fit: BoxFit.cover,
                                     ),
                                   );
@@ -186,7 +156,7 @@ class _ProductManagePageState extends State<ProductManage> {
                                 ],
                               ),
                               child: Image.file(
-                                File(_pickedImage!.path),
+                                File(_imagePath),
                                 height: 90,
                                 width: 90,
                                 fit: BoxFit.cover,
@@ -194,7 +164,7 @@ class _ProductManagePageState extends State<ProductManage> {
                             ),
                           ),
                         SizedBox(
-                          width: _pickedImage == null ? 0 : 12,
+                          width: _imagePath == '' ? 0 : 12,
                         ),
                         Container(
                           height: 90,
@@ -208,10 +178,10 @@ class _ProductManagePageState extends State<ProductManage> {
                               backgroundColor: grey,
                             ),
                             onPressed: () {
-                              pickImage();
+                              _getImageFromGallery();
                             },
                             child: Text(
-                              _pickedImage == null
+                              _imagePath == ''
                                   ? 'Upload Image'
                                   : 'Change Image',
                               textAlign: TextAlign.center,
@@ -229,7 +199,9 @@ class _ProductManagePageState extends State<ProductManage> {
               child: ElevatedButton(
                 onPressed: () {
                   log('uploading image');
-                  uploadImageCover();
+                  _uploadImage(
+                    File(_imagePath),
+                  );
                 },
                 child: const Text('Update Image'),
               ),
