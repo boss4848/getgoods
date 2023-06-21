@@ -62,7 +62,7 @@ shopSchema.virtual('products', {
 shopSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'owner',
-        select: 'name email phone'
+        // select: 'name email phone'
     });
     next();
 });
