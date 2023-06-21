@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:getgoods/src/constants/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/product_model.dart';
 
@@ -49,5 +52,33 @@ class ProductViewModel {
       print('Error fetching products: $e');
       state = ProductState.error;
     }
+  }
+
+  Future<void> upLoadImage(File file) async {
+    final String? token = await _getToken();
+    _setAuthToken(token);
+
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'image': await MultipartFile.fromFile(file.path, filename: fileName),
+    });
+    try {
+      _dio.patch('${ApiConstants.baseUrl}/products', data: formData);
+    } on DioException catch (e) {
+      print('Error uploading image: $e');
+      print('message: ${e.message}');
+    }
+  }
+
+  Future<String?> _getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  void _setAuthToken(String? token) {
+    if (token == null) {
+      throw Exception('No token found');
+    }
+    _dio.options.headers['Authorization'] = 'Bearer $token';
   }
 }
