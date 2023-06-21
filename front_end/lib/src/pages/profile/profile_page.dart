@@ -421,57 +421,9 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const AddressDetailPage()),
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 16,
-                          ),
-                          width: double.infinity,
-                          color: primaryBGColor,
-                          child: Row(
-                            children: const [
-                              Icon(
-                                Icons.location_on,
-                                color: primaryColor,
-                                size: 28,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'My Address',
-                                style: TextStyle(
-                                  color: primaryTextColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Spacer(),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: grey,
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: defaultpadding,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const BankInfoPage()),
+                                builder: (context) => BankInfoPage(
+                                      shopId: userDetail.shop.id,
+                                    )),
                           );
                         },
                         child: Container(
