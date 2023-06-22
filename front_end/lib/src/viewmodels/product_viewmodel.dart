@@ -1,6 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:getgoods/src/common_widgets/loading_dialog.dart';
 import 'package:getgoods/src/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,6 +38,85 @@ class ProductViewModel {
     } catch (e) {
       print('Error fetching products: $e');
       state = ProductState.error;
+    }
+  }
+
+  Future<String> updateDiscount({
+    required String shopId,
+    required String productId,
+    required String discount,
+    required BuildContext context,
+  }) async {
+    loadingDialog(context);
+    final String? token = await _getToken();
+    _setAuthToken(token);
+
+    String updateStockUrl =
+        '${ApiConstants.baseUrl}/shops/$shopId/products/$productId';
+    try {
+      await _dio.patch(updateStockUrl, data: {'discount': discount});
+
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+      return 'success';
+    } on DioException catch (e) {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(e.message!),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            )
+          ],
+        ),
+      );
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+      return 'error';
+    }
+  }
+
+  Future<String> updateStock({
+    required String shopId,
+    required String productId,
+    required String stock,
+    required BuildContext context,
+  }) async {
+    loadingDialog(context);
+    final String? token = await _getToken();
+    _setAuthToken(token);
+
+    String updateStockUrl =
+        '${ApiConstants.baseUrl}/shops/$shopId/products/$productId';
+    try {
+      log('stock: ' + stock);
+      await _dio.patch(updateStockUrl, data: {'quantity': stock});
+
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+      return 'success';
+    } on DioException catch (e) {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(e.message!),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            )
+          ],
+        ),
+      );
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+      return 'error';
     }
   }
 
