@@ -65,12 +65,18 @@ class _MyStorePageState extends State<MyStorePage> {
       backgroundColor: primaryBGColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
+          Navigator.of(context)
+              .push(
             MaterialPageRoute(
               builder: (context) => AddProductPage(
                 shopId: widget.shopId,
               ),
             ),
+          )
+              .then(
+            (_) {
+              _getShopDetail();
+            },
           );
         },
         child: const Icon(Icons.add),
@@ -97,6 +103,7 @@ class _MyStorePageState extends State<MyStorePage> {
             ProductList(
               products: shopViewModel.shop.products,
               shopId: widget.shopId,
+              fetchData: _getShopDetail,
             ),
             const SizedBox(height: 400),
           ],
