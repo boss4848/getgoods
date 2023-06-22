@@ -27,9 +27,19 @@ router
     .patch(
         authController.protect,
         productController.setShopIds,
-        shopController.restrictToOwner,
-        productController.uploadProductImages,
-        productController.resizeProductImages,
+        // shopController.restrictToOwner,
+        productController.uploadProductImage,
+        (req, res, next) => {
+            console.log(req.body);
+            console.log(req.file);
+            next();
+        },
+        productController.resizeProductImage,
+        (req, res, next) => {
+            console.log(req.body);
+            console.log(req.file);
+            next();
+        },
         productController.updateProduct
     )
     .delete(
