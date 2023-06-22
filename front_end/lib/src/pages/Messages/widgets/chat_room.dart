@@ -118,42 +118,62 @@ class _ChatRoomState extends State<ChatRoom> {
                   ),
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return Container(
-                      //max width of message container 70% of screen width
-                      // width: MediaQuery.of(context).size.width * 0.7,
-                      margin: EdgeInsets.only(
-                        left:
-                            messages[index].messageType == "receiver" ? 0 : 50,
-                        right:
-                            messages[index].messageType == "receiver" ? 50 : 0,
-                      ),
-                      padding: const EdgeInsets.only(
-                        left: 14,
-                        right: 14,
-                        top: 10,
-                        bottom: 10,
-                      ),
-                      child: Align(
-                        alignment: (messages[index].messageType == "receiver"
-                            ? Alignment.topLeft
-                            : Alignment.topRight),
-                        //Size of text each message
-                        //ConstrainedBox [no need, why?]
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: (messages[index].messageType == "receiver"
-                                ? Colors.grey.shade200
-                                : Colors.green[200]),
+                    return Column(
+                      children: [
+                        Container(
+                          //max width of message container 70% of screen width
+                          // width: MediaQuery.of(context).size.width * 0.7,
+                          margin: EdgeInsets.only(
+                            left: messages[index].messageType == "receiver"
+                                ? 0
+                                : 50,
+                            right: messages[index].messageType == "receiver"
+                                ? 50
+                                : 0,
                           ),
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            messages[index].message,
-                            style: const TextStyle(fontSize: 15),
+                          padding: const EdgeInsets.only(
+                            left: 14,
+                            right: 14,
+                            top: 10,
+                            bottom: 10,
                           ),
-                          //time
+                          child: Align(
+                            alignment:
+                                (messages[index].messageType == "receiver"
+                                    ? Alignment.topLeft
+                                    : Alignment.topRight),
+                            //Size of text each message
+                            //ConstrainedBox [no need, why?]
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color:
+                                    (messages[index].messageType == "receiver"
+                                        ? Colors.grey.shade200
+                                        : Colors.green[200]),
+                              ),
+                              padding: const EdgeInsets.all(16),
+                              child: Text(
+                                messages[index].message,
+                                style: const TextStyle(fontSize: 15),
+                              ),
+                              //timestamp
+                            ),
+                          ),
                         ),
-                      ),
+                        // const SizedBox(height: 2),
+                        Container(
+                          padding: const EdgeInsets.only(right: 14),
+                          alignment: Alignment.bottomRight,
+                          child: Text(
+                            messages[index].timestamp,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ],
                     );
                   }, //itembuilder
                 ),
