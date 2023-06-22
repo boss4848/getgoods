@@ -5,7 +5,6 @@ import 'package:getgoods/src/models/chat_message_model.dart';
 import 'package:getgoods/src/models/user_model.dart';
 
 class ChatRoom extends StatefulWidget {
-  //final UserDetail userDetail;
   const ChatRoom({Key? key}) : super(key: key);
 
   @override
@@ -13,10 +12,16 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  //late final UserDetail userDetail;
+  final ScrollController _scrollController = ScrollController();
   final TextEditingController _controller = TextEditingController();
   List<ChatMessage> messages = [];
   bool _isEmpty = false;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void _handleSubmitted(String text) {
     var timestamp = DateTime.now().toString().substring(10, 16);
@@ -32,6 +37,11 @@ class _ChatRoomState extends State<ChatRoom> {
         ),
       );
       _controller.clear();
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     });
   }
 
@@ -44,7 +54,6 @@ class _ChatRoomState extends State<ChatRoom> {
         backgroundColor: Colors.white,
         flexibleSpace: SafeArea(
           child: Container(
-            // color: Colors.amber,
             padding: const EdgeInsets.only(right: 16),
             child: Row(
               children: [
@@ -97,87 +106,69 @@ class _ChatRoomState extends State<ChatRoom> {
       ),
       body: Stack(
         alignment: Alignment.bottomCenter,
-        // alignment: Al,
         children: [
           Container(
             height: double.infinity,
             color: Colors.green[100],
-            // color: secondaryBGColor,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 10,
-                  bottom: 100,
-                ),
-                child: ListView.builder(
-                  itemCount: messages.length,
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Container(
-                          //max width of message container 70% of screen width
-                          // width: MediaQuery.of(context).size.width * 0.7,
-                          margin: EdgeInsets.only(
-                            left: messages[index].messageType == "receiver"
-                                ? 0
-                                : 50,
-                            right: messages[index].messageType == "receiver"
-                                ? 50
-                                : 0,
-                          ),
-                          padding: const EdgeInsets.only(
-                            left: 14,
-                            right: 14,
-                            top: 10,
-                            bottom: 10,
-                          ),
-                          child: Align(
-                            alignment:
-                                (messages[index].messageType == "receiver"
-                                    ? Alignment.topLeft
-                                    : Alignment.topRight),
-                            //Size of text each message
-                            //ConstrainedBox [no need, why?]
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color:
-                                    (messages[index].messageType == "receiver"
-                                        ? Colors.grey.shade200
-                                        : Colors.green[200]),
-                              ),
-                              padding: const EdgeInsets.all(16),
-                              child: Text(
-                                messages[index].message,
-                                style: const TextStyle(fontSize: 15),
-                              ),
-                              //timestamp
-                            ),
-                          ),
-                        ),
-                        // const SizedBox(height: 2),
-                        Container(
-                          padding: const EdgeInsets.only(right: 14),
-                          alignment: Alignment.bottomRight,
-                          child: Text(
-                            messages[index].timestamp,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ],
+            child: ListView.builder(
+              itemCount: messages.length + 1,
+              controller: _scrollController,
+              padding: const EdgeInsets.only(top: 10, bottom: 100),
+              itemBuilder: (context, index) {
+                //last message
+                if (index == messages.length) {
+                  return Container(
+                    height: 100,
                     );
-                  }, //itembuilder
-                ),
-              ),
+                }
+                return Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(
+                        left:
+                            messages[index].messageType == "receiver" ? 0 : 50,
+                        right:
+                            messages[index].messageType == "receiver" ? 50 : 0,
+                      ),
+                      padding: const EdgeInsets.only(
+                        left: 14,
+                        right: 14,
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      child: Align(
+                        alignment: messages[index].messageType == "receiver"
+                            ? Alignment.topLeft
+                            : Alignment.topRight,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: messages[index].messageType == "receiver"
+                                ? Colors.grey.shade200
+                                : Colors.green[200],
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            messages[index].message,
+                            style: const TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(right: 14),
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        messages[index].timestamp,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           Container(
@@ -196,12 +187,10 @@ class _ChatRoomState extends State<ChatRoom> {
               bottom: 10,
               top: 10,
             ),
-            // height: 100,
             child: SafeArea(
               child: Row(
                 children: [
                   GestureDetector(
-                    //send image file
                     onTap: () {},
                     child: Container(
                       height: 40,
@@ -238,13 +227,9 @@ class _ChatRoomState extends State<ChatRoom> {
                       ),
                     ),
                   ),
-                  // const SizedBox(
-                  //   width: 15,
-                  // ),
                   SizedBox(
                     height: 40,
                     child: FloatingActionButton(
-                      //send message
                       onPressed: _isEmpty
                           ? () => _handleSubmitted(_controller.text)
                           : null,
