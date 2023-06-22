@@ -4,13 +4,17 @@ import 'package:getgoods/src/pages/help_center/widgets/IssueType.dart';
 class HelpCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HelpCenterPage(),
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.green,
-      )),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context); // Handles the back button press
+          },
+        ),
+        title: const Text('GetGoods Help Center'),
+      ),
+      body: HelpCenterPage(),
     );
   }
 }
@@ -34,27 +38,17 @@ class _HelpCenterState extends State<HelpCenterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.pop(context); // Handles the back button press
-            },
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _FQA(),
+          const SizedBox(
+            height: 10,
           ),
-          title: const Text('GetGoods Help Center'),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _FQA(),
-              const SizedBox(
-                height: 10,
-              ),
-              _ContactUs(),
-            ],
-          ),
-        ));
+          _ContactUs(),
+        ],
+      ),
+    );
   }
 
   Container _FQA() {
