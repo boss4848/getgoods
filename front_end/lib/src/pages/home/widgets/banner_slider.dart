@@ -27,21 +27,12 @@ class _BannerSliderState extends State<BannerSection> {
   final List<String> _imageList = [
     "assets/images/banner_1.jpg",
     "assets/images/banner_2.jpg",
-    "assets/images/banner_1.jpg",
-    "assets/images/banner_1.jpg",
-    "assets/images/banner_1.jpg",
-    "assets/images/banner_1.jpg",
-    "assets/images/banner_1.jpg",
-    "assets/images/banner_1.jpg",
-
-    // "assets/images/banner_1.jpg",
-    // "assets/images/banner_2.jpg",
-    // "assets/images/banner_3.jpg",
-    // "assets/images/banner_4.jpg",
-    // "assets/images/banner_5.jpg",
-    // "assets/images/banner_6.jpg",
-    // "assets/images/banner_7.jpg",
-    // "assets/images/banner_8.jpg",
+    "assets/images/banner_3.jpg",
+    "assets/images/banner_4.jpg",
+    "assets/images/banner_5.jpg",
+    "assets/images/banner_6.jpg",
+    "assets/images/banner_7.jpg",
+    "assets/images/banner_8.jpg",
   ];
 
   late int _currentImageIndex;
