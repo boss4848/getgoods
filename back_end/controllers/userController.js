@@ -88,7 +88,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 exports.getMe = catchAsync(async (req, res, next) => {
     // Get the current user
     const user = await User.findById(req.user.id).populate('shop');
-
+    //const user = await User.findById(req.user.id).select('');
     // Retrieve the file URL from Azure Blob Storage
     const fileUrl = `https://getgoods.blob.core.windows.net/user-photos/${user.photo}`;
 
@@ -105,3 +105,5 @@ exports.getMe = catchAsync(async (req, res, next) => {
         }
     });
 });
+
+

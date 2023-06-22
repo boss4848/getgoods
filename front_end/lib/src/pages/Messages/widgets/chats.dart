@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
+import 'package:getgoods/src/models/user_model.dart';
 
 import 'chat_room.dart';
 
 class Chats extends StatelessWidget {
-  const Chats({super.key});
+  const Chats({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +48,7 @@ class Chats extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => const ChatRoom(),
+            //builder: (context) => ChatRoom(userDetail: UserDetail(name: name)),
           ),
         );
       },

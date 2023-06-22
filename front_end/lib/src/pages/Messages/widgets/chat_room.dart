@@ -2,93 +2,41 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/chat_message_model.dart';
+import 'package:getgoods/src/models/user_model.dart';
 
-class ChatRoom extends StatelessWidget {
-  const ChatRoom({super.key});
+class ChatRoom extends StatefulWidget {
+  //final UserDetail userDetail;
+  const ChatRoom({Key? key}) : super(key: key);
+
+  @override
+  State<ChatRoom> createState() => _ChatRoomState();
+}
+
+class _ChatRoomState extends State<ChatRoom> {
+  //late final UserDetail userDetail;
+  final TextEditingController _controller = TextEditingController();
+  List<ChatMessage> messages = [];
+  bool _isEmpty = false;
+
+  void _handleSubmitted(String text) {
+    var timestamp = DateTime.now().toString().substring(10, 16);
+    setState(() {
+      _isEmpty = false;
+      messages.add(
+        ChatMessage(
+          message: text,
+          sender: '',
+          receiver: '',
+          timestamp: timestamp,
+          messageType: 'sender',
+        ),
+      );
+      _controller.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<ChatMessage> messages = [
-      ChatMessage(
-        message:
-            'Hey, I just received rattan bag but I got wrong color! I ordered another one',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'sender',
-      ),
-      ChatMessage(
-        message: 'Can you send me an order number and picture of the product.',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'receiver',
-      ),
-      ChatMessage(
-        message: 'Sorry for the inconvenience. We will send you the right one.',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'receiver',
-      ),
-      ChatMessage(
-        message: 'What are you doing?',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'receiver',
-      ),
-      ChatMessage(
-        message: 'I\'m working.',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'sender',
-      ),
-      ChatMessage(
-        message: 'What about you?',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'sender',
-      ),
-      ChatMessage(
-        message: 'I\'m working too.',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'receiver',
-      ),
-      ChatMessage(
-        message: 'What are you working on?',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'sender',
-      ),
-      ChatMessage(
-        message: 'I\'m working on a project.',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'receiver',
-      ),
-      ChatMessage(
-        message: 'What project?',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'sender',
-      ),
-      ChatMessage(
-        message: 'I\'m working on a project for Cholameth.',
-        sender: '',
-        receiver: '',
-        timestamp: '',
-        messageType: 'receiver',
-      ),
-    ];
-
     return Scaffold(
       appBar: AppBar(
         elevation: 2,
@@ -189,6 +137,8 @@ class ChatRoom extends StatelessWidget {
                         alignment: (messages[index].messageType == "receiver"
                             ? Alignment.topLeft
                             : Alignment.topRight),
+                        //Size of text each message
+                        //ConstrainedBox [no need, why?]
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
@@ -201,10 +151,11 @@ class ChatRoom extends StatelessWidget {
                             messages[index].message,
                             style: const TextStyle(fontSize: 15),
                           ),
+                          //time
                         ),
                       ),
                     );
-                  },
+                  }, //itembuilder
                 ),
               ),
             ),
@@ -230,6 +181,7 @@ class ChatRoom extends StatelessWidget {
               child: Row(
                 children: [
                   GestureDetector(
+                    //send image file
                     onTap: () {},
                     child: Container(
                       height: 40,
@@ -250,6 +202,13 @@ class ChatRoom extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextField(
+                      controller: _controller,
+                      onSubmitted: _handleSubmitted,
+                      onChanged: (String text) {
+                        setState(() {
+                          _isEmpty = text.length > 0;
+                        });
+                      },
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.green.shade50,
@@ -265,7 +224,10 @@ class ChatRoom extends StatelessWidget {
                   SizedBox(
                     height: 40,
                     child: FloatingActionButton(
-                      onPressed: () {},
+                      //send message
+                      onPressed: _isEmpty
+                          ? () => _handleSubmitted(_controller.text)
+                          : null,
                       backgroundColor: Colors.lightGreen,
                       elevation: 0,
                       child: const Icon(

@@ -58,7 +58,7 @@ class _HelpCenterState extends State<HelpCenterPage> {
   Container _FQA() {
     return Container(
         color: Colors.white,
-        child: const Padding(
+        child: Padding(
           padding: EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +81,7 @@ class _HelpCenterState extends State<HelpCenterPage> {
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: const Column(
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Contact Us",
