@@ -245,12 +245,32 @@ class ProductItemCard extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
           children: [
-            TextSpan(
-              text: Format().currency(product.price, decimal: false),
-              style: const TextStyle(
-                fontSize: 16,
+            if (product.discount == 0)
+              TextSpan(
+                text: Format().currency(product.price, decimal: false),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
               ),
-            ),
+            if (product.discount != 0) ...[
+              TextSpan(
+                text: Format().currency(
+                  product.price - (product.price * product.discount / 100),
+                  decimal: false,
+                ),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              const TextSpan(text: ' '),
+              TextSpan(
+                text: Format().currency(product.price, decimal: false),
+                style: const TextStyle(
+                  fontSize: 12,
+                  decoration: TextDecoration.lineThrough,
+                ),
+              ),
+            ],
           ],
         ),
       );

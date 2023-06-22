@@ -317,16 +317,36 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           text: '฿ ',
           style: const TextStyle(
             color: Colors.green,
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
           children: [
-            TextSpan(
-              text: Format().currency(product.price, decimal: false),
-              style: const TextStyle(
-                fontSize: 20,
+            if (product.discount == 0)
+              TextSpan(
+                text: Format().currency(product.price, decimal: false),
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
               ),
-            ),
+            if (product.discount != 0) ...[
+              TextSpan(
+                text: Format().currency(
+                  product.price - (product.price * product.discount / 100),
+                  decimal: false,
+                ),
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              const TextSpan(text: ' '),
+              TextSpan(
+                text: Format().currency(product.price, decimal: false),
+                style: const TextStyle(
+                  fontSize: 16,
+                  decoration: TextDecoration.lineThrough,
+                ),
+              ),
+            ],
           ],
         ),
       );
