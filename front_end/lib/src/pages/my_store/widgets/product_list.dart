@@ -7,9 +7,14 @@ import 'package:getgoods/src/viewmodels/shop_viewmodel.dart';
 import '../../../constants/colors.dart';
 
 class ProductList extends StatefulWidget {
+  final Function fetchData;
   final String shopId;
   final List<Product> products;
-  const ProductList({super.key, required this.products, required this.shopId});
+  const ProductList(
+      {super.key,
+      required this.products,
+      required this.shopId,
+      required this.fetchData});
 
   @override
   State<ProductList> createState() => _ProductListState();
@@ -71,7 +76,9 @@ class _ProductListState extends State<ProductList> {
               );
             },
           ),
-        );
+        ).then((_) {
+          widget.fetchData();
+        });
       },
       child: Container(
         color: primaryBGColor,
