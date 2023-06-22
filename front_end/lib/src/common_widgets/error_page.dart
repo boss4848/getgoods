@@ -15,7 +15,9 @@ class ErrorPage extends StatelessWidget {
       backgroundColor: secondaryBGColor,
       body: const Center(
         child: Text(
-          'Error',
+          'Something went wrong. '
+          'Please try again later.',
+          maxLines: 2,
           style: TextStyle(
             color: primaryColor,
             fontSize: 16,
