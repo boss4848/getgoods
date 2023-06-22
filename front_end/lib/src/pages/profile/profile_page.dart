@@ -513,13 +513,32 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await userViewModel.logout();
-                          userViewModel.updateState(UserState.idle);
-                          setState(() {});
-                        },
-                        child: const Text('Log out'),
+                      Padding(
+                        padding: const EdgeInsets.all(defaultpadding),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50))),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await userViewModel.logout();
+                              userViewModel.updateState(UserState.idle);
+                              setState(() {});
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Log out',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
