@@ -34,41 +34,11 @@ class _AddProductPageState extends State<AddProductPage> {
   final _productPrice = TextEditingController();
   final _productQuantity = TextEditingController();
 
-  // File? _pickedImage;
-  // final _imagePicker = ImagePicker();
-  // bool _isImageLoading = false;
-  PickedFile? _pickedImage;
-  final _imagePicker = ImagePicker();
-  Future<void> pickImage() async {
-    loadingDialog(context);
-    final pickedImage = await _imagePicker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 50,
-    );
-    if (pickedImage != null) {
-      final imageBytes = await pickedImage.readAsBytes();
-      final image = img.decodeImage(imageBytes);
-      final convertedImage = img.encodeJpg(
-        image!,
-        quality: 85,
-      ); // Convert to JPEG
-
-      setState(() {
-        _pickedImage = PickedFile(pickedImage.path); // Update the picked file
-      });
-
-      // Save the converted image to a temporary file
-      final tempDir = await getTemporaryDirectory();
-      final tempPath = '${tempDir.path}/converted_image.jpg';
-      File(tempPath).writeAsBytesSync(convertedImage);
-
-      Navigator.pop(context);
-    }
-  }
-
   Future<void> sendRequest() async {
+    loadingDialog(context);
     String _category = '';
-    if (_pickedImage == null || _currentIndex == -1) {
+    if (_currentIndex == -1) {
+      Navigator.pop(context);
       return;
     }
     if (_currentIndex == 0) {
@@ -80,23 +50,6 @@ class _AddProductPageState extends State<AddProductPage> {
     } else if (_currentIndex == 3) {
       _category = 'driedGood';
     }
-
-    // FormData formData = FormData.fromMap({
-    //   // 'imageCover': await MultipartFile.fromFile(
-    //   //   _pickedImage!.path,
-    //   //   contentType: MediaType('image', 'jpg'),
-    //   // ),
-    //   'name': _productName.text,
-    //   'description': _productDesc.text,
-    //   'price': _productPrice.text,
-    //   'quantity': _productQuantity.text,
-    //   'category': _category,
-    //   'discount': 0,
-    // });
-    // log(
-    //   'formData: ${formData.files}',
-    // );
-
     try {
       final String? token = await _getToken();
       _setAuthToken(token);
@@ -112,15 +65,33 @@ class _AddProductPageState extends State<AddProductPage> {
         },
       );
       log(response.data.toString());
+      Navigator.pop(context);
+      Navigator.pop(context);
 
       print(response.data); // Handle the server response
     } on DioException catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(error.response!.data['message']),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'))
+          ],
+        ),
+      );
+
       log('Error uploading image: $error');
       log('Error uploading image: ${error.response}');
       log('Error uploading image: ${error.response!.data}');
       log('Error uploading image: ${error.response!.statusCode}');
       log('Error uploading image: ${error.response!.statusMessage}');
       log('message: ${error.message}');
+      Navigator.pop(context);
     }
   }
 
@@ -162,87 +133,6 @@ class _AddProductPageState extends State<AddProductPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildRichText('Image Cover', 1),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'The image cover will be used as the main product image for display in a size of 500x500 pixels.',
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            if (_pickedImage != null)
-                              GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Dialog(
-                                        child: Image.file(
-                                          File(_pickedImage!.path),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 1.5,
-                                        spreadRadius: 0.1,
-                                      )
-                                    ],
-                                  ),
-                                  child: Image.file(
-                                    File(_pickedImage!.path),
-                                    height: 90,
-                                    width: 90,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            SizedBox(
-                              width: _pickedImage == null ? 0 : 12,
-                            ),
-                            Container(
-                              height: 90,
-                              width: 90,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: grey,
-                              ),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: grey,
-                                ),
-                                onPressed: () {
-                                  pickImage();
-                                },
-                                child: Text(
-                                  _pickedImage == null
-                                      ? 'Upload Image'
-                                      : 'Change Image',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  _buildDivider(),
                   _buildInputField(
                     label: 'Name',
                     hintText: 'Ex. Dried Mangoes',
