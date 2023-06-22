@@ -13,17 +13,22 @@ import 'package:getgoods/src/viewmodels/category_viewmodel.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../constants/colors.dart';
+import '../../../constants/colors.dart';
 
-class AddProductPage extends StatefulWidget {
+class UpdateProductPage extends StatefulWidget {
   final String shopId;
-  const AddProductPage({super.key, required this.shopId});
+  final String productId;
+  const UpdateProductPage({
+    super.key,
+    required this.shopId,
+    required this.productId,
+  });
 
   @override
-  State<AddProductPage> createState() => _AddProductPageState();
+  State<UpdateProductPage> createState() => _AddProductPageState();
 }
 
-class _AddProductPageState extends State<AddProductPage> {
+class _AddProductPageState extends State<UpdateProductPage> {
   Dio dio = Dio();
 
   final List<String> categories = CategoryViewModel().categories;
@@ -32,15 +37,11 @@ class _AddProductPageState extends State<AddProductPage> {
   final _productName = TextEditingController();
   final _productDesc = TextEditingController();
   final _productPrice = TextEditingController();
-  final _productQuantity = TextEditingController();
 
   Future<void> sendRequest() async {
     loadingDialog(context);
     String _category = '';
-    if (_currentIndex == -1) {
-      Navigator.pop(context);
-      return;
-    }
+
     if (_currentIndex == 0) {
       _category = 'processed';
     } else if (_currentIndex == 1) {
@@ -54,22 +55,26 @@ class _AddProductPageState extends State<AddProductPage> {
       final String? token = await _getToken();
       _setAuthToken(token);
 
-      Response response = await dio.post(
-        '${ApiConstants.baseUrl}/shops/${widget.shopId}/products',
+      Response response = await dio.patch(
+        '${ApiConstants.baseUrl}/shops/${widget.shopId}/products/${widget.productId}',
         data: {
           'price': _productPrice.text,
-          'quantity': _productQuantity.text,
           'category': _category,
           'description': _productDesc.text,
           'name': _productName.text,
         },
       );
       log(response.data.toString());
+
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
 
       print(response.data); // Handle the server response
     } on DioException catch (error) {
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -84,14 +89,12 @@ class _AddProductPageState extends State<AddProductPage> {
           ],
         ),
       );
-
       log('Error uploading image: $error');
       log('Error uploading image: ${error.response}');
       log('Error uploading image: ${error.response!.data}');
       log('Error uploading image: ${error.response!.statusCode}');
       log('Error uploading image: ${error.response!.statusMessage}');
       log('message: ${error.message}');
-      Navigator.pop(context);
     }
   }
 
@@ -111,7 +114,7 @@ class _AddProductPageState extends State<AddProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Product'),
+        title: const Text('Update Product'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -152,13 +155,6 @@ class _AddProductPageState extends State<AddProductPage> {
                     label: 'Price',
                     hintText: 'Price of your product',
                     controller: _productPrice,
-                    keyboardType: TextInputType.number,
-                  ),
-                  _buildDivider(),
-                  _buildInputField(
-                    label: 'Quantity',
-                    hintText: 'Quantity of your product',
-                    controller: _productQuantity,
                     keyboardType: TextInputType.number,
                   ),
                   _buildDivider(),
@@ -223,7 +219,7 @@ class _AddProductPageState extends State<AddProductPage> {
                 onPressed: () {
                   sendRequest();
                 },
-                child: const Text('Publish Product'),
+                child: const Text('Update Product'),
               ),
             ),
             const SizedBox(height: 400),
