@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/pages/checkout/checkout_page.dart';
 
 import '../../../constants/colors.dart';
 
@@ -48,16 +49,28 @@ class CustomBottomBar extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Container(
-              height: 80,
-              color: primaryColor,
-              child: const Center(
-                child: Text(
-                  'Buy Now',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const CheckoutPage();
+                    },
+                  ),
+                );
+              },
+              child: Container(
+                height: 80,
+                color: primaryColor,
+                child: const Center(
+                  child: Text(
+                    'Buy Now',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
