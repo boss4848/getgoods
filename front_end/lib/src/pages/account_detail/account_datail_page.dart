@@ -1,32 +1,37 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
-
-import '../../viewmodels/shop_viewmodel.dart';
+import 'package:getgoods/src/models/user_model.dart';
+import 'package:getgoods/src/pages/account_detail/widgets/update_user_info.dart';
+import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 
 class MyAccountDetailPage extends StatefulWidget {
-  final String shopId;
-  const MyAccountDetailPage({super.key, required this.shopId});
+  final String userId;
+  const MyAccountDetailPage({super.key, required this.userId});
 
   @override
   State<MyAccountDetailPage> createState() => _MyAccountDetailPageState();
 }
 
 class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
-  final ShopViewModel _shopViewModel = ShopViewModel();
+  final UserViewModel _userViewModel = UserViewModel();
 
   @override
   void initState() {
     super.initState();
-    _fetchShopDetails();
+    _fetchUserDetails();
   }
 
-  Future<void> _fetchShopDetails() async {
-    await _shopViewModel.fetchShop(widget.shopId);
+  Future<void> _fetchUserDetails() async {
+    await _userViewModel.fetchUser();
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final UserDetail userDetail = _userViewModel.userDetail;
+    log(userDetail.email.toString());
     // final ShopDetail shop = _shopViewModel.shop;
     // if (_shopViewModel.state == ShopState.loading) {
     //   return const Loading();
@@ -43,9 +48,7 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // _buildMerchantProfile(),
-            // _buildWarehouseAddress(),
-            _buildUsername(context),
+            _buildUserInfo(context, userDetail),
             _buildMyaddress(context),
             const SizedBox(height: 200),
           ],
@@ -54,7 +57,7 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
     );
   }
 
-  Container _buildUsername(BuildContext context) {
+  Container _buildUserInfo(BuildContext context, UserDetail user) {
     return Container(
       margin: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -87,7 +90,13 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    print('Edit');
+                    print('Edit user info');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UpdateUserInfoPage()
+                            // product: _product,
+                            ));
                   },
                   child: const Text(
                     'Edit',
@@ -105,17 +114,17 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
           _buildDivider(),
           _buildSetInput(
             label: 'Username',
-            value: 'test5',
+            value: user.name,
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'Email',
-            value: 'user@gmail.com',
+            value: user.email,
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'Phone Number',
-            value: '09487654321',
+            value: user.phone,
           ),
         ],
       ),
@@ -145,17 +154,31 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
             child: Row(
               children: [
                 const Text(
-                  'My Address',
+                  'Address Information',
                   style: TextStyle(
                     color: primaryTextColor,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                const SizedBox(
+                  width: 2,
+                ),
+                const Tooltip(
+                  message:
+                      'We have to inform you that these information will be use for shipping address.',
+                  child: Icon(
+                    Icons.help_outline_outlined,
+                    size: 18,
+                    color: primaryColor,
+                  ),
+                ),
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
                     print('Edit');
+                    // MaterialPageRoute(builder: (context) => ''
+                    //     );
                   },
                   child: const Text(
                     'Edit',
