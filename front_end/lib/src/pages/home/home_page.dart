@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/viewmodels/product_viewmodel.dart';
+import '../../models/product_model.dart';
 import './widgets/header.dart';
 import './widgets/content.dart';
 
@@ -23,12 +25,27 @@ class _HomePageState extends State<HomePage> {
     _dxMax = widget.size.width - 100;
     _dyMax = widget.size.height - (160 + widget.paddingBottom);
     super.initState();
+    _getProducts();
+    products = productViewModel.products;
   }
 
   @override
   void dispose() {
     _scrollControll.dispose();
     super.dispose();
+    _getProducts();
+    products = productViewModel.products;
+  }
+
+  late ProductViewModel productViewModel = ProductViewModel();
+  late List<Product> products;
+
+  _getProducts() async {
+    await productViewModel.fetchProducts();
+
+    setState(() {
+      products = productViewModel.products;
+    });
   }
 
   @override
@@ -38,7 +55,12 @@ class _HomePageState extends State<HomePage> {
       body: Stack(
         children: [
           // Content(_scrollControll),
-          Content(_scrollControll),
+          Content(
+            _scrollControll,
+            onRefresh: () => _getProducts(),
+            products: products,
+            productViewModel: productViewModel,
+          ),
           Header(
             scrollController: _scrollControll,
           ),

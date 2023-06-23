@@ -7,34 +7,22 @@ import '../../../viewmodels/product_viewmodel.dart';
 import '../../product_detail/product_detail_page.dart';
 
 class ProductLoadMore extends StatefulWidget {
-  const ProductLoadMore({Key? key}) : super(key: key);
+  final List<Product> products;
+  final ProductViewModel productViewModel;
+  const ProductLoadMore(
+      {Key? key, required this.products, required this.productViewModel})
+      : super(
+          key: key,
+        );
 
   @override
   State<ProductLoadMore> createState() => _ProductLoadMoreState();
 }
 
 class _ProductLoadMoreState extends State<ProductLoadMore> {
-  late List<Product> products;
-  late ProductViewModel productViewModel;
-
-  @override
-  void initState() {
-    super.initState();
-    productViewModel = ProductViewModel();
-    products = productViewModel.products;
-    _getProduct();
-  }
-
-  _getProduct() async {
-    await productViewModel.fetchProducts();
-    setState(() {
-      products = productViewModel.products;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return productViewModel.state == ProductState.loading
+    return widget.productViewModel.state == ProductState.loading
         ? Container(
             color: Colors.white,
             height: 600,
@@ -75,7 +63,7 @@ class _ProductLoadMoreState extends State<ProductLoadMore> {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: products.length,
+            itemCount: widget.products.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: 0.75,
               crossAxisCount: 2,
@@ -83,7 +71,7 @@ class _ProductLoadMoreState extends State<ProductLoadMore> {
               crossAxisSpacing: 15,
             ),
             itemBuilder: (BuildContext context, int index) {
-              return ProductItemCard(products[index]);
+              return ProductItemCard(widget.products[index]);
             },
           ),
           false ? const SizedBox(height: 150) : BottomLoader(),
@@ -245,12 +233,32 @@ class ProductItemCard extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
           children: [
-            TextSpan(
-              text: Format().currency(product.price, decimal: false),
-              style: const TextStyle(
-                fontSize: 16,
+            if (product.discount == 0)
+              TextSpan(
+                text: Format().currency(product.price, decimal: false),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
               ),
-            ),
+            if (product.discount != 0) ...[
+              TextSpan(
+                text: Format().currency(
+                  product.price - (product.price * product.discount / 100),
+                  decimal: false,
+                ),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              const TextSpan(text: ' '),
+              TextSpan(
+                text: Format().currency(product.price, decimal: false),
+                style: const TextStyle(
+                  fontSize: 12,
+                  decoration: TextDecoration.lineThrough,
+                ),
+              ),
+            ],
           ],
         ),
       );

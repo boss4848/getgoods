@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const cors = require('cors');
+const logDataOperation = require('./middlewares/logDataOperation');
 
 app.use(express.json());
 // Enable CORS
@@ -16,7 +17,8 @@ app.use((req, res, next) => {
     next();
 });
 
-
+// Register the logDataOperation middleware
+app.use(logDataOperation);
 
 //Routes
 app.use('/api/v1/users', require('./routes/userRoute'));
