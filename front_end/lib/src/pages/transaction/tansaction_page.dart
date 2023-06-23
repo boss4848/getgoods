@@ -26,13 +26,15 @@ class CheckOutPage extends StatelessWidget {
       backgroundColor: secondaryBGColor,
       body: SingleChildScrollView(
         child: Column(
-          children: const [
+          children: [
             Padding(
               padding: EdgeInsets.only(
                   top: defaultpadding * 2,
                   left: defaultpadding * 2,
                   right: defaultpadding * 2),
-              child: UserAddress(),
+              child: Container(
+                  decoration: BoxDecoration(boxShadow: [defaultShadow]),
+                  child: UserAddress()),
             ),
             MerchandiseSub(),
             SizedBox(
