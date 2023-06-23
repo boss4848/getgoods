@@ -84,6 +84,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
+                        //user name
                         "Passakorn Puttama",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
@@ -115,11 +116,13 @@ class _ChatRoomState extends State<ChatRoom> {
               controller: _scrollController,
               padding: const EdgeInsets.only(top: 10, bottom: 100),
               itemBuilder: (context, index) {
+                //number of text message
+                //print(messages.length);
                 //last message
                 if (index == messages.length) {
                   return Container(
                     height: 100,
-                    );
+                  );
                 }
                 return Column(
                   children: [
@@ -211,6 +214,8 @@ class _ChatRoomState extends State<ChatRoom> {
                   ),
                   Expanded(
                     child: TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
                       controller: _controller,
                       onSubmitted: _handleSubmitted,
                       onChanged: (String text) {

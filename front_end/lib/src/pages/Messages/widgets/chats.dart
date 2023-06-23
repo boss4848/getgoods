@@ -19,6 +19,7 @@ class Chats extends StatelessWidget {
             right: 12,
           ),
           child: Column(
+            //Gift ja 
             children: List.generate(
               5,
               (index) => _buildChatItem(
