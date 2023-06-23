@@ -17,7 +17,7 @@ loadingDialog(BuildContext context) {
             const Text(
               'Loading...',
               style: TextStyle(
-                color: Colors.green,
+                color: Colors.white,
                 fontSize: 16,
                 decoration: TextDecoration.none,
               ),

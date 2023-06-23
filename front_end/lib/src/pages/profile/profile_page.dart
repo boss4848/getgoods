@@ -4,9 +4,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
+import 'package:getgoods/src/constants/constants.dart';
 import 'package:getgoods/src/models/user_model.dart';
+import 'package:getgoods/src/pages/account_detail/account_datail_page.dart';
+import 'package:getgoods/src/pages/address_detail/address_detail_page.dart';
+import 'package:getgoods/src/pages/bank_info_detail/bank_info_page.dart';
+import 'package:getgoods/src/pages/help_center/help_center.dart';
 import 'package:getgoods/src/pages/login/login_page.dart';
 import 'package:getgoods/src/pages/my_purchase/my_purchase_page.dart';
+import 'package:getgoods/src/pages/profile/widgets/purchase_bar.dart';
 import 'package:getgoods/src/pages/signup/signup_page.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 
@@ -126,7 +132,9 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MyPurchasePage(),
+                          builder: (context) => const MyPurchasePage(
+                            tabIndex: 0,
+                          ),
                         ),
                       );
                     },
@@ -294,12 +302,17 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: defaultpadding,
+                      ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const MyPurchasePage(),
+                              builder: (context) => const MyPurchasePage(
+                                tabIndex: 0,
+                              ),
                             ),
                           );
                         },
@@ -311,16 +324,16 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           width: double.infinity,
                           color: primaryBGColor,
                           child: Row(
-                            children: [
-                              const Icon(
+                            children: const [
+                              Icon(
                                 Icons.storefront_rounded,
                                 color: primaryColor,
                                 size: 28,
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 10,
                               ),
-                              const Text(
+                              Text(
                                 'My Purchases',
                                 style: TextStyle(
                                   color: primaryTextColor,
@@ -328,18 +341,170 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const Spacer(),
-                              const Text(
+                              Spacer(),
+                              Text(
                                 'Order history',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: grey,
                                   fontSize: 12,
                                 ),
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 4,
                               ),
-                              const Icon(
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: grey,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const PurchasetrackBar(),
+                      const SizedBox(
+                        height: defaultpadding,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyAccountDetailPage(
+                                      shopId: userDetail.shop.id,
+                                    )),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 16,
+                          ),
+                          width: double.infinity,
+                          color: primaryBGColor,
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.person_rounded,
+                                color: primaryColor,
+                                size: 28,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'My Account',
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: grey,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: defaultpadding,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BankInfoPage(
+                                      shopId: userDetail.shop.id,
+                                    )),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 16,
+                          ),
+                          width: double.infinity,
+                          color: primaryBGColor,
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.account_balance_rounded,
+                                color: primaryColor,
+                                size: 28,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Banking Account Info',
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: grey,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: defaultpadding,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HelpCenter()),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 16,
+                          ),
+                          width: double.infinity,
+                          color: primaryBGColor,
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.help_rounded,
+                                color: primaryColor,
+                                size: 28,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Help Center',
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: grey,
                                 size: 16,
