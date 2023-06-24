@@ -79,7 +79,7 @@ class _SelectAllButtonState extends State<SelectAllButton> {
             ),
             const Spacer(),
             Container(
-              padding: const EdgeInsets.only(right: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [

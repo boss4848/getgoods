@@ -229,21 +229,40 @@ class _ProductDetailState extends State<ProductDetail> {
                       ),
                       child: SizedBox(
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            IconButton(
-                              icon: const Icon(Icons.remove),
-                              iconSize: 16,
-                              onPressed: decreaseQuantity,
+                            SizedBox(
+                              width: 24,
+                              height: 28,
+                              // alignment: Alignment.center,
+                              child: IconButton(
+                                icon: const Icon(Icons.remove),
+                                iconSize: 12,
+                                onPressed: decreaseQuantity,
+                              ), // Center the content
                             ),
-                            Text(
-                              selectedQuantity.toString(),
-                              style: const TextStyle(
-                                  fontSize: 10, fontWeight: FontWeight.bold),
+                            SizedBox(
+                              width: 24,
+                              height: 28,
+                              child: Center(
+                                child: Text(
+                                  selectedQuantity.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.add),
-                              iconSize: 16,
-                              onPressed: increaseQuantity,
+                            SizedBox(
+                              width: 24,
+                              height: 28,
+                              // alignment: Alignment.center,
+                              child: IconButton(
+                                icon: const Icon(Icons.add),
+                                iconSize: 12,
+                                onPressed: increaseQuantity,
+                              ), // Center the content
                             ),
                           ],
                         ),
