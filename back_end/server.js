@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const app = require('./app');
 const http = require('http');
 const socketIO = require('socket.io');
+const Message = require('./models/messageModel')
+
 //Handle uncaught exceptions
 process.on('uncaughtException', err => {
     console.log(err.name, err.message);
@@ -30,9 +32,16 @@ const io = socketIO(server);
 
 // Socket.IO integration
 io.on('connection', (socket) => {
+    const userName = socket.handshake.query.userName
+
     console.log('A user connected');
+    console.log(userName);
 
     socket.on('chat message', (message) => {
+        Message.create({
+            message : message.message,
+            sender : userName
+        });
         console.log('Message received:', message);
         io.emit('chat message', message);
     });

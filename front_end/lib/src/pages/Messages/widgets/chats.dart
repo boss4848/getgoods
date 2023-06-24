@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/user_model.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'chat_room.dart';
 
@@ -48,7 +49,7 @@ class Chats extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ChatRoom(),
+            builder: (context) => const ChatRoom(userName: "649020872f417fdf203f6ba9",),
             //builder: (context) => ChatRoom(userDetail: UserDetail(name: name)),
           ),
         );

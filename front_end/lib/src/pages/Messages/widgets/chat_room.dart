@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/chat_message_model.dart';
 import 'package:getgoods/src/models/user_model.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatRoom extends StatefulWidget {
-  const ChatRoom({Key? key}) : super(key: key);
+  final String userName;
+  const ChatRoom({Key? key, required this.userName}) : super(key: key);
 
   @override
   State<ChatRoom> createState() => _ChatRoomState();
@@ -16,10 +18,60 @@ class _ChatRoomState extends State<ChatRoom> {
   final TextEditingController _controller = TextEditingController();
   List<ChatMessage> messages = [];
   bool _isEmpty = false;
+  late IO.Socket _socket;
+
+  _connectSocket() {
+    _socket.onConnect((data) {
+      print('Connection established');
+    });
+
+    _socket.onConnectError((data) {
+      print('Connection Error: $data');
+    });
+
+    _socket.onDisconnect((data) {
+      print('Socket.IO server disconnect');
+    });
+
+    _socket.on('chat message', (data) {
+      setState(() {
+        messages.add(
+          ChatMessage(
+            message: data['message'],
+            sender: data['sender'],
+            receiver: data['receiver'],
+            timestamp: data['timestamp'],
+            messageType: 'receiver',
+          ),
+        );
+      });
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // If testing app on Android then replace http://localhost:8000 with http://10.0.2.2:8000
+    //platform.isIOS
+    _socket = IO.io(
+      "http://localhost:8000",
+      IO.OptionBuilder()
+          .setTransports(['websocket'])
+          .setQuery({'userName': widget.userName})
+          .build(),
+    );
+    _connectSocket();
+  }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _socket.dispose();
     super.dispose();
   }
 
@@ -30,7 +82,7 @@ class _ChatRoomState extends State<ChatRoom> {
       messages.add(
         ChatMessage(
           message: text,
-          sender: '',
+          sender: widget.userName,
           receiver: '',
           timestamp: timestamp,
           messageType: 'sender',
@@ -42,6 +94,12 @@ class _ChatRoomState extends State<ChatRoom> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
+    });
+    _socket.emit('chat message', {
+      'message': text,
+      'sender': widget.userName,
+      'receiver': '',
+      'timestamp': timestamp,
     });
   }
 
