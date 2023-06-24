@@ -27,14 +27,6 @@ class HelpCenterPage extends StatefulWidget {
 }
 
 class _HelpCenterState extends State<HelpCenterPage> {
-  String buttonText = 'Tap Me';
-  String updatedText = 'Initial Text';
-
-  void updateText() {
-    setState(() {
-      updatedText = 'Text Updated!';
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
