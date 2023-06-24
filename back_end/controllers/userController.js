@@ -99,6 +99,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                phone : user.phone,
                 photo: fileUrl, // Add the file URL to the response
                 shop: user.shop,
             }

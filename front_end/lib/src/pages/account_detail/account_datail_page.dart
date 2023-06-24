@@ -92,11 +92,12 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
                   onTap: () {
                     print('Edit user info');
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UpdateUserInfoPage()
-                            // product: _product,
-                            ));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UpdateUserInfoPage()
+                          // product: _product,
+                          ),
+                    ).then((_) => _fetchUserDetails());
                   },
                   child: const Text(
                     'Edit',
