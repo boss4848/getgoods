@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:getgoods/src/constants/colors.dart';
 
 class InputField extends StatelessWidget {
   final String name;
   final bool isRequired;
   final TextEditingController controller;
+  final bool isUnderline;
 
   const InputField({
     super.key,
     required this.name,
     required this.isRequired,
     required this.controller,
+    this.isUnderline = true,
   });
 
   @override
@@ -29,16 +30,20 @@ class InputField extends StatelessWidget {
         ),
 
         //only add border buttom
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.black54,
-          ),
-        ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.black54,
-          ),
-        ),
+        enabledBorder: isUnderline
+            ? const UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black54,
+                ),
+              )
+            : InputBorder.none,
+        focusedBorder: isUnderline
+            ? const UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black54,
+                ),
+              )
+            : InputBorder.none,
         border: InputBorder.none,
       ),
     );

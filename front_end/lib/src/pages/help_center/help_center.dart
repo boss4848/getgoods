@@ -59,10 +59,10 @@ class _HelpCenterState extends State<HelpCenterPage> {
     return Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: const [
               Text(
                 "FAQ",
                 style: TextStyle(
@@ -70,7 +70,9 @@ class _HelpCenterState extends State<HelpCenterPage> {
                     fontWeight: FontWeight.w800,
                     fontSize: 20),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               IssueTypeWidget(),
             ],
           ),
@@ -81,7 +83,7 @@ class _HelpCenterState extends State<HelpCenterPage> {
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
+        child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Contact Us",
@@ -113,5 +115,4 @@ class _HelpCenterState extends State<HelpCenterPage> {
       ),
     );
   }
-
 }
