@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/pages/transaction/tansaction_page.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/colors.dart';
@@ -25,28 +26,30 @@ class _UnpaidListState extends State<UnpaidList> {
               order: '4567ujf38h833fh',
               date: DateFormat.yMd().add_jm(),
               amount: 2,
-              payment: 1000),
+              payment: 1000,
+              context: context),
           _buildUnpaid(
               shop: 'Trakasarn',
               name: 'Product name',
               order: '4567ujf38h833fh',
               date: DateFormat.yMd().add_jm(),
               amount: 2,
-              payment: 1000)
+              payment: 1000,
+              context: context)
         ],
       ),
     );
   }
 }
 
-Container _buildUnpaid({
-  required String shop,
-  required String name,
-  required String order,
-  required DateFormat date,
-  required int amount,
-  required double payment,
-}) {
+Container _buildUnpaid(
+    {required String shop,
+    required String name,
+    required String order,
+    required DateFormat date,
+    required int amount,
+    required double payment,
+    required BuildContext context}) {
   return Container(
     decoration: BoxDecoration(
       color: Colors.grey[200],
@@ -156,15 +159,22 @@ Container _buildUnpaid({
       ),
       const SizedBox(height: 5),
       Align(
-        alignment: Alignment.bottomRight,
-        child: TextButton(
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.green),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),),
-        onPressed: () {},
-        child: Text('Pay Now'),
-      )
-      )
+          alignment: Alignment.bottomRight,
+          child: TextButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.green),
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CheckOutPage(),
+                ),
+              );
+            },
+            child: Text('Pay Now'),
+          ))
     ]),
   );
 }

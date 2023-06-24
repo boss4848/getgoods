@@ -5,11 +5,14 @@ import 'package:getgoods/src/pages/my_purchase/widgets/to_ship.dart';
 import 'package:getgoods/src/pages/my_purchase/widgets/unpaid_list.dart';
 
 class MyPurchasePage extends StatelessWidget {
-  const MyPurchasePage({super.key});
+  const MyPurchasePage({super.key, required this.tabIndex});
+
+  final int tabIndex;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+        initialIndex: tabIndex,
         length: 4,
         child: Scaffold(
             appBar: AppBar(

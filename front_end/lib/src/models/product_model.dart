@@ -93,6 +93,7 @@ class Product {
   final int sold;
   final String imageCover;
   final String id;
+  final int quantity;
 
   Product({
     required this.name,
@@ -101,6 +102,7 @@ class Product {
     required this.sold,
     this.imageCover = '',
     required this.id,
+    required this.quantity,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -111,6 +113,7 @@ class Product {
       sold: json['sold'] ?? 0,
       imageCover: json['imageCover'] ?? '',
       id: json['_id'] ?? '',
+      quantity: json['quantity'] ?? 0,
     );
   }
 }
