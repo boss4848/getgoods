@@ -7,9 +7,15 @@ const Color accentColor = Color(0xFFFAF117);
 
 const Color primaryBGColor = Color(0xFFF5F5F5);
 const Color secondaryBGColor = Color(0xFFE8E8E8);
-
 const Color primaryTextColor = Color(0xFF4C4C4C);
 const Color secondaryTextColor = Color(0xFF5E5E5E);
 
 const Color pastelRed = Color(0xFFD97E7E);
 const Color grey = Color(0xFFC4C4C4);
+
+BoxShadow defaultShadow = BoxShadow(
+  color: Colors.grey.withOpacity(0.5),
+  spreadRadius: 2,
+  blurRadius: 5,
+  offset: const Offset(0, 1), // horizontal and vertical offset
+);
