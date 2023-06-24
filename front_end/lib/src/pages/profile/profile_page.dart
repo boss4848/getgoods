@@ -7,7 +7,6 @@ import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/constants/constants.dart';
 import 'package:getgoods/src/models/user_model.dart';
 import 'package:getgoods/src/pages/account_detail/account_datail_page.dart';
-import 'package:getgoods/src/pages/address_detail/address_detail_page.dart';
 import 'package:getgoods/src/pages/bank_info_detail/bank_info_page.dart';
 import 'package:getgoods/src/pages/help_center/help_center.dart';
 import 'package:getgoods/src/pages/login/login_page.dart';
@@ -326,7 +325,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           child: Row(
                             children: const [
                               Icon(
-                                Icons.storefront_rounded,
+                                Icons.assignment_rounded,
                                 color: primaryColor,
                                 size: 28,
                               ),
@@ -371,7 +370,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => MyAccountDetailPage(
-                                      shopId: userDetail.shop.id,
+                                      userId: userDetail.shop.id,
                                     )),
                           );
                         },
@@ -393,7 +392,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                                 width: 10,
                               ),
                               Text(
-                                'My Account',
+                                'Account & Address Info',
                                 style: TextStyle(
                                   color: primaryTextColor,
                                   fontSize: 16,
@@ -513,13 +512,32 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await userViewModel.logout();
-                          userViewModel.updateState(UserState.idle);
-                          setState(() {});
-                        },
-                        child: const Text('Log out'),
+                      Padding(
+                        padding: const EdgeInsets.all(defaultpadding),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50))),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await userViewModel.logout();
+                              userViewModel.updateState(UserState.idle);
+                              setState(() {});
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Log out',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
