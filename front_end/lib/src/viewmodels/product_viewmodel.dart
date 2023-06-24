@@ -12,6 +12,7 @@ enum ProductState {
 class ProductViewModel {
   final Dio _dio = Dio();
   List<Product> products = [];
+  List<Product> filterProduct = [];
   late ProductDetail productDetail = ProductDetail.empty();
   ProductState state = ProductState.loading;
 
@@ -44,6 +45,26 @@ class ProductViewModel {
       final data = response.data['data']['product'];
 
       productDetail = ProductDetail.fromJson(data);
+      state = ProductState.success;
+    } catch (e) {
+      print('Error fetching products: $e');
+      state = ProductState.error;
+    }
+  }
+
+  Future<void> filteredProduct(String category) async {
+    final String getProductsUrl =
+        '${ApiConstants.baseUrl}/products?category=$category&fields=name,price,discount,sold,imageCover';
+
+    state = ProductState.loading;
+    try {
+      final response = await _dio.get(getProductsUrl);
+      final data = response.data['data']['products'];
+      print(data);
+
+      filterProduct = List<Product>.from(data.map((product) {
+        return Product.fromJson(product);
+      }));
       state = ProductState.success;
     } catch (e) {
       print('Error fetching products: $e');

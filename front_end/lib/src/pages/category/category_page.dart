@@ -10,14 +10,12 @@ class CategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(children: const [
-            SearchBar(),
-            ProductFilter(),
-            ShowProduct(),
-          ]),
-        ),
+      body: SingleChildScrollView(
+        child: Column(children: const [
+          SearchBar(),
+          ProductFilter(),
+          ShowProduct(),
+        ]),
       ),
     );
   }
