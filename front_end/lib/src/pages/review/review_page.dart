@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/pages/review/widgets/review.dart';
 
 class ReviewPage extends StatelessWidget {
@@ -8,6 +9,7 @@ class ReviewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            backgroundColor: primaryColor,
             title: const Text(
                 style: TextStyle(
                     color: Colors.white,
@@ -15,6 +17,11 @@ class ReviewPage extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                     fontFamily: 'SFTHONBURI'),
                 'Product Review')),
-        body: const Review());
+        backgroundColor: primaryBGColor,
+        body: Column(
+          children: [
+            ReviewForm(),
+          ],
+        ));
   }
 }

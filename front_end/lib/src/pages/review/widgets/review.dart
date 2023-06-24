@@ -1,54 +1,106 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:getgoods/src/common_widgets/loading_dialog.dart';
+import 'package:getgoods/src/viewmodels/review_viewmodel.dart';
 
-class Review extends StatefulWidget {
-  const Review({super.key});
+class ReviewForm extends StatefulWidget {
+  const ReviewForm({super.key});
 
   @override
-  State<Review> createState() => _ReviewState();
+  _ReviewFormState createState() => _ReviewFormState();
 }
 
-class _ReviewState extends State<Review> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: _buildReview(name: 'Product name'),
+class _ReviewFormState extends State<ReviewForm> {
+  int _rating = 0;
+  String _reviewText = '';
+
+  ReviewViewModel reviewViewModel = ReviewViewModel();
+
+  _ReviewSubmit() async {
+    if (_reviewText == null || _rating == null) {
+      onError('Please complete all field.');
+      return;
+    }
+    loadingDialog(context);
+    final response = await reviewViewModel.createReviews(
+      '64874b259c858d1de5061ea0',
+      '6495b956f2e406fc686299fb',
+      _reviewText,
+      _rating,
+    );
+    if (response == 'success') {
+      Navigator.pop(context);
+      Navigator.pop(context);
+    } else {
+      print(response);
+    }
+  }
+
+  void onError(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Invalid input'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
-}
 
-Container _buildReview({
-  required String name,
-}) {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(
-          width: 10,
-        ),
-        Text(
-          name,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Write a review',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+            onChanged: (value) {
+              setState(() {
+                _reviewText = value;
+              });
+            },
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Text('Product quality'), Icon(Icons.star)],
-        ),
-        Column(
-          children: [
-            Text('Add Photo(1/2)'),
-          ],
-        )
-      ],
-    ),
-  );
+          const SizedBox(height: 16.0),
+          RatingBar.builder(
+            initialRating: _rating.toDouble(),
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: false,
+            itemCount: 5,
+            itemSize: 40.0,
+            itemBuilder: (context, _) => const Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            onRatingUpdate: (rating) {
+              setState(() {
+                _rating = rating.toInt();
+              });
+            },
+          ),
+          const SizedBox(height: 16.0),
+          ElevatedButton(
+            child: Text('Submit'),
+            onPressed: () {
+              _ReviewSubmit();
+            },
+          ),
+        ],
+      ),
+    );
+  }
 }
