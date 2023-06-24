@@ -23,6 +23,7 @@ dependencies:
   image: ^4.0.17
   image_picker: ^0.8.9
   intl: ^0.18.1
+  patterns_canvas: ^0.4.0
   path_provider: ^2.0.15
   percent_indicator: ^4.2.3
   shared_preferences: ^2.1.2
