@@ -40,7 +40,8 @@ class _IssueTypeWidgetState extends State<IssueTypeWidget> {
       children: [
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
+          child: Wrap(
+            spacing: 10,
             children: [
               WidgetButton(
                 onPressed: () => setActiveState(0),
@@ -48,17 +49,11 @@ class _IssueTypeWidgetState extends State<IssueTypeWidget> {
                 buttonText: 'Hot\nIssues',
                 icon: Icon(Icons.local_fire_department),
               ),
-              const SizedBox(
-                width: 12,
-              ),
               WidgetButton(
                 onPressed: () => setActiveState(1),
                 isActive: activeIndex == 1,
                 buttonText: 'Payment\nMethods',
                 icon: Icon(Icons.account_balance_wallet),
-              ),
-              const SizedBox(
-                width: 12,
               ),
               WidgetButton(
                 onPressed: () => setActiveState(2),
@@ -66,22 +61,16 @@ class _IssueTypeWidgetState extends State<IssueTypeWidget> {
                 buttonText: 'Store\nUsage',
                 icon: Icon(Icons.store),
               ),
-              const SizedBox(
-                width: 12,
-              ),
               WidgetButton(
                 onPressed: () => setActiveState(3),
                 isActive: activeIndex == 3,
                 buttonText: 'Order\nTracking',
                 icon: Icon(Icons.local_shipping),
               ),
-              const SizedBox(
-                width: 12,
-              ),
               WidgetButton(
                 onPressed: () => setActiveState(4),
                 isActive: activeIndex == 4,
-                buttonText: 'About\nGetGoods',
+                buttonText: 'About\nUs',
                 icon: Icon(Icons.info_rounded),
               ),
             ],
@@ -128,7 +117,7 @@ class WidgetButton extends StatelessWidget {
       ),
       child: SizedBox(
         // height: 80,
-        width: 62,
+        width: MediaQuery.of(context).size.width / 9,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 8,
@@ -141,12 +130,12 @@ class WidgetButton extends StatelessWidget {
                 size: 22.0,
                 color: isActive ? activeColor : deactiveColor,
               ),
-              const SizedBox(height: 5.0),
+              const SizedBox(height: 4.0),
               Text(
                 buttonText,
                 style: TextStyle(
                   color: isActive ? activeColor : deactiveColor,
-                  fontSize: 12.0,
+                  fontSize: 10.0,
                 ),
                 textAlign: TextAlign.center,
               ),
