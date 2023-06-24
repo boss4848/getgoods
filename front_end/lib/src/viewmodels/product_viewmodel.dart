@@ -147,7 +147,7 @@ class ProductViewModel {
       final data = response.data['data']['products'];
       print(data);
 
-      filterProduct = List<Product>.from(data.map((product) {
+      products = List<Product>.from(data.map((product) {
         return Product.fromJson(product);
       }));
       state = ProductState.success;

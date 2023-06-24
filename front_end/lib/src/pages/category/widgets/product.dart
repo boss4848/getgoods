@@ -19,21 +19,6 @@ class _ProductLoadMoreState extends State<ShowProduct> {
   late ProductViewModel productViewModel;
 
   @override
-  void initState() {
-    super.initState();
-    productViewModel = ProductViewModel();
-    products = productViewModel.products;
-    _getProduct();
-  }
-
-  _getProduct() async {
-    await productViewModel.fetchProducts();
-    setState(() {
-      products = productViewModel.products;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return productViewModel.state == ProductState.loading
         ? Container(

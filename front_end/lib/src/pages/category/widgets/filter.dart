@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 
 class ProductFilter extends StatefulWidget {
-  const ProductFilter({Key? key}) : super(key: key);
+  final Function filterProduct;
+  const ProductFilter({Key? key, required this.filterProduct})
+      : super(key: key);
 
   @override
   State<ProductFilter> createState() => _ProductFilterState();
@@ -18,16 +20,7 @@ class _ProductFilterState extends State<ProductFilter> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Container(
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.stretch,
-        //     children: [
-        //       _buildHeader(),
-        //     ],
-        //   ),
-        // ),
         Container(
-          // padding: const EdgeInsets.symmetric(horizontal: 15),
           padding: const EdgeInsets.all(15),
           child: Column(
             children: [
