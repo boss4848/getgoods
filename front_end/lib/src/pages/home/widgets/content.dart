@@ -2,12 +2,23 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../models/product_model.dart';
+import '../../../viewmodels/product_viewmodel.dart';
 import 'coupon.dart';
 import 'banner_slider.dart';
 import 'product_load_more.dart';
 
 class Content extends StatefulWidget {
-  const Content(this.scrollController, {super.key});
+  final List<Product> products;
+  final ProductViewModel productViewModel;
+  final Function onRefresh;
+  const Content(
+    this.scrollController, {
+    super.key,
+    required this.onRefresh,
+    required this.products,
+    required this.productViewModel,
+  });
 
   final TrackingScrollController scrollController;
 
@@ -27,7 +38,7 @@ class _ContentState extends State<Content> {
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
       controller: _indicatorController,
-      onRefresh: () => Future.delayed(const Duration(seconds: 2)),
+      onRefresh: () => widget.onRefresh(),
       builder: (context, child, controller) => AnimatedBuilder(
         animation: controller,
         builder: (context, _) => Stack(
@@ -60,7 +71,10 @@ class _ContentState extends State<Content> {
             // _buildDivider(),
             const Coupon(),
             _buildDivider(),
-            const ProductLoadMore(),
+            ProductLoadMore(
+              products: widget.products,
+              productViewModel: widget.productViewModel,
+            ),
           ],
         ),
       ),

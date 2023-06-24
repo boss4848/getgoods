@@ -7,7 +7,6 @@ const catchAsync = require('../utils/catchAsync');
 const sharp = require('sharp');
 const AppError = require('../utils/appError');
 const APIFeatures = require('../utils/apiFeatures');
-
 dotenv.config({ path: './config.env' });
 
 const multerStorage = multer.memoryStorage();
@@ -29,25 +28,20 @@ const upload = multer({
 
 const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
 
-exports.uploadProductImages = upload.fields([
-    { name: 'imageCover', maxCount: 1 },
-    { name: 'images', maxCount: 3 }
-]);
-exports.resizeProductImages = catchAsync(async (req, res, next) => {
-    if (!req.files.imageCover || !req.files.images) return next();
-    // console.log(req.files);
+exports.uploadProductImage = upload.single('imageCover');
 
-    // 1) Cover image
-    req.body.imageCover = `product-${req.params.id}-cover.jpeg`;
+exports.resizeProductImage = catchAsync(async (req, res, next) => {
+    if (!req.file) return next();
+    req.file.filename = `product-${req.params.id}-${Date.now()}-cover.jpeg`;
 
-    // Resize the image to 600x600
-    const resizedImageBuffer = await sharp(req.files.imageCover[0].buffer)
+    // Resize the image to 400x400
+    const resizedImageBuffer = await sharp(req.file.buffer)
         .resize(600, 600)
         .toBuffer();
 
     // Upload the resized image to Azure Blob Storage
     const containerClient = blobServiceClient.getContainerClient('product-photos');
-    const blockBlobClient = containerClient.getBlockBlobClient(req.body.imageCover);
+    const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename);
 
     await blockBlobClient.uploadData(resizedImageBuffer, {
         blobHTTPHeaders: {
@@ -55,34 +49,66 @@ exports.resizeProductImages = catchAsync(async (req, res, next) => {
         },
     });
 
-    // 2) Images
-    req.body.images = [];
-
-    await Promise.all(
-        req.files.images.map(async (file, i) => {
-            const fileName = `product-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
-
-            // Resize the image to 600x600
-            const resizedImageBuffer = await sharp(file.buffer)
-                .resize(600, 600)
-                .toBuffer();
-
-            // Upload the resized image to Azure Blob Storage
-            const containerClient = blobServiceClient.getContainerClient('product-photos');
-            const blockBlobClient = containerClient.getBlockBlobClient(fileName);
-
-            await blockBlobClient.uploadData(resizedImageBuffer, {
-                blobHTTPHeaders: {
-                    blobContentType: 'image/jpeg',
-                },
-            });
-
-            req.body.images.push(fileName);
-        })
-    );
+    req.body.imageCover = req.file.filename;
 
     next();
 });
+
+
+// exports.uploadProductImages = upload.fields([
+//     { name: 'imageCover', maxCount: 1 },
+//     { name: 'images', maxCount: 3 }
+// ]);
+// exports.resizeProductImages = catchAsync(async (req, res, next) => {
+//     if (!req.files.imageCover || !req.files.images) return next();
+//     // console.log(req.files);
+
+//     // 1) Cover image
+//     req.body.imageCover = `product-${req.params.id}-cover.jpeg`;
+
+//     // Resize the image to 600x600
+//     const resizedImageBuffer = await sharp(req.files.imageCover[0].buffer)
+//         .resize(600, 600)
+//         .toBuffer();
+
+//     // Upload the resized image to Azure Blob Storage
+//     const containerClient = blobServiceClient.getContainerClient('product-photos');
+//     const blockBlobClient = containerClient.getBlockBlobClient(req.body.imageCover);
+
+//     await blockBlobClient.uploadData(resizedImageBuffer, {
+//         blobHTTPHeaders: {
+//             blobContentType: 'image/jpeg',
+//         },
+//     });
+
+//     // 2) Images
+//     req.body.images = [];
+
+//     await Promise.all(
+//         req.files.images.map(async (file, i) => {
+//             const fileName = `product-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+
+//             // Resize the image to 600x600
+//             const resizedImageBuffer = await sharp(file.buffer)
+//                 .resize(600, 600)
+//                 .toBuffer();
+
+//             // Upload the resized image to Azure Blob Storage
+//             const containerClient = blobServiceClient.getContainerClient('product-photos');
+//             const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+
+//             await blockBlobClient.uploadData(resizedImageBuffer, {
+//                 blobHTTPHeaders: {
+//                     blobContentType: 'image/jpeg',
+//                 },
+//             });
+
+//             req.body.images.push(fileName);
+//         })
+//     );
+
+//     next();
+// });
 
 exports.setShopIds = async (req, res, next) => {
     // Allow nested routes
