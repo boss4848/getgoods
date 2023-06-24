@@ -14,4 +14,14 @@ router.get('/craete-payment-intent',
     buyingController.createPaymentIntent
 );
 
+router.get('/transactions/:customerId',
+    // authController.protect,
+    buyingController.getTransactions
+);
+
+router.get('/customer/:email',
+    // authController.protect,
+    buyingController.getCustomerByEmail
+);
+
 module.exports = router;

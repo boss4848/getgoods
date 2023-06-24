@@ -3,6 +3,29 @@ const catchAsync = require('../utils/catchAsync');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Product = require('../models/productModel');
 
+exports.getTransactions = catchAsync(async (req, res, next) => {
+    const customerId = req.params.customerId; // Assuming customerId is passed as a parameter
+    const transactions = await stripe.charges.list({
+        customer: customerId
+    });
+
+    res.status(200).json({
+        status: 'success',
+        transactions
+    });
+});
+
+exports.getCustomerByEmail = catchAsync(async (req, res, next) => {
+    const email = req.params.email; // Assuming email is passed as a parameter
+    const customer = await stripe.customers.list({
+        email: email
+    });
+
+    res.status(200).json({
+        status: 'success',
+        customer
+    });
+});
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     // 1) Get the currently bought product
@@ -86,7 +109,20 @@ exports.createPaymentIntent = catchAsync(async (req, res, next) => {
         amount: parseInt(req.query.amount) * 100,
         currency: 'thb',
         //product
-
+        // customer_email: req.user.email,
+        // customer_email: 'test7@gmail.com',
+        // customer: 'cus_O8SVUwvroU8CiS',
+        metadata: {
+            // productId: req.query.productId,
+            // product: req.query.product,
+            // price: req.query.price,
+            // quantity: req.query.quantity,
+            // imageCover: req.query.imageCover,
+            productId: '93284923i4',
+            price: '100',
+            quantity: '2',
+            imageCover: 'https://getgoods.blob.core.windows.net/user-photos/user-649020872f417fdf203f6ba9-1687371038193.jpeg'
+        },
 
         // payment_method_types: ['card'],
         // receipt_email: req.body.email,
