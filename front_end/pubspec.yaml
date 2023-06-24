@@ -28,6 +28,7 @@ dependencies:
   percent_indicator: ^4.2.3
   shared_preferences: ^2.1.2
   timeago: ^3.4.0
+  socket_io_client: ^2.0.2
 
 dev_dependencies:
   flutter_test:
