@@ -34,12 +34,15 @@ class _AddUserInfoPageState extends State<UpdateUserInfoPage> {
       final String? token = await _getToken();
       _setAuthToken(token);
 
+      print(_phone.text);
+      print(_userName.text);
+
       Response response = await dio.patch(
         '${ApiConstants.baseUrl}/users/updateMe',
         data: {
           'phone': _phone.text,
           //'email': _email.text,
-          'username': _userName.text,
+          'name': _userName.text,
         },
       );
       log(response.data.toString());
@@ -158,9 +161,6 @@ class _AddUserInfoPageState extends State<UpdateUserInfoPage> {
               child: ElevatedButton(
                 onPressed: () {
                   sendRequest();
-                  print(_userName);
-                  print(_email);
-                  print(_phone);
                 },
                 child: const Text('Update User'),
               ),
