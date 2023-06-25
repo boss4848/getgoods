@@ -109,6 +109,8 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                         MaterialPageRoute(
                           builder: (context) => const SignUpPage(),
                         ),
+                      ).then(
+                        (_) => _getUserDetail(),
                       );
                     },
                     child: const Text('Sign up'),
@@ -125,19 +127,6 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                       ); // Fetch user details again after logging in
                     },
                     child: const Text('Log in'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyPurchasePage(
-                            tabIndex: 0,
-                          ),
-                        ),
-                      );
-                    },
-                    child: const Text('My purchase'),
                   ),
                 ],
               ),
