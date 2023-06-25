@@ -32,18 +32,18 @@ const userSchema = new mongoose.Schema({
     // },
     photo: {
         type: String,
-        default: 'default.png'
+        default: 'default.jpg'
     },
     phone: {
         type: String,
-        required: [true, 'A user must have a phone number'],
+        // required: [true, 'A user must have a phone number'],
         trim: true,
         maxlength: [10, 'A user phone number must have less or equal then 10 characters'],
         minlength: [10, 'A user phone number must have more or equal then 10 characters'],
     },
     address: {
         type: String,
-        required: [true, 'A user must have an address'],
+        // required: [true, 'A user must have an address'],
         trim: true,
         maxlength: [100, 'A user address must have less or equal then 100 characters'],
         minlength: [10, 'A user address must have more or equal then 10 characters'],
@@ -61,6 +61,24 @@ const userSchema = new mongoose.Schema({
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'Shop',
     // },
+    stripeId: {
+        type: String,
+        default: '',
+        required: [true, 'A user must have a stripeId'],
+    },
+    address: {
+        type: Object,
+        default: {
+            detail: '',
+            province_th: '',
+            province_en: '',
+            district_th: '',
+            district_en: '',
+            sub_district_th: '',
+            sub_district_en: '',
+            post_code: '',
+        },
+    }
 },
     {
         timestamps: true,

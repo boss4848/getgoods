@@ -26,6 +26,7 @@ app.use('/api/v1/shops', require('./routes/shopRoute'));
 app.use('/api/v1/products', require('./routes/productRoute'));
 app.use('/api/v1/reviews', require('./routes/reviewRoute'));
 app.use('/api/v1/buyings', require('./routes/buyingRoute'));
+app.use('/api/v1/transactions', require('./routes/transactionRoute'));
 
 //Handle undefined routes
 app.all('*', (req, res, next) => {

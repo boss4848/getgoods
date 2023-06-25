@@ -5,6 +5,8 @@ const multer = require('multer');
 const sharp = require('sharp');
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const AppError = require('../utils/appError');
 
 const multerStorage = multer.memoryStorage();
 const multerFilter = (req, file, cb) => {
@@ -68,19 +70,52 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     }
 
     // Filtered out unwanted fields names that are not allowed to be updated
-    const filteredBody = filterObj(req.body, 'name', 'email');
+    const filteredBody = filterObj(
+        req.body,
+        'name',
+        'email',
+        'phone',
+        'address',
+    );
     if (req.file) filteredBody.photo = req.file.filename;
 
-    // Update user document
-    const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
-        new: true,
-        runValidators: true
-    });
+    // Update to stripe
+    const user = await User.findById(req.user.id);
+    // console.log(user)
+    if (!user.stripeId) {
+        return next(new AppError('Cannot find stripe id', 400));
 
+    }
+    const updatedCustomer = await stripe.customers.update(user.stripeId, {
+        name: req.body.name,
+        email: req.body.email,
+        phone: req.body.phone,
+        address: {
+            line1: req.body.address.detail,//ที่อยู่
+            state: req.body.address.province_en, //จังหวัด
+            city: req.body.address.district_en,//อำเภอ
+            line2: req.body.address.sub_district_en,//ตำบล
+            country: 'th',//ประเทศ
+            postal_code: req.body.address.post_code,//รหัสไปรษณีย์
+        },
+    });
+    // console.log(updatedCustomer);
+    console.log(filteredBody);
+
+    // Update user document and location
+    const updatedUser = await User.findByIdAndUpdate(
+        req.user.id,
+        filteredBody,
+        {
+            new: true,
+            runValidators: true
+        }
+    );
     res.status(200).json({
         status: 'success',
         data: {
-            user: updatedUser
+            user: updatedUser,
+            customer: updatedCustomer,
         }
     });
 });
