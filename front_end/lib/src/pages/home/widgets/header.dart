@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/pages/shopping_cart/shopping_cart.dart';
 
 class Header extends StatefulWidget {
   final TrackingScrollController scrollController;
@@ -44,7 +45,11 @@ class _HeaderState extends State<Header> {
               _buildInputSearch(),
               const SizedBox(width: 8),
               _buildIconButton(
-                onPressed: () => print('click'),
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ShoppingCart(),
+                    )),
                 icon: CupertinoIcons.cart_fill,
                 notification: 10,
               ),
