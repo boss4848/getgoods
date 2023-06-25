@@ -7,7 +7,7 @@ class CustomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 80,
       width: double.infinity,
       decoration: BoxDecoration(
         boxShadow: [
@@ -18,10 +18,10 @@ class CustomBar extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          SelectAllButton(), // Use the custom SelectAllButton widget
-          const Expanded(
+      child: Column(
+        children: const [
+          AnimatedTotalPrice(),
+          Expanded(
             child: CheckOutButton(),
           ),
         ],
@@ -30,86 +30,28 @@ class CustomBar extends StatelessWidget {
   }
 }
 
-class SelectAllButton extends StatefulWidget {
-  @override
-  _SelectAllButtonState createState() => _SelectAllButtonState();
-}
-
-class _SelectAllButtonState extends State<SelectAllButton> {
-  bool isSelected = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          isSelected = !isSelected;
-        });
-      },
-      child: Container(
-        height: 80,
-        width: 250,
-        color: isSelected ? primaryBGColor : Colors.white,
-        child: Row(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Checkbox(
-                    value: isSelected,
-                    onChanged: (value) {
-                      setState(() {
-                        isSelected = value ?? false;
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  'Select All',
-                  style: TextStyle(
-                    color: isSelected ? primaryColor : Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                      '฿ 100'), //To show total price of all products that have been selected.
-                  Text('Total'),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CheckOutButton extends StatelessWidget {
+class CheckOutButton extends StatefulWidget {
   const CheckOutButton({Key? key});
+
+  @override
+  _CheckOutButtonState createState() => _CheckOutButtonState();
+}
+
+class _CheckOutButtonState extends State<CheckOutButton> {
+  bool isChecked = false;
+  int quantity = 0;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
-      width: 200,
+      height: 60,
+      width: double.infinity,
       color: primaryColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Text(
-            'Check Out',
+        children: [
+          const Text(
+            'Check Out ',
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -117,14 +59,39 @@ class CheckOutButton extends StatelessWidget {
             ),
           ),
           Text(
-            ' (' '0' ') ',
-            style: TextStyle(
+            '($quantity)',
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 19,
               fontWeight: FontWeight.bold,
             ),
-          ) //To show quantity of all products that have been selected
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class AnimatedTotalPrice extends StatelessWidget {
+  const AnimatedTotalPrice({Key? key});
+
+  @override
+  Widget build(BuildContext context) {
+    double totalPrice = 20;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      height: totalPrice == 0 ? 0 : 30,
+      width: double.infinity,
+      color: Colors.white,
+      child: Center(
+        child: Text(
+          'Total Price: \$${totalPrice.toStringAsFixed(2)}',
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }

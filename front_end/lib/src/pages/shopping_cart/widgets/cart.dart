@@ -66,13 +66,11 @@ class _ProductInCartState extends State<ProductInCart> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(15),
       color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: _buildShopGroups(),
-          ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: _buildShopGroups(),
         ),
       ),
     );
@@ -94,28 +92,31 @@ class _ProductInCartState extends State<ProductInCart> {
     List<Widget> shopGroupsWidgets = [];
     shopGroups.forEach((shop, cartList) {
       shopGroupsWidgets.add(
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  shop,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: primaryColor,
+        Container(
+          padding: EdgeInsets.only(top: 8),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    shop,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: primaryColor,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const Divider(),
-            Column(
-              children: cartList.map((cart) {
-                return ProductDetail(cartDetail: cart);
-              }).toList(),
-            ),
-          ],
+                ],
+              ),
+              const Divider(thickness: 1),
+              Column(
+                children: cartList.map((cart) {
+                  return ProductDetail(cartDetail: cart);
+                }).toList(),
+              ),
+            ],
+          ),
         ),
       );
     });
@@ -164,126 +165,143 @@ class _ProductDetailState extends State<ProductDetail> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: SizedBox(
         width: double.infinity,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Checkbox(
-              value: isSelected,
-              onChanged: (value) {
-                setState(() {
-                  isSelected = !isSelected;
-                });
-              },
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: grey),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Checkbox(
+                value: isSelected,
+                onChanged: (value) {
+                  setState(() {
+                    isSelected = !isSelected;
+                  });
+                },
               ),
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: Image.network(
-                widget.cartDetail.imageCover,
-                height: 100,
-                width: 100,
-                fit: BoxFit.cover,
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: grey),
+                ),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: Image.network(
+                  widget.cartDetail.imageCover,
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 5),
-                  child: Text(
-                    widget.cartDetail.name,
-                    style: const TextStyle(
-                        fontSize: 10, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 4),
-                  width: 150,
-                  child: Text(
-                    widget.cartDetail.description,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                    style: const TextStyle(
-                        fontSize: 8, fontWeight: FontWeight.w800),
-                  ),
-                ),
-                Container(
-                    margin: const EdgeInsets.only(bottom: 4),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Price : ${widget.cartDetail.price}" " Baht",
-                          style: const TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )),
-                Row(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: SizedBox(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              height: 28,
-                              // alignment: Alignment.center,
-                              child: IconButton(
-                                icon: const Icon(Icons.remove),
-                                iconSize: 12,
-                                onPressed: decreaseQuantity,
-                              ), // Center the content
-                            ),
-                            SizedBox(
-                              width: 24,
-                              height: 28,
-                              child: Center(
-                                child: Text(
-                                  selectedQuantity.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 24,
-                              height: 28,
-                              // alignment: Alignment.center,
-                              child: IconButton(
-                                icon: const Icon(Icons.add),
-                                iconSize: 12,
-                                onPressed: increaseQuantity,
-                              ), // Center the content
-                            ),
-                          ],
+                      margin: const EdgeInsets.only(bottom: 5),
+                      child: Text(
+                        widget.cartDetail.name,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    if (selectedQuantity >= widget.cartDetail.quantity)
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        child: const Text(
-                          'Maximum Reached',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.red,
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 4),
+                        width: double.infinity,
+                        child: Text(
+                          widget.cartDetail.description,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
+                          style: const TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
                       ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Price : ${widget.cartDetail.price}" " Baht",
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: SizedBox(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 24,
+                                  height: 28,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.remove),
+                                    iconSize: 12,
+                                    onPressed: decreaseQuantity,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 24,
+                                  height: 28,
+                                  child: Center(
+                                    child: Text(
+                                      selectedQuantity.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 24,
+                                  height: 28,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.add),
+                                    iconSize: 12,
+                                    onPressed: increaseQuantity,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (selectedQuantity >= widget.cartDetail.quantity)
+                          Expanded(
+                            child: Container(
+                              width: double.infinity,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: const Text(
+                                'Maximum Reached',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
