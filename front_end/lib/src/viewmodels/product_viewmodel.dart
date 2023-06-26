@@ -137,25 +137,25 @@ class ProductViewModel {
     }
   }
 
-  Future<void> filteredProduct(String category) async {
-    final String getProductsUrl =
-        '${ApiConstants.baseUrl}/products?category=$category&fields=name,price,discount,sold,imageCover';
+  // Future<void> filteredProduct(String category) async {
+  //   final String getProductsUrl =
+  //       '${ApiConstants.baseUrl}/products?category=$category&fields=name,price,discount,sold,imageCover';
 
-    state = ProductState.loading;
-    try {
-      final response = await _dio.get(getProductsUrl);
-      final data = response.data['data']['products'];
-      print(data);
+  //   state = ProductState.loading;
+  //   try {
+  //     final response = await _dio.get(getProductsUrl);
+  //     final data = response.data['data']['products'];
+  //     print(data);
 
-      products = List<Product>.from(data.map((product) {
-        return Product.fromJson(product);
-      }));
-      state = ProductState.success;
-    } catch (e) {
-      print('Error fetching products: $e');
-      state = ProductState.error;
-    }
-  }
+  //     products = List<Product>.from(data.map((product) {
+  //       return Product.fromJson(product);
+  //     }));
+  //     state = ProductState.success;
+  //   } catch (e) {
+  //     print('Error fetching products: $e');
+  //     state = ProductState.error;
+  //   }
+  // }
 
   Future<void> upLoadImage(File file) async {
     final String? token = await _getToken();

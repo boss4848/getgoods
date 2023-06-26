@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/pages/category/widgets/filter.dart';
 import 'package:getgoods/src/pages/category/widgets/product.dart';
-import 'package:getgoods/src/pages/category/widgets/searchbar.dart';
+import 'package:getgoods/src/pages/category/widgets/header.dart';
 
 import '../../models/product_model.dart';
-import '../../viewmodels/product_viewmodel.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -14,8 +13,9 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  late List<Product> products;
-  late ProductViewModel productViewModel;
+  List<Product> products = [];
+  final _scrollControll = TrackingScrollController();
+  // late ProductViewModel productViewModel;
   String category = '';
 
   _setCategory(String category) {
@@ -24,26 +24,33 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
-  _filterProduct() async {
-    await productViewModel.filteredProduct(category);
-    setState(() {
-      products = productViewModel.products;
-    });
-  }
+  // _filterProduct() async {
+  //   await productViewModel.filteredProduct(category);
+  //   setState(() {
+  //     products = productViewModel.products;
+  //   });
+  // }
 
-  _getProduct() async {
-    await productViewModel.fetchProducts();
-    setState(() {
-      products = productViewModel.products;
-    });
-  }
+  // _getProduct() async {
+  //   await productViewModel.fetchProducts();
+  //   setState(() {
+  //     products = productViewModel.products;
+  //   });
+  // }
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   productViewModel = ProductViewModel();
+  //   products = productViewModel.products;
+  //   _getProduct();
+  // }
   @override
-  void initState() {
-    super.initState();
-    productViewModel = ProductViewModel();
-    products = productViewModel.products;
-    _getProduct();
+  void dispose() {
+    _scrollControll.dispose();
+    super.dispose();
+    // _getProducts();
+    // products = productViewModel.products;
   }
 
   @override
@@ -52,7 +59,9 @@ class _CategoryPageState extends State<CategoryPage> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(children: [
-          SearchBar(),
+          CategoryHeader(
+            scrollController: _scrollControll,
+          ),
           ProductFilter(
             filterProduct: _setCategory,
           ),

@@ -13,33 +13,39 @@ class ProductFilter extends StatefulWidget {
 class _ProductFilterState extends State<ProductFilter> {
   bool _isCategorySelectorVisible = false;
   String _selectedCategory = '';
-  String _selectedSortOption =
+  final String _selectedSortOption =
       'Most Relevant'; // Default selected sorting option
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(15),
-          child: Column(
+    return Container(
+      // color: Colors.yellow,
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            // color: Colors.blue,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _filter(),
+                const SizedBox(
+                  width: 10,
+                ),
+                _sorting(),
+                const Spacer(),
+                _clear(),
+              ],
+            ),
+          ),
+          Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _filter(),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  _sorting(),
-                  const Spacer(),
-                  _clear(),
-                ],
-              ),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOutQuad,
-                height: _isCategorySelectorVisible ? 200 : 0,
+                height: _isCategorySelectorVisible ? 160 : 0,
                 child: _isCategorySelectorVisible
                     ? ClipRect(
                         child: Align(
@@ -49,36 +55,38 @@ class _ProductFilterState extends State<ProductFilter> {
                       )
                     : null,
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Divider(thickness: 1.5),
             ],
           ),
-        ),
-      ],
+          const SizedBox(
+            height: 10,
+          ),
+          const Divider(thickness: 1.5),
+        ],
+      ),
     );
   }
 
   Widget _filter() {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _isCategorySelectorVisible = !_isCategorySelectorVisible;
-          if (_isCategorySelectorVisible) {
-            Future.delayed(const Duration(milliseconds: 300)).then((_) {
-              setState(() {
-                // Additional state changes after the delay
-              });
-            });
-          } else {
-            // Additional state changes when hiding the category selector
-          }
-        });
+        setState(
+          () {
+            _isCategorySelectorVisible = !_isCategorySelectorVisible;
+            // if (_isCategorySelectorVisible) {
+            //   Future.delayed(const Duration(milliseconds: 500)).then((_) {
+            //     setState(() {
+            //       // Additional state changes after the delay
+            //     });
+            //   });
+            // } else {
+            //   // Additional state changes when hiding the category selector
+            // }
+          },
+        );
       },
       child: Container(
-        height: 48,
-        width: 160,
+        height: 35,
+        width: 110,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
             border: Border.all(
@@ -91,13 +99,14 @@ class _ProductFilterState extends State<ProductFilter> {
             const Icon(
               Icons.filter_list,
               color: Colors.white,
+              size: 10,
             ),
             const SizedBox(width: 5),
             Text(
               _selectedCategory.isNotEmpty ? _selectedCategory : 'Category',
               style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 15,
+                  fontSize: 10,
                   fontWeight: FontWeight.bold),
             ),
           ],
@@ -106,36 +115,97 @@ class _ProductFilterState extends State<ProductFilter> {
     );
   }
 
+  Widget _buildCategorySelector() {
+    return FutureBuilder(
+      future: Future.delayed(const Duration(milliseconds: 300)),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(); // Return an empty container while waiting
+        }
+        return Container(
+          // color: Colors.yellow,
+          child: Column(
+            children: [
+              _buildCategoryItem('Processed'),
+              _buildCategoryItem('OTOP'),
+              _buildCategoryItem('Medicinal Plant'),
+              _buildCategoryItem('Dried Food'),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCategoryItem(String category) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _selectedCategory = category;
+          _isCategorySelectorVisible = false; // Close the category selector
+        });
+      },
+      child: Container(
+        // color: Colors.red,
+        height: 40,
+        child: ListTile(
+          title: Text(
+            category,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: _selectedCategory == category ? primaryColor : null,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _sorting() {
     return SizedBox(
-      height: 48,
+      height: 35,
+      width: 110,
       child: PopupMenuButton<String>(
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           const PopupMenuItem<String>(
             value: 'Most Relevant',
-            child: Text('Most Relevant'),
+            child: Text(
+              'Most Relevant',
+              style: TextStyle(fontSize: 10),
+            ),
           ),
           const PopupMenuItem<String>(
             value: 'Most Reviewed',
-            child: Text('Most Reviewed'),
+            child: Text(
+              'Most Reviewed',
+              style: TextStyle(fontSize: 10),
+            ),
           ),
           const PopupMenuItem<String>(
             value: 'Highest Rated',
-            child: Text('Highest Rated'),
+            child: Text(
+              'Highest Rated',
+              style: TextStyle(fontSize: 10),
+            ),
           ),
           const PopupMenuItem<String>(
             value: 'Newest',
-            child: Text('Newest'),
+            child: Text(
+              'Newest',
+              style: TextStyle(fontSize: 10),
+            ),
           ),
         ],
-        onSelected: (String value) {
-          setState(() {
-            _selectedSortOption = value;
-            // Perform sorting based on the selected option
-          });
-        },
+
+        // onSelected: (String value) {
+        //   setState(() {
+        //     _selectedSortOption = value;
+        //     // Perform sorting based on the selected option
+        //   });
+        // },
+
         child: Container(
-          width: 170,
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: (BorderRadius.circular(5)),
@@ -148,18 +218,21 @@ class _ProductFilterState extends State<ProductFilter> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Sort by',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 2),
+                      child: const Text(
+                        'Sort by',
+                        style: TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
                     ),
                     const SizedBox(width: 5),
                     Text(
                       _selectedSortOption,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 10,
                         color: Colors.white,
                       ),
                     ),
@@ -178,63 +251,22 @@ class _ProductFilterState extends State<ProductFilter> {
     );
   }
 
-  Widget _buildCategorySelector() {
-    return SizedBox(
-      height: 200,
+  Widget _clear() {
+    return Flexible(
       child: Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            _buildCategoryItem('Processed'),
-            _buildCategoryItem('OTOP'),
-            _buildCategoryItem('Medicinal Plant'),
-            _buildCategoryItem('Dried Food'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryItem(String category) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedCategory = category;
-          _isCategorySelectorVisible = false; // Close the category selector
-        });
-      },
-      child: ListTile(
-        title: Text(
-          category,
+        width: double.infinity,
+        alignment: Alignment.bottomRight,
+        child: const Text(
+          'Set to default',
+          maxLines: 2,
           style: TextStyle(
-            color: _selectedCategory == category ? primaryColor : null,
+            decoration: TextDecoration.underline,
+            fontSize: 10,
+            color: primaryColor,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),
     );
   }
-
-  Widget _clear() {
-    return SizedBox(
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-        ),
-        child: const Text('Clear'),
-      ),
-    );
-  }
-
-  // Widget _buildHeader() => Container(
-  //       color: Colors.white,
-  //       padding: const EdgeInsets.all(12),
-  //       child: const Text(
-  //         "Filter your products",
-  //         style: TextStyle(
-  //           color: primaryColor,
-  //           fontWeight: FontWeight.bold,
-  //           fontSize: 20,
-  //         ),
-  //       ),
-  //     );
 }

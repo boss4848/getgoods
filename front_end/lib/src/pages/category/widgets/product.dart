@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../constants/colors.dart';
 import '../../../models/product_model.dart';
 import '../../../utils/format.dart';
-import '../../../viewmodels/product_viewmodel.dart';
 import '../../product_detail/product_detail_page.dart';
 
 class ShowProduct extends StatefulWidget {
@@ -16,30 +15,32 @@ class ShowProduct extends StatefulWidget {
 
 class _ProductLoadMoreState extends State<ShowProduct> {
   late List<Product> products;
-  late ProductViewModel productViewModel;
+  // late ProductViewModel productViewModel;
+
+// productViewModel.state == ProductState.loading
+//         ? Container(
+//             color: Colors.white,
+//             height: 600,
+//             child: const Center(
+//               child: CircularProgressIndicator(
+//                 color: primaryColor,
+//               ),
+//             ),
+//           )
+//         :
 
   @override
   Widget build(BuildContext context) {
-    return productViewModel.state == ProductState.loading
-        ? Container(
-            color: Colors.white,
-            height: 600,
-            child: const Center(
-              child: CircularProgressIndicator(
-                color: primaryColor,
-              ),
-            ),
-          )
-        : Container(
-            color: Colors.grey[200],
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildHeader(),
-                _buildProductList(),
-              ],
-            ),
-          );
+    return Container(
+      color: Colors.grey[200],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildHeader(),
+          _buildProductList(),
+        ],
+      ),
+    );
   }
 
   Widget _buildHeader() => Container(
