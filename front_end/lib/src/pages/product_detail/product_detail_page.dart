@@ -278,7 +278,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ],
                   ),
                 ),
-                const CustomAppBar(),
+                CustomAppBar(
+                  product: product,
+                ),
 
                 // const CustomBottomBar(),
 
