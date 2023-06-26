@@ -1,46 +1,79 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
 // import 'package:getgoods/src/services/api_service.dart';
 import '../../../constants/colors.dart';
 import '../../../models/product_model.dart';
 import '../../../utils/format.dart';
+import '../../../viewmodels/product_viewmodel.dart';
 import '../../product_detail/product_detail_page.dart';
 
 class ShowProduct extends StatefulWidget {
-  const ShowProduct({Key? key}) : super(key: key);
+  final List<Product> products;
+  final ProductViewModel productViewModel;
+  const ShowProduct({
+    Key? key,
+    required this.products,
+    required this.productViewModel,
+  }) : super(key: key);
 
   @override
-  State<ShowProduct> createState() => _ProductLoadMoreState();
+  State<ShowProduct> createState() => _ShowProductState();
 }
 
-class _ProductLoadMoreState extends State<ShowProduct> {
-  late List<Product> products;
-  // late ProductViewModel productViewModel;
+class _ShowProductState extends State<ShowProduct> {
+  @override
+  void initState() {
+    super.initState();
+    //widget.productViewModel.filteredProduct('otop');
+  }
 
-// productViewModel.state == ProductState.loading
-//         ? Container(
-//             color: Colors.white,
-//             height: 600,
-//             child: const Center(
-//               child: CircularProgressIndicator(
-//                 color: primaryColor,
-//               ),
-//             ),
-//           )
-//         :
+  void onError(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Invalid input'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[200],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildHeader(),
-          _buildProductList(),
-        ],
-      ),
-    );
+    return widget.productViewModel.state == ProductState.loading
+        ? Container(
+            color: Colors.white,
+            height: 600,
+            child: const Center(
+              child: CircularProgressIndicator(
+                color: Colors.green,
+              ),
+            ),
+          )
+        : Container(
+            color: Colors.grey[200],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                _buildHeader(),
+                _buildProductList(),
+              ],
+            ),
+          );
   }
 
   Widget _buildHeader() => Container(
@@ -62,7 +95,7 @@ class _ProductLoadMoreState extends State<ShowProduct> {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: products.length,
+            itemCount: widget.products.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: 0.75,
               crossAxisCount: 2,
@@ -70,10 +103,10 @@ class _ProductLoadMoreState extends State<ShowProduct> {
               crossAxisSpacing: 15,
             ),
             itemBuilder: (BuildContext context, int index) {
-              return ProductItemCard(products[index]);
+              return ProductItemCard(widget.products[index]);
             },
           ),
-          false ? const SizedBox(height: 150) : BottomLoader(),
+          false ? const SizedBox(height: 150) : const BottomLoader(),
         ],
       );
 }

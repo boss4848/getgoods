@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/pages/category/widgets/filter.dart';
-import 'package:getgoods/src/pages/category/widgets/product.dart';
 import 'package:getgoods/src/pages/category/widgets/header.dart';
+import 'package:getgoods/src/pages/category/widgets/product.dart';
+import 'package:getgoods/src/viewmodels/product_viewmodel.dart';
 
 import '../../models/product_model.dart';
 
@@ -13,10 +14,12 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  List<Product> products = [];
   final _scrollControll = TrackingScrollController();
   // late ProductViewModel productViewModel;
   String category = '';
+
+  late List<Product> products;
+  late ProductViewModel productViewModel;
 
   _setCategory(String category) {
     setState(() {
@@ -38,19 +41,28 @@ class _CategoryPageState extends State<CategoryPage> {
   //   });
   // }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   productViewModel = ProductViewModel();
-  //   products = productViewModel.products;
-  //   _getProduct();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    productViewModel = ProductViewModel();
+    products = productViewModel.filterProduct;
+    _getProducts();
+  }
+
   @override
   void dispose() {
     _scrollControll.dispose();
     super.dispose();
-    // _getProducts();
-    // products = productViewModel.products;
+    _getProducts();
+    products = productViewModel.filterProduct;
+  }
+
+  _getProducts() async {
+    await productViewModel.filteredProduct('otop');
+
+    setState(() {
+      products = productViewModel.filterProduct;
+    });
   }
 
   @override
@@ -65,7 +77,10 @@ class _CategoryPageState extends State<CategoryPage> {
           ProductFilter(
             filterProduct: _setCategory,
           ),
-          ShowProduct(),
+          ShowProduct(
+            products: products,
+            productViewModel: productViewModel,
+          ),
         ]),
       ),
     );
