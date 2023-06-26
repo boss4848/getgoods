@@ -1,12 +1,59 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/user_model.dart';
+import 'package:getgoods/src/viewmodels/chat_viewmodel.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
+import '../../../constants/constants.dart';
 import 'chat_room.dart';
 
-class Chats extends StatelessWidget {
+class Chats extends StatefulWidget {
   const Chats({Key? key}) : super(key: key);
+
+  @override
+  State<Chats> createState() => _ChatsState();
+}
+
+class _ChatsState extends State<Chats> {
+  late ChatViewModel chatViewModel = ChatViewModel();
+  List<dynamic>? chatList;
+
+  @override
+  void initState() {
+    super.initState();
+    chatViewModel = ChatViewModel();
+  }
+
+  getChatList() async {
+    // await chatViewModel.fetchChatList().then((value){
+    //   setState(() {
+    //     chatList = value;
+    //   });
+    // });
+    try {
+    Response response = await Dio().get(
+      '${ApiConstants.baseUrl}/chats/',
+      // Replace ':id' with the actual chat room ID you want to retrieve messages for
+    );
+
+    if (response.statusCode == 200) {
+      // Chat messages retrieved successfully
+      chatList = response.data;
+      print(chatList);
+    } else {
+      // Error occurred while retrieving chat messages
+      // Handle the error based on the response status code
+      print("error");
+    }
+  } catch (e) {
+    // Error occurred while making the request
+    // Handle the network or other errors
+    print('Error getting chat messages: $e');
+  }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +77,11 @@ class Chats extends StatelessWidget {
                 message: 'Hello, how are you?',
                 time: '12:00 PM',
               ),
-            ),
+            // ),
           ),
         ),
       ),
-    );
+    ));
   }
 
   GestureDetector _buildChatItem({
@@ -49,7 +96,7 @@ class Chats extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ChatRoom(userName: "649020872f417fdf203f6ba9",),
+            builder: (context) => const ChatRoom(userName: "649020872f417fdf203f6ba9", chatId: "6498098b7321325eb8eb10f5",),
             //builder: (context) => ChatRoom(userDetail: UserDetail(name: name)),
           ),
         );

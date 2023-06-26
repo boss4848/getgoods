@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
+    chatId : {
+        type : mongoose.Schema.ObjectId,
+        ref : 'Chat',
+        require : [true, 'Room ID should have']
+    },
     message : {
         type : String,
         require : [true, 'Message should have']

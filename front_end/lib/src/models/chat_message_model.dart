@@ -1,25 +1,22 @@
 class ChatMessage {
   final String message;
   final String sender;
-  final String receiver;
+  final String chatId;
   final String timestamp;
-  final String messageType;
 
   ChatMessage({
     required this.message,
     required this.sender,
-    required this.receiver,
+    required this.chatId,
     required this.timestamp,
-    required this.messageType,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
     return ChatMessage(
       message: json['message'],
       sender: json['sender'],
-      receiver: json['receiver'],
+      chatId: json['chatId'],
       timestamp: json['timestamp'],
-      messageType: json['messageType'],
     );
   }
 
@@ -27,9 +24,8 @@ class ChatMessage {
     return {
       'message': message,
       'sender': sender,
-      'receiver': receiver,
+      'chatId': chatId,
       'timestamp': timestamp,
-      'messageType': messageType,
     };
   }
 }

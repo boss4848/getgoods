@@ -1,12 +1,16 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/product_model.dart';
+import 'package:getgoods/src/pages/Messages/widgets/chat_room.dart';
+import 'package:getgoods/src/viewmodels/chat_viewmodel.dart';
 
 import '../../common_widgets/custom_app_bar.dart';
+import '../../constants/constants.dart';
 import '../../models/review_model.dart';
 import '../../utils/format.dart';
 import '../../viewmodels/product_viewmodel.dart';
@@ -25,6 +29,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   late ProductViewModel productViewModel;
   late List<ReviewDetail> reviews;
   late ReviewViewModel reviewViewModel;
+  late ChatViewModel chatViewModel;
+
+  Dio dio = Dio();
 
   @override
   void initState() {
@@ -55,6 +62,35 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       // log('product: ${product.name}');
     });
   }
+
+  Future<void> createChat() async {
+  try {
+    Response response = await Dio().post(
+      // '${ApiConstants.baseUrl}/chats/createChat',
+      '${ApiConstants.baseUrl}/chats/createChat',
+      data: {
+        'member': [
+          '649020872f417fdf203f6ba9',
+          '6487747c9c858d1de5061eab'
+        ]
+      },
+    );
+
+    if (response.statusCode == 201) {
+      // Chat room created successfully
+      var responseData = response.data;
+      // Handle the response data as needed
+      log(responseData);
+    } else {
+      // Error occurred while creating chat room
+      // Handle the error based on the response status code
+    }
+  } catch (e) {
+    // Error occurred while making the request
+    // Handle the network or other errors
+    print('Error creating chat room: $e');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -221,21 +257,26 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                       ),
                                     ),
 
-                                    child: Row(
-                                      children: const [
-                                        Icon(
-                                          CupertinoIcons.bubble_right,
-                                          color: primaryColor,
-                                        ),
-                                        SizedBox(width: 7),
-                                        Text(
-                                          'Chat Now',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        createChat();
+                                      },
+                                      child: Row(
+                                        children: const [
+                                          Icon(
+                                            CupertinoIcons.bubble_right,
+                                            color: primaryColor,
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(width: 7),
+                                          Text(
+                                            'Chat Now',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -1,13 +1,20 @@
+import 'dart:math';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/chat_message_model.dart';
 import 'package:getgoods/src/models/user_model.dart';
+import 'package:getgoods/src/viewmodels/chat_viewmodel.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+
+import '../../../constants/constants.dart';
 
 class ChatRoom extends StatefulWidget {
   final String userName;
-  const ChatRoom({Key? key, required this.userName}) : super(key: key);
+  final String chatId;
+  const ChatRoom({Key? key, required this.userName, required this.chatId}) : super(key: key);
 
   @override
   State<ChatRoom> createState() => _ChatRoomState();
@@ -16,6 +23,7 @@ class ChatRoom extends StatefulWidget {
 class _ChatRoomState extends State<ChatRoom> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _controller = TextEditingController();
+  late ChatViewModel chatViewModel;
   List<ChatMessage> messages = [];
   bool _isEmpty = false;
   late IO.Socket _socket;
@@ -39,9 +47,8 @@ class _ChatRoomState extends State<ChatRoom> {
           ChatMessage(
             message: data['message'],
             sender: data['sender'],
-            receiver: data['receiver'],
+            chatId: data['chatId'],
             timestamp: data['timestamp'],
-            messageType: 'receiver',
           ),
         );
       });
@@ -53,6 +60,33 @@ class _ChatRoomState extends State<ChatRoom> {
     });
   }
 
+  Future<void> _getMessage() async{
+    // await chatViewModel.fetchChatMessage(widget.chatId);
+    // setState(() {
+    //   messages = chatViewModel.message;
+    // });
+    try {
+    Response response = await Dio().get(
+      '${ApiConstants.baseUrl}/chats/${widget.chatId}',
+      // Replace ':id' with the actual chat room ID you want to retrieve messages for
+    );
+
+    if (response.statusCode == 200) {
+      // Chat messages retrieved successfully
+      messages = response.data;
+      print(messages);
+    } else {
+      // Error occurred while retrieving chat messages
+      // Handle the error based on the response status code
+      print("error");
+    }
+  } catch (e) {
+    // Error occurred while making the request
+    // Handle the network or other errors
+    print('Error getting chat messages: $e');
+  }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -62,10 +96,12 @@ class _ChatRoomState extends State<ChatRoom> {
       "http://localhost:8000",
       IO.OptionBuilder()
           .setTransports(['websocket'])
-          .setQuery({'userName': widget.userName})
+          .setQuery({'userName': widget.userName, 'chatId' : widget.chatId})
           .build(),
     );
     _connectSocket();
+    _getMessage();
+    
   }
 
   @override
@@ -79,15 +115,14 @@ class _ChatRoomState extends State<ChatRoom> {
     var timestamp = DateTime.now().toString().substring(10, 16);
     setState(() {
       _isEmpty = false;
-      messages.add(
-        ChatMessage(
-          message: text,
-          sender: widget.userName,
-          receiver: '',
-          timestamp: timestamp,
-          messageType: 'sender',
-        ),
-      );
+      // messages.add(
+      //   ChatMessage(
+      //     message: text,
+      //     sender: widget.userName,
+      //     chatId: widget.chatId,
+      //     timestamp: timestamp,
+      //   ),
+      // );
       _controller.clear();
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
@@ -98,7 +133,7 @@ class _ChatRoomState extends State<ChatRoom> {
     _socket.emit('chat message', {
       'message': text,
       'sender': widget.userName,
-      'receiver': '',
+      'chatId' : widget.chatId,
       'timestamp': timestamp,
     });
   }
@@ -187,9 +222,9 @@ class _ChatRoomState extends State<ChatRoom> {
                     Container(
                       margin: EdgeInsets.only(
                         left:
-                            messages[index].messageType == "receiver" ? 0 : 50,
+                            messages[index].sender== "receiver" ? 0 : 50,
                         right:
-                            messages[index].messageType == "receiver" ? 50 : 0,
+                            messages[index].sender == "receiver" ? 50 : 0,
                       ),
                       padding: const EdgeInsets.only(
                         left: 14,
@@ -198,13 +233,13 @@ class _ChatRoomState extends State<ChatRoom> {
                         bottom: 10,
                       ),
                       child: Align(
-                        alignment: messages[index].messageType == "receiver"
+                        alignment: messages[index].sender == "receiver"
                             ? Alignment.topLeft
                             : Alignment.topRight,
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: messages[index].messageType == "receiver"
+                            color: messages[index].sender == "receiver"
                                 ? Colors.grey.shade200
                                 : Colors.green[200],
                           ),
