@@ -5,7 +5,7 @@ class HelpCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HelpCenterPage(),
+      home: const HelpCenterPage(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           appBarTheme: const AppBarTheme(
@@ -83,17 +83,17 @@ class _HelpCenterState extends State<HelpCenterPage> {
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: const Column(
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Contact Us",
+              const Text("Contact Us",
                   style: TextStyle(
                       color: Colors.green,
                       fontWeight: FontWeight.w800,
                       fontSize: 20)),
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
               Row(
-                children: [
+                children: const [
                   Icon(Icons.call, size: 20,),
                   SizedBox(
                     width: 10,
@@ -101,9 +101,9 @@ class _HelpCenterState extends State<HelpCenterPage> {
                   Text("0643285827", style: TextStyle(fontSize: 16),)
                 ],
               ),
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
               Row(
-                children: [
+                children: const [
                   Icon(Icons.email, size : 20),
                   SizedBox(
                     width: 10,
