@@ -5,21 +5,29 @@ import 'package:getgoods/src/pages/transaction/widgets/merchandise_sub.dart';
 import 'package:getgoods/src/pages/transaction/widgets/my_address.dart';
 import 'package:getgoods/src/pages/transaction/widgets/payment_detail.dart';
 import 'package:getgoods/src/pages/transaction/widgets/shipping_sub.dart';
+import 'package:getgoods/src/services/stripe_service.dart';
 
 import '../../models/product_model.dart';
 import '../../models/shop_model.dart';
 
-class CheckOutPage extends StatelessWidget {
+class CheckOutPage extends StatefulWidget {
   final List<CheckoutProduct> products;
   final double subTotal;
   final Shop shop;
-  final double shippingFee = 40;
+
   const CheckOutPage({
     super.key,
     required this.products,
     required this.subTotal,
     required this.shop,
   });
+
+  @override
+  State<CheckOutPage> createState() => _CheckOutPageState();
+}
+
+class _CheckOutPageState extends State<CheckOutPage> {
+  final double shippingFee = 40;
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +60,8 @@ class CheckOutPage extends StatelessWidget {
               ),
             ),
             MerchandiseSub(
-              products: products,
-              subTotal: subTotal,
+              products: widget.products,
+              subTotal: widget.subTotal,
             ),
             const SizedBox(
               height: defaultpadding * 2,
@@ -63,7 +71,7 @@ class CheckOutPage extends StatelessWidget {
               height: defaultpadding * 2,
             ),
             TotalPaymentDetail(
-              subTotal: subTotal,
+              subTotal: widget.subTotal,
               shippingFee: shippingFee,
             )
           ],
@@ -91,7 +99,7 @@ class CheckOutPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '฿ ${subTotal + shippingFee}',
+                  '฿ ${widget.subTotal + shippingFee}',
                   style: const TextStyle(
                     color: primaryColor,
                     fontSize: 20,
@@ -113,7 +121,17 @@ class CheckOutPage extends StatelessWidget {
                   ),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () async {
+                await StripeService.stripePaymentCheckout(
+                  widget.products,
+                  500,
+                  context,
+                  mounted,
+                  onSuccess: () => print('Success'),
+                  onCancel: () => print('Cancel'),
+                  onError: (e) => print("Error: " + e),
+                );
+              },
               child: const Center(
                 child: Text(
                   'Place Order',
