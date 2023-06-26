@@ -6,8 +6,20 @@ import 'package:getgoods/src/pages/transaction/widgets/my_address.dart';
 import 'package:getgoods/src/pages/transaction/widgets/payment_detail.dart';
 import 'package:getgoods/src/pages/transaction/widgets/shipping_sub.dart';
 
+import '../../models/product_model.dart';
+import '../../models/shop_model.dart';
+
 class CheckOutPage extends StatelessWidget {
-  const CheckOutPage({super.key});
+  final List<CheckoutProduct> products;
+  final double subTotal;
+  final Shop shop;
+  final double shippingFee = 40;
+  const CheckOutPage({
+    super.key,
+    required this.products,
+    required this.subTotal,
+    required this.shop,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +29,11 @@ class CheckOutPage extends StatelessWidget {
         title: const Text(
           'Check Out',
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'SFTHONBURI'),
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'SFTHONBURI',
+          ),
         ),
       ),
       backgroundColor: secondaryBGColor,
@@ -28,23 +41,31 @@ class CheckOutPage extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: defaultpadding * 2,
-                  left: defaultpadding * 2,
-                  right: defaultpadding * 2),
+              padding: const EdgeInsets.only(
+                top: defaultpadding * 2,
+                left: defaultpadding * 2,
+                right: defaultpadding * 2,
+              ),
               child: Container(
-                  decoration: BoxDecoration(boxShadow: [defaultShadow]),
-                  child: UserAddress()),
+                decoration: BoxDecoration(boxShadow: [defaultShadow]),
+                child: const UserAddress(),
+              ),
             ),
-            MerchandiseSub(),
-            SizedBox(
+            MerchandiseSub(
+              products: products,
+              subTotal: subTotal,
+            ),
+            const SizedBox(
               height: defaultpadding * 2,
             ),
-            ShippingSub(),
-            SizedBox(
+            const ShippingSub(),
+            const SizedBox(
               height: defaultpadding * 2,
             ),
-            TotalPaymentDetail()
+            TotalPaymentDetail(
+              subTotal: subTotal,
+              shippingFee: shippingFee,
+            )
           ],
         ),
       ),
@@ -59,8 +80,8 @@ class CheckOutPage extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: const [
-                Text(
+              children: [
+                const Text(
                   'Total Payment',
                   style: TextStyle(
                     color: primaryTextColor,
@@ -70,8 +91,8 @@ class CheckOutPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '฿ 460',
-                  style: TextStyle(
+                  '฿ ${subTotal + shippingFee}',
+                  style: const TextStyle(
                     color: primaryColor,
                     fontSize: 20,
                     fontWeight: FontWeight.w700,

@@ -166,12 +166,12 @@ Container _buildUnpaid(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CheckOutPage(),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const CheckOutPage(),
+              //   ),
+              // );
             },
             child: Text('Pay Now'),
           ))

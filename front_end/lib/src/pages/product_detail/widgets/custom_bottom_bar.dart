@@ -4,6 +4,7 @@ import 'package:getgoods/src/common_widgets/image_box.dart';
 
 import '../../../constants/colors.dart';
 import '../../../models/product_model.dart';
+import '../../../utils/format.dart';
 import '../../transaction/tansaction_page.dart';
 
 class CustomBottomBar extends StatefulWidget {
@@ -19,9 +20,33 @@ class CustomBottomBar extends StatefulWidget {
 
 class _CustomBottomBarState extends State<CustomBottomBar> {
   int selectedQuantity = 1;
+  CheckoutProduct product = CheckoutProduct.empty();
+  @override
+  void initState() {
+    super.initState();
+    product = CheckoutProduct(
+      id: widget.product.id,
+      name: widget.product.name,
+      price: widget.product.price -
+          (widget.product.price * widget.product.discount / 100),
+      discount: widget.product.discount,
+      quantity: 1,
+      imageCover: widget.product.imageCover,
+    );
+  }
+
   void updateQuantity(int value) {
     setState(() {
       selectedQuantity = value;
+      product = CheckoutProduct(
+        id: widget.product.id,
+        name: widget.product.name,
+        price: widget.product.price -
+            (widget.product.price * widget.product.discount / 100),
+        imageCover: widget.product.imageCover,
+        quantity: selectedQuantity,
+        discount: widget.product.discount,
+      );
     });
     print('selectedQuantity: $selectedQuantity');
   }
@@ -104,13 +129,17 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  Text(
-                                    '฿${widget.product.price}',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: primaryColor,
-                                    ),
+                                  _buildPrice(
+                                    widget.product.price,
+                                    widget.product.discount,
                                   ),
+                                  // Text(
+                                  //   '฿${widget.product.price} ฿${widget.product.price - (widget.product.price * widget.product.discount / 100)}',
+                                  //   style: const TextStyle(
+                                  //     fontSize: 16,
+                                  //     color: primaryColor,
+                                  //   ),
+                                  // ),
                                   const SizedBox(height: 4),
                                   Text(
                                     'Stock: ${widget.product.quantity}',
@@ -164,7 +193,12 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const CheckOutPage(),
+                                    builder: (context) => CheckOutPage(
+                                      shop: widget.product.shop,
+                                      products: [product],
+                                      subTotal:
+                                          selectedQuantity * product.price,
+                                    ),
                                   ),
                                 );
                               },
@@ -197,6 +231,49 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
       ),
     );
   }
+
+  RichText _buildPrice(
+    double price,
+    double discount,
+  ) =>
+      RichText(
+        text: TextSpan(
+          text: '฿ ',
+          style: const TextStyle(
+            color: Colors.green,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+          children: [
+            if (discount == 0)
+              TextSpan(
+                text: Format().currency(price, decimal: false),
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            if (discount != 0) ...[
+              TextSpan(
+                text: Format().currency(
+                  price - (price * discount / 100),
+                  decimal: false,
+                ),
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              const TextSpan(text: ' '),
+              TextSpan(
+                text: Format().currency(price, decimal: false),
+                style: const TextStyle(
+                  fontSize: 16,
+                  decoration: TextDecoration.lineThrough,
+                ),
+              ),
+            ],
+          ],
+        ),
+      );
 }
 
 class QuantityBox extends StatefulWidget {
