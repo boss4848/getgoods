@@ -7,11 +7,18 @@ const authController = require('../controllers/authController');
 
 // router.get('/:chatId', chatController.getMessage);
 
-router.route('/:chatId').get(chatController.getMessage);
 
-router.route('/:chatId/chatList').get(chatController.getChatList);
+router.route('/chatList').get(
+    authController.protect,
+    chatController.getChatList,
+    );
+    
+router.route('/:chatId').get(authController.protect,chatController.getMessage);
 
-router.route('/createChat').post(chatController.createChatRoom);
+// router.route('/getChatId').get(authController.protect,chatController.getChatID);
+
+router.route('/createChat').post(
+    authController.protect,chatController.createChatRoom);
 
 // router.get('/createChat', chatController.createChatRoom);
 

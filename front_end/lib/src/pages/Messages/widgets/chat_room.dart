@@ -6,15 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/chat_message_model.dart';
 import 'package:getgoods/src/models/user_model.dart';
+import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 import 'package:getgoods/src/viewmodels/chat_viewmodel.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../constants/constants.dart';
+import '../../../services/api_service.dart';
 
 class ChatRoom extends StatefulWidget {
-  final String userName;
   final String chatId;
-  const ChatRoom({Key? key, required this.userName, required this.chatId}) : super(key: key);
+  const ChatRoom({Key? key, required this.chatId}) : super(key: key);
 
   @override
   State<ChatRoom> createState() => _ChatRoomState();
@@ -24,6 +25,9 @@ class _ChatRoomState extends State<ChatRoom> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _controller = TextEditingController();
   late ChatViewModel chatViewModel;
+  late UserViewModel userViewModel;
+  late UserDetail userDetail;
+  late String userId = "";
   List<ChatMessage> messages = [];
   bool _isEmpty = false;
   late IO.Socket _socket;
@@ -61,30 +65,24 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   Future<void> _getMessage() async{
-    // await chatViewModel.fetchChatMessage(widget.chatId);
-    // setState(() {
-    //   messages = chatViewModel.message;
-    // });
-    try {
-    Response response = await Dio().get(
-      '${ApiConstants.baseUrl}/chats/${widget.chatId}',
-      // Replace ':id' with the actual chat room ID you want to retrieve messages for
+    final response = await ApiService.request(
+        'GET',
+        '${ApiConstants.baseUrl}/${widget.chatId}',
+        requiresAuth: true,
     );
 
-    if (response.statusCode == 200) {
-      // Chat messages retrieved successfully
-      messages = response.data;
-      print(messages);
-    } else {
-      // Error occurred while retrieving chat messages
-      // Handle the error based on the response status code
-      print("error");
-    }
-  } catch (e) {
-    // Error occurred while making the request
-    // Handle the network or other errors
-    print('Error getting chat messages: $e');
+    setState(() {
+      messages = response.data['data']['messages'];
+    });
   }
+
+  _getUser() async {
+    await userViewModel.fetchUser();
+    setState(() {
+      userDetail = userViewModel.userDetail;
+      userId = userDetail.id;
+    });
+    print('user detail $userDetail');
   }
 
   @override
@@ -96,12 +94,13 @@ class _ChatRoomState extends State<ChatRoom> {
       "http://localhost:8000",
       IO.OptionBuilder()
           .setTransports(['websocket'])
-          .setQuery({'userName': widget.userName, 'chatId' : widget.chatId})
+          .setQuery({'userName': '649020872f417fdf203f6ba9','chatId' : widget.chatId})
           .build(),
     );
     _connectSocket();
     _getMessage();
-    
+    _getUser();
+
   }
 
   @override
@@ -132,7 +131,7 @@ class _ChatRoomState extends State<ChatRoom> {
     });
     _socket.emit('chat message', {
       'message': text,
-      'sender': widget.userName,
+      'sender': '649020872f417fdf203f6ba9',
       'chatId' : widget.chatId,
       'timestamp': timestamp,
     });

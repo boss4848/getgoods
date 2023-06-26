@@ -36,8 +36,8 @@ io.on('connection', (socket) => {
     const chatId = socket.handshake.query.chatId;
 
     console.log('A user connected');
-    console.log(userName);
-    console.log(chatId);
+    console.log('username: ' + userName);
+    console.log('chatId: '+ chatId);
 
     socket.on('chat message', (message) => {
         Message.create({

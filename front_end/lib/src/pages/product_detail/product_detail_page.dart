@@ -8,10 +8,12 @@ import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/product_model.dart';
 import 'package:getgoods/src/pages/Messages/widgets/chat_room.dart';
 import 'package:getgoods/src/viewmodels/chat_viewmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common_widgets/custom_app_bar.dart';
 import '../../constants/constants.dart';
 import '../../models/review_model.dart';
+import '../../services/api_service.dart';
 import '../../utils/format.dart';
 import '../../viewmodels/product_viewmodel.dart';
 import '../../viewmodels/review_viewmodel.dart';
@@ -41,7 +43,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     reviewViewModel = ReviewViewModel();
     reviews = reviewViewModel.reviews;
-
+    
     _getProduct();
     _getReview();
   }
@@ -51,6 +53,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     setState(() {
       product = productViewModel.productDetail;
       log('product: ${product.name}');
+      log('owner id: ${product.shop.ownerId}');
     });
   }
 
@@ -64,33 +67,30 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   Future<void> createChat() async {
-  try {
-    Response response = await Dio().post(
-      // '${ApiConstants.baseUrl}/chats/createChat',
-      '${ApiConstants.baseUrl}/chats/createChat',
-      data: {
-        'member': [
-          '649020872f417fdf203f6ba9',
-          '6487747c9c858d1de5061eab'
-        ]
+    final response = await ApiService.request(
+        'POST',
+        '${ApiConstants.baseUrl}/chats/createChat',
+        requiresAuth: true,
+        data: {
+        'ownerId': product.shop.ownerId
       },
-    );
+      );
 
-    if (response.statusCode == 201) {
-      // Chat room created successfully
-      var responseData = response.data;
-      // Handle the response data as needed
-      log(responseData);
-    } else {
-      // Error occurred while creating chat room
-      // Handle the error based on the response status code
-    }
-  } catch (e) {
-    // Error occurred while making the request
-    // Handle the network or other errors
-    print('Error creating chat room: $e');
-  }
+    log(response);
+
 }
+
+Future<String?> _getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  void _setAuthToken(String? token) {
+    if (token == null) {
+      throw Exception('No token found');
+    }
+    dio.options.headers['Authorization'] = 'Bearer $token';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +240,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                     ],
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      createChat();
+                                    },
                                     //outlined
                                     style: ElevatedButton.styleFrom(
                                       padding: const EdgeInsets.symmetric(
@@ -257,26 +259,21 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                       ),
                                     ),
 
-                                    child: GestureDetector(
-                                      onTap: (){
-                                        createChat();
-                                      },
-                                      child: Row(
-                                        children: const [
-                                          Icon(
-                                            CupertinoIcons.bubble_right,
-                                            color: primaryColor,
+                                    child: Row(
+                                      children: const [
+                                        Icon(
+                                          CupertinoIcons.bubble_right,
+                                          color: primaryColor,
+                                        ),
+                                        SizedBox(width: 7),
+                                        Text(
+                                          'Chat Now',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                          SizedBox(width: 7),
-                                          Text(
-                                            'Chat Now',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],

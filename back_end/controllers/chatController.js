@@ -3,10 +3,9 @@ const Message = require("../models/messageModel")
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const mongoose = require("mongoose");
-const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.getChatList = catchAsync(async (req, res, next) => {
-  const chat = await Chat.findById(req.params._id);
+  const chat = await Chat.find({ members: { $in: req.user.id } })
 
   if (!chat) {
     return next(new AppError("No chat room found", 404));
@@ -21,7 +20,7 @@ exports.getChatList = catchAsync(async (req, res, next) => {
 });
 
 exports.getMessage = catchAsync(async (req, res, next) => {
-  const message = await Message.findById(req.params.chatId).populate("message");
+  const message = await Message.find({ chatId : { $in: req.params.chatId } }).populate("message");
 
   res.status(200).json({
     status: "success",
@@ -32,14 +31,29 @@ exports.getMessage = catchAsync(async (req, res, next) => {
 });
 
 exports.createChatRoom = catchAsync(async (req, res, next) => {
-  const newRoom = await Chat.create(req.body);
+  const ownerId = req.body.ownerId
+  const userId = req.user.id
+  const chat = await Chat.find({ members: { $in: [ownerId, userId] } })
 
+  if(chat.length !== 0){
+    return next(new AppError('You already have a chat', 400));
+  }
+  if(ownerId == userId){
+    return next(new AppError('You cannot talk with yourself na', 400));
+  }
+    const newRoom = await Chat.create({
+    "members": [
+      ownerId,
+      userId
+    ]
+  });
   res.status(201).json({
     status: 'success',
     data: {
         data: newRoom
     }
 });
+  
 })
 
 exports.deleteChatRoom = catchAsync(async (req, res, next) => {
