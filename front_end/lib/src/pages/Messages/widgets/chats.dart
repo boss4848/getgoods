@@ -23,8 +23,6 @@ class Chats extends StatefulWidget {
 }
 
 class _ChatsState extends State<Chats> {
-  late UserViewModel userViewModel;
-  late ChatViewModel chatViewModel;
   late UserDetail userDetail;
   late String roomId;
   List<ChatList> chatLists = [];
@@ -54,32 +52,38 @@ class _ChatsState extends State<Chats> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: secondaryBGColor,
-        child: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.only(
-                top: 62,
-                left: 12,
-                right: 12,
-              ),
-              child: Column(
-                children: List.generate(
-                  chatLists.length,
-                  (index) => _buildChatItem(
-                    context: context,
-                    avatar: 'https://i.pravatar.cc/150?img=$index',
-                    name: 'John Doe',
-                    message: 'Hello, how are you?',
-                    time: '12:00 PM',
-                  ),
-                  // ),
-                ),
-              )),
-        ));
-  }
+  return Container(
+    color: secondaryBGColor,
+    child: SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 62,
+          left: 12,
+          right: 12,
+        ),
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: chatLists.length,
+          itemBuilder: (context, index) {
+            return _buildChatItem(
+              index : index,
+              avatar: chatLists[index].member[0].photo,
+              name: chatLists[index].member[0].name,
+              message: 'Hello, how are you?',
+              time: '12:00 PM',
+              context: context,
+            );
+          },
+        ),
+      ),
+    ),
+  );
+}
+
 
   GestureDetector _buildChatItem({
+    required int index,
     required String avatar,
     required String name,
     required String message,
@@ -92,7 +96,7 @@ class _ChatsState extends State<Chats> {
           context,
           MaterialPageRoute(
             builder: (context) => ChatRoom(
-              chatId: '6499b11ef851f957787da579',
+              chatId: chatLists[index].chatId,
             ),
             //builder: (context) => ChatRoom(userDetail: UserDetail(name: name)),
           ),

@@ -67,12 +67,15 @@ class _ChatRoomState extends State<ChatRoom> {
   Future<void> _getMessage() async{
     final response = await ApiService.request(
         'GET',
-        '${ApiConstants.baseUrl}/${widget.chatId}',
+        '${ApiConstants.baseUrl}/chats/${widget.chatId}',
         requiresAuth: true,
     );
 
+    final Map<String, dynamic> data = response['data'];
+    final List<dynamic> messageData = data['message'];
+    messages = messageData.map((e) => ChatMessage.fromJson(e)).toList();
+
     setState(() {
-      messages = response.data['data']['messages'];
     });
   }
 
@@ -131,7 +134,7 @@ class _ChatRoomState extends State<ChatRoom> {
     });
     _socket.emit('chat message', {
       'message': text,
-      'sender': '649020872f417fdf203f6ba9',
+      'sender': userId,
       'chatId' : widget.chatId,
       'timestamp': timestamp,
     });
@@ -175,10 +178,10 @@ class _ChatRoomState extends State<ChatRoom> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         //user name
-                        "Passakorn Puttama",
-                        style: TextStyle(
+                        widget.chatId,
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(
