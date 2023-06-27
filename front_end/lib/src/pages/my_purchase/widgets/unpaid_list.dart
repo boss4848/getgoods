@@ -1,12 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/models/transaction_model.dart';
 import 'package:getgoods/src/pages/transaction/tansaction_page.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/colors.dart';
 
 class UnpaidList extends StatefulWidget {
-  const UnpaidList({super.key});
+  final List<Transaction> transactions;
+  const UnpaidList({
+    super.key,
+    required this.transactions,
+  });
 
   @override
   State<UnpaidList> createState() => _UnpaidListState();
@@ -17,26 +22,41 @@ class _UnpaidListState extends State<UnpaidList> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Column(
-        children: [
-          const SizedBox(height: 6),
-          _buildUnpaid(
-              shop: 'Trakasarn',
-              name: 'Product name',
-              order: '4567ujf38h833fh',
-              date: DateFormat.yMd().add_jm(),
-              amount: 2,
-              payment: 1000,
-              context: context),
-          _buildUnpaid(
-              shop: 'Trakasarn',
-              name: 'Product name',
-              order: '4567ujf38h833fh',
-              date: DateFormat.yMd().add_jm(),
-              amount: 2,
-              payment: 1000,
-              context: context)
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 6),
+            //list unpaid loop
+            for (var i = 0; i < widget.transactions.length; i++)
+              _buildUnpaid(
+                shop: widget.transactions[i].shop.name,
+                name: widget.transactions[i].productTransaction.name,
+                order: widget.transactions[i].id,
+                date: widget.transactions[i].createdAt,
+                amount: widget.transactions[i].productTransaction.quantity,
+                payment: widget.transactions[i].productTransaction.price,
+                context: context,
+              ),
+            // _buildUnpaid(
+            //   shop: 'Trakasarn',
+            //   name: 'Product name',
+            //   order: '4567ujf38h833fh',
+            //   date: DateFormat.yMd().add_jm(),
+            //   amount: 2,
+            //   payment: 1000,
+            //   context: context,
+            // ),
+            // _buildUnpaid(
+            //   shop: 'Trakasarn',
+            //   name: 'Product name',
+            //   order: '4567ujf38h833fh',
+            //   date: DateFormat.yMd().add_jm(),
+            //   amount: 2,
+            //   payment: 1000,
+            //   context: context,
+            // ),
+          ],
+        ),
       ),
     );
   }
@@ -46,7 +66,7 @@ Container _buildUnpaid(
     {required String shop,
     required String name,
     required String order,
-    required DateFormat date,
+    required DateTime date,
     required int amount,
     required double payment,
     required BuildContext context}) {
