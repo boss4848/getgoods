@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
+import 'package:getgoods/src/models/product_model.dart';
 import 'package:getgoods/src/pages/product_detail/widgets/custom_bottom_bar.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({super.key});
+  final ProductDetail product;
+  const CustomAppBar({
+    super.key,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +60,9 @@ class CustomAppBar extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        const CustomBottomBar(),
+        CustomBottomBar(
+          product: product,
+        ),
       ],
     );
   }

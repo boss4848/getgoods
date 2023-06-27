@@ -4,11 +4,13 @@ class Shop {
   final String id;
   final String name;
   final Location location;
+  final String ownerId;
 
   Shop({
     required this.id,
     required this.name,
     required this.location,
+    required this.ownerId,
   });
 
   factory Shop.fromJson(Map<String, dynamic> json) {
@@ -16,6 +18,7 @@ class Shop {
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       location: Location.fromJson(json['location'] ?? {}),
+      ownerId: json['owner']['_id'] ?? '',
     );
   }
 
@@ -24,6 +27,7 @@ class Shop {
       id: '',
       name: '',
       location: Location.empty(),
+      ownerId: '',
     );
   }
 }
