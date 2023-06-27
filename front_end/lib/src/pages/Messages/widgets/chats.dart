@@ -16,7 +16,6 @@ import '../../../services/api_service.dart';
 import 'chat_room.dart';
 
 class Chats extends StatefulWidget {
-
   const Chats({Key? key}) : super(key: key);
 
   @override
@@ -28,67 +27,56 @@ class _ChatsState extends State<Chats> {
   late ChatViewModel chatViewModel;
   late UserDetail userDetail;
   late String roomId;
-  late List<ChatList> chatLists;
+  List<ChatList> chatLists = [];
 
   @override
-  void initState() {
+  initState() {
     super.initState();
     getChatList();
   }
 
   Future<void> getChatList() async {
     final response = await ApiService.request(
-        'GET',
-        '${ApiConstants.baseUrl}/chats/chatList',
-        requiresAuth: true,
+      'GET',
+      '${ApiConstants.baseUrl}/chats/chatList',
+      requiresAuth: true,
     );
 
-    print('chat list: $response');
-    final Map<String, dynamic> data = response;
-    final List<dynamic> chatList = data['chat'];
-    
-    chatLists = chatList.map((e) => ChatList.fromJson(e)).toList();
+    final Map<String, dynamic> data = response['data'];
 
-    setState(() {
-      
-    });
+    log('data: ${data['chat']}');
+    final List<dynamic> chatListData = data['chat'];
+    chatLists = chatListData.map((e) => ChatList.fromJson(e)).toList();
 
-
-    // setState(() {
-      // chatLists = List<ChatList>.from(data.map((chat) {
-      //   return ChatList.fromJson(chat);
-      // }));
-    // });
+    log('chatLists: ${chatLists.length}');
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: secondaryBGColor,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 62,
-            left: 12,
-            right: 12,
-          ),
-          child: Column(
-            children: 
-              List.generate(
-              chatLists.length,
-              (index) => _buildChatItem(
-                context: context,
-                avatar: 'https://i.pravatar.cc/150?img=$index',
-                name: 'John Doe',
-                message: 'Hello, how are you?',
-                time: '12:00 PM',
+        color: secondaryBGColor,
+        child: SingleChildScrollView(
+          child: Padding(
+              padding: const EdgeInsets.only(
+                top: 62,
+                left: 12,
+                right: 12,
               ),
-            // ),
-          ),
-            
-          )
-      ),
-    ));
+              child: Column(
+                children: List.generate(
+                  chatLists.length,
+                  (index) => _buildChatItem(
+                    context: context,
+                    avatar: 'https://i.pravatar.cc/150?img=$index',
+                    name: 'John Doe',
+                    message: 'Hello, how are you?',
+                    time: '12:00 PM',
+                  ),
+                  // ),
+                ),
+              )),
+        ));
   }
 
   GestureDetector _buildChatItem({
@@ -103,7 +91,9 @@ class _ChatsState extends State<Chats> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatRoom(chatId: '6499b11ef851f957787da579',),
+            builder: (context) => ChatRoom(
+              chatId: '6499b11ef851f957787da579',
+            ),
             //builder: (context) => ChatRoom(userDetail: UserDetail(name: name)),
           ),
         );

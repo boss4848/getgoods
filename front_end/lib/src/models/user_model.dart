@@ -1,25 +1,27 @@
 import 'shop_model.dart';
 
 class User {
+  final String id;
   final String photo;
   final String name;
 
   User({
+    required this.id,
     required this.photo,
     required this.name,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      photo: json['photo'] ??
-          'https://getgoods.blob.core.windows.net/user-photos/default.png',
+      photo: json['photo'] ?? '',
+      id: json['_id'] ?? '',
       name: json['name'] ?? '',
     );
   }
-
   factory User.empty() {
     return User(
-      photo: 'https://getgoods.blob.core.windows.net/user-photos/default.png',
+      id: '',
+      photo: 'https://getgoods.blob.core.windows.net/user-photos/default.jpg',
       name: '',
     );
   }
