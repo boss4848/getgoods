@@ -17,22 +17,31 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   final _scrollController = TrackingScrollController();
-  late ProductViewModel productViewModel;
+
   String category = '';
 
+  late ProductViewModel productViewModel;
   List<Product> products = [];
 
   @override
   void initState() {
     super.initState();
     productViewModel = ProductViewModel();
-    // _getProducts();
+    _getAllProducts();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  _getAllProducts() async {
+    await productViewModel.fetchProducts();
+
+    setState(() {
+      products = productViewModel.products;
+    });
   }
 
   Future<void> _getProducts(String category) async {
@@ -51,6 +60,17 @@ class _CategoryPageState extends State<CategoryPage> {
     _getProducts(category);
   }
 
+  _setToDefault() {
+    setState(() {
+      category = '';
+    });
+    print('category: You set to default');
+    _getAllProducts();
+    setState(() {
+      products = productViewModel.products;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,14 +83,22 @@ class _CategoryPageState extends State<CategoryPage> {
             ),
             ProductFilter(
               filterProduct: _setCategory,
+              defaultProduct: _setToDefault,
             ),
             Column(
               children: [
-                _buildHeader(category),
-                CatContent(_scrollController,
-                    products: products,
-                    productViewModel: productViewModel,
-                    onRefresh: () => _getProducts(category)),
+                if (category.isEmpty) _buildHeader('Recommended'),
+                // CatContent(_scrollController,
+                //     onRefresh: () => _getAllProducts(),
+                //     products: products,
+                //     productViewModel: productViewModel),
+                if (category.isNotEmpty) _buildHeader(category),
+                CatContent(
+                  _scrollController,
+                  products: products,
+                  productViewModel: productViewModel,
+                  onRefresh: () => _getProducts(category),
+                ),
                 ElevatedButton(
                   onPressed: () {
                     _getProducts(category);
@@ -97,10 +125,15 @@ class _CategoryPageState extends State<CategoryPage> {
       },
     );
 
-    modifiedTitle = modifiedTitle.toUpperCase();
+    modifiedTitle = modifiedTitle.toLowerCase();
 
+    if (modifiedTitle.isNotEmpty) {
+      modifiedTitle =
+          modifiedTitle[0].toUpperCase() + modifiedTitle.substring(1);
+    }
     return Container(
       color: Colors.white,
+      alignment: Alignment.centerLeft,
       padding: const EdgeInsets.all(12),
       child: Text(
         modifiedTitle,

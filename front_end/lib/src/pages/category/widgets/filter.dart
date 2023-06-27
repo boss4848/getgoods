@@ -3,7 +3,9 @@ import 'package:getgoods/src/constants/colors.dart';
 
 class ProductFilter extends StatefulWidget {
   final Function filterProduct;
-  const ProductFilter({Key? key, required this.filterProduct})
+  final Function defaultProduct;
+  const ProductFilter(
+      {Key? key, required this.filterProduct, required this.defaultProduct})
       : super(key: key);
 
   @override
@@ -33,7 +35,7 @@ class _ProductFilterState extends State<ProductFilter> {
                 ),
                 _sorting(),
                 const Spacer(),
-                _clear(),
+                _clear(widget.defaultProduct),
               ],
             ),
           ),
@@ -156,8 +158,9 @@ class _ProductFilterState extends State<ProductFilter> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color:
-                  _selectedCategory == formattedCategory ? primaryColor : null,
+              color: _selectedCategory == formattedCategory
+                  ? primaryColor
+                  : primaryTextColor,
             ),
           ),
         ),
@@ -248,19 +251,25 @@ class _ProductFilterState extends State<ProductFilter> {
     );
   }
 
-  Widget _clear() {
+  Widget _clear(Function defaultProduct) {
     return Flexible(
       child: Container(
         width: double.infinity,
         alignment: Alignment.bottomRight,
-        child: const Text(
-          'Set to default',
-          maxLines: 2,
-          style: TextStyle(
-            decoration: TextDecoration.underline,
-            fontSize: 12,
-            color: primaryColor,
-            overflow: TextOverflow.ellipsis,
+        child: GestureDetector(
+          onTap: () {
+            defaultProduct();
+            print('set to default');
+          },
+          child: const Text(
+            'Set to default',
+            maxLines: 2,
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+              fontSize: 12,
+              color: primaryColor,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ),
       ),
