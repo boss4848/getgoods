@@ -33,16 +33,21 @@ exports.getMessage = catchAsync(async (req, res, next) => {
 exports.createChatRoom = catchAsync(async (req, res, next) => {
   const ownerId = req.body.ownerId
   const userId = req.user.id
-  const chat = await Chat.find({ members: { $in: [ownerId, userId] } })
-
-  if(chat.length !== 0){
+  // const chat = await Chat.find({ members: { $in: [ownerId, userId] } })
+  const chat = await Chat.findOne({
+    $and: [
+      { members: { $all: [ownerId, userId] } },
+      { members: { $size: 2 } },
+      { ownerId: { $ne: userId } }
+    ]
+  });
+  
+  if(chat){
     return next(new AppError('You already have a chat', 400));
   }
-  if(ownerId == userId){
-    return next(new AppError('You cannot talk with yourself na', 400));
-  }
-    const newRoom = await Chat.create({
-    "members": [
+
+  const newRoom = await Chat.create({
+    members: [
       ownerId,
       userId
     ]

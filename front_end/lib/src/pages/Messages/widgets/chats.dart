@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../../../constants/constants.dart';
+import '../../../models/chat_room_model.dart';
 import '../../../services/api_service.dart';
 import 'chat_room.dart';
 
@@ -27,12 +28,11 @@ class _ChatsState extends State<Chats> {
   late ChatViewModel chatViewModel;
   late UserDetail userDetail;
   late String roomId;
-  List<String>? list;
+  late List<ChatList> chatLists;
 
   @override
   void initState() {
     super.initState();
-    chatViewModel = ChatViewModel();
     getChatList();
   }
 
@@ -43,17 +43,22 @@ class _ChatsState extends State<Chats> {
         requiresAuth: true,
     );
 
+    print('chat list: $response');
+    final Map<String, dynamic> data = response;
+    final List<dynamic> chatList = data['chat'];
+    
+    chatLists = chatList.map((e) => ChatList.fromJson(e)).toList();
+
     setState(() {
       
     });
-    
-  }
 
-  _getUser() async {
-    await userViewModel.fetchUser();
-    setState(() {
-      userDetail = userViewModel.userDetail;
-    });
+
+    // setState(() {
+      // chatLists = List<ChatList>.from(data.map((chat) {
+      //   return ChatList.fromJson(chat);
+      // }));
+    // });
   }
 
   @override
@@ -70,7 +75,7 @@ class _ChatsState extends State<Chats> {
           child: Column(
             children: 
               List.generate(
-              5,
+              chatLists.length,
               (index) => _buildChatItem(
                 context: context,
                 avatar: 'https://i.pravatar.cc/150?img=$index',
