@@ -44,6 +44,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     setState(() {
       product = productViewModel.productDetail;
       log('product: ${product.name}');
+      log('ownerId: ${product.shop.ownerId}');
     });
   }
 
@@ -278,7 +279,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ],
                   ),
                 ),
-                const CustomAppBar(),
+                CustomAppBar(
+                  product: product,
+                ),
 
                 // const CustomBottomBar(),
 
