@@ -61,16 +61,13 @@ exports.getTransaction = catchAsync(async (req, res, next) => {
     });
 });
 
-// exports.getTransaction = catchAsync(async (req, res, next) => {
-//     const transaction = await stripe.paymentIntents.retrieve(
-//         // 'pi_3NMpVAI5fmkNEzwd0pd5h7lC'
-//         req.params.piId,
+exports.getAllTransactions = catchAsync(async (req, res, next) => {
+    // find by user id
+    const transactions = await Transaction.find({ user: req.user.id });
 
-//     );
-
-//     res.status(200).json({
-//         status: 'success',
-//         transaction,
-//     })
-// })
+    res.status(200).json({
+        status: 'success',
+        transactions,
+    });
+});
 

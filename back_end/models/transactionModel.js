@@ -51,4 +51,19 @@ const transactionSchema = new mongoose.Schema({
     toObject: { virtuals: true }
 });
 
+transactionSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'user',
+        select: 'name email phone address'
+    }).populate({
+        path: 'shop',
+        //filter out owner
+        select: 'name'
+    }).populate({
+        path: 'products',
+        select: 'name price quantity imageCover'
+    });
+    next();
+});
+
 module.exports = mongoose.model('Transaction', transactionSchema);
