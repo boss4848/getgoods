@@ -13,19 +13,16 @@ class ProductFilter extends StatefulWidget {
 class _ProductFilterState extends State<ProductFilter> {
   bool _isCategorySelectorVisible = false;
   String _selectedCategory = '';
-  final String _selectedSortOption =
-      'Most Relevant'; // Default selected sorting option
+  final String _selectedSortOption = 'Most Relevant';
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Colors.yellow,
       padding: const EdgeInsets.all(15),
       child: Column(
         children: [
           Container(
             width: double.infinity,
-            // color: Colors.blue,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -50,7 +47,7 @@ class _ProductFilterState extends State<ProductFilter> {
                     ? ClipRect(
                         child: Align(
                           alignment: Alignment.topCenter,
-                          child: _buildCategorySelector(),
+                          child: _buildCategorySelector(widget.filterProduct),
                         ),
                       )
                     : null,
@@ -58,7 +55,7 @@ class _ProductFilterState extends State<ProductFilter> {
             ],
           ),
           const SizedBox(
-            height: 10,
+            height: 2,
           ),
           const Divider(thickness: 1.5),
         ],
@@ -69,31 +66,21 @@ class _ProductFilterState extends State<ProductFilter> {
   Widget _filter() {
     return GestureDetector(
       onTap: () {
-        setState(
-          () {
-            _isCategorySelectorVisible = !_isCategorySelectorVisible;
-            // if (_isCategorySelectorVisible) {
-            //   Future.delayed(const Duration(milliseconds: 500)).then((_) {
-            //     setState(() {
-            //       // Additional state changes after the delay
-            //     });
-            //   });
-            // } else {
-            //   // Additional state changes when hiding the category selector
-            // }
-          },
-        );
+        setState(() {
+          _isCategorySelectorVisible = !_isCategorySelectorVisible;
+        });
       },
       child: Container(
         height: 35,
         width: 110,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey,
-            ),
-            borderRadius: BorderRadius.circular(5),
-            color: primaryColor),
+          border: Border.all(
+            color: Colors.grey,
+          ),
+          borderRadius: BorderRadius.circular(5),
+          color: primaryColor,
+        ),
         child: Row(
           children: [
             const Icon(
@@ -105,9 +92,10 @@ class _ProductFilterState extends State<ProductFilter> {
             Text(
               _selectedCategory.isNotEmpty ? _selectedCategory : 'Category',
               style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold),
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -115,21 +103,20 @@ class _ProductFilterState extends State<ProductFilter> {
     );
   }
 
-  Widget _buildCategorySelector() {
+  Widget _buildCategorySelector(Function filterProduct) {
     return FutureBuilder(
       future: Future.delayed(const Duration(milliseconds: 300)),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(); // Return an empty container while waiting
+          return Container();
         }
         return Container(
-          // color: Colors.yellow,
           child: Column(
             children: [
-              _buildCategoryItem('Processed'),
-              _buildCategoryItem('OTOP'),
-              _buildCategoryItem('Medicinal Plant'),
-              _buildCategoryItem('Dried Food'),
+              _buildCategoryItem('Processed', filterProduct),
+              _buildCategoryItem('OTOP', filterProduct),
+              _buildCategoryItem('Medicinal Plant', filterProduct),
+              _buildCategoryItem('Dried Good', filterProduct),
             ],
           ),
         );
@@ -137,24 +124,40 @@ class _ProductFilterState extends State<ProductFilter> {
     );
   }
 
-  Widget _buildCategoryItem(String category) {
+  Widget _buildCategoryItem(String category, Function filterProduct) {
+    String formattedCategory = category.toLowerCase().replaceAll(' ', '');
+    String convertToCamelCase(String text) {
+      List<String> words = text.split(RegExp(r'\s+|_'));
+      String camelCaseText = words[0].toLowerCase();
+      for (int i = 1; i < words.length; i++) {
+        String word = words[i];
+        camelCaseText += word.substring(0, 1).toUpperCase() +
+            word.substring(1).toLowerCase();
+      }
+
+      return camelCaseText;
+    }
+
     return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedCategory = category;
-          _isCategorySelectorVisible = false; // Close the category selector
-        });
-      },
+      // onTap: () {
+      //   setState(() {
+      //     _selectedCategory = formattedCategory;
+      //     _isCategorySelectorVisible = false;
+      //     print(
+      //         'Category clicked: $formattedCategory');
+      //   });
+      // },
+      onTap: () => filterProduct(convertToCamelCase(category)),
       child: Container(
-        // color: Colors.red,
         height: 40,
         child: ListTile(
           title: Text(
             category,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: _selectedCategory == category ? primaryColor : null,
+              color:
+                  _selectedCategory == formattedCategory ? primaryColor : null,
             ),
           ),
         ),
@@ -197,19 +200,12 @@ class _ProductFilterState extends State<ProductFilter> {
             ),
           ),
         ],
-
-        // onSelected: (String value) {
-        //   setState(() {
-        //     _selectedSortOption = value;
-        //     // Perform sorting based on the selected option
-        //   });
-        // },
-
         child: Container(
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: (BorderRadius.circular(5)),
-              color: primaryColor),
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(5),
+            color: primaryColor,
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 5),
           child: Row(
             children: [
@@ -223,9 +219,10 @@ class _ProductFilterState extends State<ProductFilter> {
                       child: const Text(
                         'Sort by',
                         style: TextStyle(
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                          fontSize: 8,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 5),
@@ -261,7 +258,7 @@ class _ProductFilterState extends State<ProductFilter> {
           maxLines: 2,
           style: TextStyle(
             decoration: TextDecoration.underline,
-            fontSize: 10,
+            fontSize: 12,
             color: primaryColor,
             overflow: TextOverflow.ellipsis,
           ),

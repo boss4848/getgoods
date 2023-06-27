@@ -1,68 +1,54 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/pages/category/widgets/catcontent.dart';
 import 'package:getgoods/src/pages/category/widgets/filter.dart';
 import 'package:getgoods/src/pages/category/widgets/header.dart';
-import 'package:getgoods/src/pages/category/widgets/product.dart';
 import 'package:getgoods/src/viewmodels/product_viewmodel.dart';
 
 import '../../models/product_model.dart';
 
 class CategoryPage extends StatefulWidget {
-  const CategoryPage({super.key});
+  const CategoryPage({Key? key}) : super(key: key);
 
   @override
   State<CategoryPage> createState() => _CategoryPageState();
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  final _scrollControll = TrackingScrollController();
-  // late ProductViewModel productViewModel;
+  final _scrollController = TrackingScrollController();
+  late ProductViewModel productViewModel;
   String category = '';
 
-  late List<Product> products;
-  late ProductViewModel productViewModel;
-
-  _setCategory(String category) {
-    setState(() {
-      this.category = category;
-    });
-  }
-
-  // _filterProduct() async {
-  //   await productViewModel.filteredProduct(category);
-  //   setState(() {
-  //     products = productViewModel.products;
-  //   });
-  // }
-
-  // _getProduct() async {
-  //   await productViewModel.fetchProducts();
-  //   setState(() {
-  //     products = productViewModel.products;
-  //   });
-  // }
+  List<Product> products = [];
 
   @override
   void initState() {
     super.initState();
     productViewModel = ProductViewModel();
-    products = productViewModel.filterProduct;
-    _getProducts();
+    // _getProducts();
   }
 
   @override
   void dispose() {
-    _scrollControll.dispose();
+    _scrollController.dispose();
     super.dispose();
-    _getProducts();
-    products = productViewModel.filterProduct;
   }
 
-  _getProducts() async {
-    await productViewModel.filteredProduct('otop');
-
+  Future<void> _getProducts(String category) async {
+    await productViewModel.filteredProduct(category);
     setState(() {
       products = productViewModel.filterProduct;
+      log('In $category category has ${products.length} products');
     });
+  }
+
+  void _setCategory(String selectedCategory) {
+    setState(() {
+      category = selectedCategory;
+    });
+    print('category: $category');
+    _getProducts(category);
   }
 
   @override
@@ -70,18 +56,59 @@ class _CategoryPageState extends State<CategoryPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Column(children: [
-          CategoryHeader(
-            scrollController: _scrollControll,
-          ),
-          ProductFilter(
-            filterProduct: _setCategory,
-          ),
-          ShowProduct(
-            products: products,
-            productViewModel: productViewModel,
-          ),
-        ]),
+        child: Column(
+          children: [
+            CategoryHeader(
+              scrollController: _scrollController,
+            ),
+            ProductFilter(
+              filterProduct: _setCategory,
+            ),
+            Column(
+              children: [
+                _buildHeader(category),
+                CatContent(_scrollController,
+                    products: products,
+                    productViewModel: productViewModel,
+                    onRefresh: () => _getProducts(category)),
+                ElevatedButton(
+                  onPressed: () {
+                    _getProducts(category);
+                  },
+                  child: const Text('Refresh'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(String headTitle) {
+    String modifiedTitle = headTitle.replaceAllMapped(
+      RegExp(r'([A-Z]+)(?=[A-Z][a-z])|([a-z]+)(?=[A-Z])'),
+      (Match match) {
+        if (match.group(1) != null) {
+          return '${match.group(1)} ';
+        } else {
+          return '${match.group(2)} ';
+        }
+      },
+    );
+
+    modifiedTitle = modifiedTitle.toUpperCase();
+
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(12),
+      child: Text(
+        modifiedTitle,
+        style: const TextStyle(
+          color: Colors.green,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
       ),
     );
   }
