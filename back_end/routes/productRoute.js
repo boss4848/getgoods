@@ -6,9 +6,10 @@ const productController = require('../controllers/productController');
 const authController = require('../controllers/authController');
 const reviewRouter = require('./reviewRoute');
 const shopController = require('../controllers/shopController');
-
+const cartRouter = require('./cartRoute');
 //Nested routes
 router.use('/:productId/reviews', reviewRouter);
+router.use('/:productId/cart', cartRouter);
 
 //Routes
 router

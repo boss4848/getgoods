@@ -3,6 +3,9 @@ const catchAsync = require('../utils/catchAsync');
 const jwt = require('jsonwebtoken');
 const AppError = require('../utils/appError');
 const { promisify } = require('util');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Cart = require('../models/cartModel');
+
 const signToken = id => {
     return jwt.sign({ id },
         process.env.JWT_SECRET, {
@@ -11,26 +14,41 @@ const signToken = id => {
 }
 
 exports.signup = catchAsync(async (req, res, next) => {
+    //create stripe customer
+    const customer = await stripe.customers.create({
+        email: req.body.email,
+        name: req.body.name,
+    });
+    console.log(customer);
+    //handle error
+    if (!customer) {
+        return next(new AppError('Creating customer on stripe error', 401));
+    }
+    //create user
     const newUser = await User.create({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        address: req.body.address,
-        phone: req.body.phone,
+        // address: req.body.address,
+        // phone: req.body.phone,
+        stripeId: customer.id,
         // passwordConfirm: req.body.passwordConfirm
     });
-
+    //create cart
+    const newCart = await Cart.create({
+        user: newUser._id,
+    });
     const token = signToken(newUser._id);
 
     res.status(201).json({
         status: 'success',
         token,
         data: {
-            user: newUser
+            user: newUser,
+            stripe: customer,
         }
     });
-}); 1
-
+});
 exports.login = catchAsync(async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
