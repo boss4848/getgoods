@@ -140,16 +140,17 @@ class _ProductFilterState extends State<ProductFilter> {
       return camelCaseText;
     }
 
+    bool isSelected = _selectedCategory == formattedCategory; // Add this line
+
     return InkWell(
-      // onTap: () {
-      //   setState(() {
-      //     _selectedCategory = formattedCategory;
-      //     _isCategorySelectorVisible = false;
-      //     print(
-      //         'Category clicked: $formattedCategory');
-      //   });
-      // },
-      onTap: () => filterProduct(convertToCamelCase(category)),
+      onTap: () {
+        setState(() {
+          _selectedCategory = formattedCategory;
+          _isCategorySelectorVisible = false;
+          print('Category clicked: $category');
+          print('Category 2 clicked: $_selectedCategory');
+        });
+      },
       child: Container(
         height: 40,
         child: ListTile(
@@ -158,9 +159,7 @@ class _ProductFilterState extends State<ProductFilter> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: _selectedCategory == formattedCategory
-                  ? primaryColor
-                  : primaryTextColor,
+              color: isSelected ? Colors.green : primaryTextColor,
             ),
           ),
         ),
