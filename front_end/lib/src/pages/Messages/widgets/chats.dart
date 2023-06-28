@@ -6,6 +6,7 @@ import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/user_model.dart';
 import 'package:getgoods/src/viewmodels/chat_viewmodel.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -24,12 +25,29 @@ class Chats extends StatefulWidget {
 
 class _ChatsState extends State<Chats> {
   late String roomId;
+  late String? userId = "";
   List<ChatList> chatLists = [];
 
   @override
   initState() {
     super.initState();
+    _getUserId();
     getChatList();
+  }
+
+  Future<void> _getUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+  }
+
+  int isCurrentUser(int index) {
+    if(chatLists[index].member[0].id == userId) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
   Future<void> getChatList() async {
@@ -43,42 +61,42 @@ class _ChatsState extends State<Chats> {
 
     log('data: ${data['chat']}');
     final List<dynamic> chatListData = data['chat'];
-    chatLists = chatListData.map((e) => ChatList.fromJson(e)).toList();
+    setState(() {
+      chatLists = chatListData.map((e) => ChatList.fromJson(e)).toList();
+    });
 
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-  return Container(
-    color: secondaryBGColor,
-    child: SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 62,
-          left: 12,
-          right: 12,
-        ),
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: chatLists.length,
-          itemBuilder: (context, index) {
-            return _buildChatItem(
-              index : index,
-              avatar: chatLists[index].member[0].photo,
-              name: chatLists[index].member[0].name,
-              message: 'Hello, how are you?',
-              time: '12:00 PM',
-              context: context,
-            );
-          },
+    return Container(
+      color: secondaryBGColor,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 62,
+            left: 12,
+            right: 12,
+          ),
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: chatLists.length,
+            itemBuilder: (context, index) {
+              return _buildChatItem(
+                index: index,
+                avatar: 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].member[(isCurrentUser(index))].photo}',
+                name: chatLists[index].member[(isCurrentUser(index))].name,
+                message: 'Hello, how are you?',
+                time: '12:00 PM',
+                context: context,
+              );
+            },
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   GestureDetector _buildChatItem({
     required int index,
@@ -95,7 +113,8 @@ class _ChatsState extends State<Chats> {
           MaterialPageRoute(
             builder: (context) => ChatRoom(
               chatId: chatLists[index].chatId,
-              chatName: chatLists[index].member[0].name,
+              chatName: chatLists[index].member[(isCurrentUser(index))].name,
+              avatar : 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].member[(isCurrentUser(index))].photo}'
             ),
             //builder: (context) => ChatRoom(userDetail: UserDetail(name: name)),
           ),

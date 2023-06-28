@@ -18,7 +18,8 @@ import '../../../services/api_service.dart';
 class ChatRoom extends StatefulWidget {
   final String chatId;
   final String chatName;
-  const ChatRoom({Key? key, required this.chatId, required this.chatName})
+  final String avatar;
+  const ChatRoom({Key? key, required this.chatId, required this.chatName, required this.avatar})
       : super(key: key);
 
   @override
@@ -199,9 +200,9 @@ class _ChatRoomState extends State<ChatRoom> {
                 const SizedBox(
                   width: 2,
                 ),
-                const CircleAvatar(
+                CircleAvatar(
                   backgroundImage: NetworkImage(
-                    "https://i.pravatar.cc/150?img=1",
+                    widget.avatar,
                   ),
                   maxRadius: 20,
                 ),
