@@ -18,7 +18,8 @@ import '../../../services/api_service.dart';
 class ChatRoom extends StatefulWidget {
   final String chatId;
   final String chatName;
-  const ChatRoom({Key? key, required this.chatId, required this.chatName}) : super(key: key);
+  const ChatRoom({Key? key, required this.chatId, required this.chatName})
+      : super(key: key);
 
   @override
   State<ChatRoom> createState() => _ChatRoomState();
@@ -33,52 +34,70 @@ class _ChatRoomState extends State<ChatRoom> {
   List<ChatMessage> messages = [];
   bool _isEmpty = false;
   late IO.Socket _socket;
-  
 
-  void _connectSocket() {
-    
-    _socket.onConnect((data) {
-      print('Connection established');
-    });
+  // void _connectSocket() {
+  //   _socket.onConnect((data) {
+  //     print('Connection established');
+  //   });
 
-    _socket.onConnectError((data) {
-      print('Connection Error: $data');
-    });
+  //   _socket.onConnectError((data) {
+  //     print('Connection Error: $data');
+  //   });
 
-    _socket.onDisconnect((data) {
-      print('Socket.IO server disconnect');
-    });
+  //   _socket.onDisconnect((data) {
+  //     print('Socket.IO server disconnect');
+  //   });
 
-    _socket.on('chat message', (data) {
-      setState(() {
-        messages.add(
-          ChatMessage(
-            message: data['message'],
-            sender: data['sender'],
-            chatId: data['chatId'],
-            createdAt: data['timestamp'],
-          ),
-        );
-      });
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    });
+  //   _socket.on('chat message', (data) {
+  //     setState(() {
+  //       messages.add(
+  //         ChatMessage(
+  //           message: data['message'],
+  //           sender: data['sender'],
+  //           chatId: data['chatId'],
+  //           createdAt: data['timestamp'],
+  //         ),
+  //       );
+  //     });
+  //     _scrollController.animateTo(
+  //       _scrollController.position.maxScrollExtent,
+  //       duration: const Duration(milliseconds: 300),
+  //       curve: Curves.easeOut,
+  //     );
+  //   });
+  // }
+
+  _connectionSocket() {
+    _socket = IO.io(
+      "http://localhost:8000",
+      IO.OptionBuilder().setTransports(['websocket']).setQuery(
+          {'userName': userId, 'chatId': widget.chatId}).build(),
+    );
+     _socket.connect();
+    _socket.onConnect((data) => print("data clied-connected"));
+    _socket.onDisconnect((data) => print("data cliend-disconncted"));
+    _socket.on(
+        'chat message',
+        (data) => setState(() {
+              messages.add(ChatMessage(
+                  message: data['message'],
+                  sender: data['sender'],
+                  chatId: data['chatId'],
+                  createdAt: DateTime.now()));
+            }));
   }
 
-  Future<void> _getMessage() async{
+  Future<void> _getMessage() async {
     final response = await ApiService.request(
-        'GET',
-        '${ApiConstants.baseUrl}/chats/${widget.chatId}',
-        requiresAuth: true,
+      'GET',
+      '${ApiConstants.baseUrl}/chats/${widget.chatId}',
+      requiresAuth: true,
     );
-
     final Map<String, dynamic> data = response['data'];
     final List<dynamic> messageData = data['message'];
-    messages = messageData.map((e) => ChatMessage.fromJson(e)).toList();
-    
+    setState(() {
+      messages = messageData.map((e) => ChatMessage.fromJson(e)).toList();
+    });
   }
 
   Future<void> _getUserId() async {
@@ -88,49 +107,37 @@ class _ChatRoomState extends State<ChatRoom> {
     });
   }
 
-  Future<bool?> _checkSender(int index) async{
-    if(userId == messages[index].sender){
-        return true;
-    }
-    else{
-      return false;
-    }
-    
-  }
-
   @override
   void initState() {
     super.initState();
     _getMessage();
-    // If testing app on Android then replace http://localhost:8000 with http://10.0.2.2:8000
-    //platform.isIOS
-    _socket = IO.io(
-      "http://localhost:8000",
-      IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .setQuery({'userName': userId ,'chatId' : widget.chatId})
-          .build(),
-    );
+    _getUserId().then((value) => _connectionSocket());
+    // _getMessage();
 
-    _socket.connect();
+    // _connectionSocket();
+    // _socket.connect();
 
-    _socket.on('chat message', (data) {
-      setState(() {
-        messages.add(
-          ChatMessage(
-            message: data['message'],
-            sender: data['sender'],
-            chatId: data['chatId'],
-            createdAt: data['timestamp'],
-          ),
-        );
-      });
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    });
+    // _socket.on('chat message', (data) {
+    //   print(data);
+    // });
+
+    // _socket.on('chat message', (data) {
+    //   setState(() {
+    //     messages.add(
+    //       ChatMessage(
+    //         message: data['message'],
+    //         sender: data['sender'],
+    //         chatId: data['chatId'],
+    //         createdAt: data['timestamp'],
+    //       ),
+    //     );
+    //   });
+    //   _scrollController.animateTo(
+    //     _scrollController.position.maxScrollExtent,
+    //     duration: const Duration(milliseconds: 300),
+    //     curve: Curves.easeOut,
+    //   );
+    // });
 
     // _socket.onConnectError((data) {
     //   print('Connection Error: $data');
@@ -139,9 +146,6 @@ class _ChatRoomState extends State<ChatRoom> {
     // _socket.onDisconnect((data) {
     //   print('Socket.IO server disconnect');
     // });
-
-    _getUserId();
-
   }
 
   @override
@@ -156,20 +160,12 @@ class _ChatRoomState extends State<ChatRoom> {
     _socket.emit('chat message', {
       'message': text,
       'sender': userId,
-      'chatId' : widget.chatId,
+      'chatId': widget.chatId,
       'timestamp': timestamp,
     });
 
     setState(() {
       _isEmpty = false;
-      // messages.add(
-      //   ChatMessage(
-      //     message: text,
-      //     sender: widget.userName,
-      //     chatId: widget.chatId,
-      //     timestamp: timestamp,
-      //   ),
-      // );
       _controller.clear();
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
@@ -177,7 +173,6 @@ class _ChatRoomState extends State<ChatRoom> {
         curve: Curves.easeOut,
       );
     });
-    
   }
 
   @override
@@ -264,10 +259,8 @@ class _ChatRoomState extends State<ChatRoom> {
                   children: [
                     Container(
                       margin: EdgeInsets.only(
-                        left:
-                            messages[index].sender != userId ? 0 : 50,
-                        right:
-                            messages[index].sender != userId ? 50 : 0,
+                        left: messages[index].sender != userId ? 0 : 50,
+                        right: messages[index].sender != userId ? 50 : 0,
                       ),
                       padding: const EdgeInsets.only(
                         left: 14,
@@ -296,7 +289,9 @@ class _ChatRoomState extends State<ChatRoom> {
                     ),
                     Container(
                       padding: const EdgeInsets.only(right: 14),
-                      alignment: Alignment.bottomRight,
+                      alignment: messages[index].sender != userId
+                          ? Alignment.bottomLeft
+                          : Alignment.bottomRight,
                       child: Text(
                         messages[index].createdAt.toString().substring(10, 16),
                         style: const TextStyle(
