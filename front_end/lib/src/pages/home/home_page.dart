@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/models/cart_model.dart';
 import 'package:getgoods/src/viewmodels/product_viewmodel.dart';
+import '../../constants/constants.dart';
 import '../../models/product_model.dart';
+import '../../services/api_service.dart';
 import './widgets/header.dart';
 import './widgets/content.dart';
 
@@ -27,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _getProducts();
     products = productViewModel.products;
+    getCart();
   }
 
   @override
@@ -48,6 +54,28 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  List<CartItem> cart = [CartItem.empty()];
+  int totalCartItems = 0;
+
+  Future<void> getCart() async {
+    final getCartUrl = '${ApiConstants.baseUrl}/cart';
+    final res = await ApiService.request(
+      'GET',
+      getCartUrl,
+      requiresAuth: true,
+    );
+
+    final Map<String, dynamic> data = res['data'];
+    log('data: $data');
+    log("totalItems: ${data['totalItems']}");
+    totalCartItems = data['totalItems'];
+    setState(() {});
+
+    // final List<dynamic> cartData = data['cart'];
+    // cart = cartData.map((e) => CartItem.fromJson(e)).toList();
+    // log('cart: ${cart[0].shopName}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,12 +85,18 @@ class _HomePageState extends State<HomePage> {
           // Content(_scrollControll),
           Content(
             _scrollControll,
-            onRefresh: () => _getProducts(),
+            onRefresh: () {
+              _getProducts();
+              getCart();
+            },
             products: products,
             productViewModel: productViewModel,
           ),
           Header(
             scrollController: _scrollControll,
+            totalCartItems: totalCartItems,
+            getCart: getCart,
+            // cart: cart,
           ),
           Positioned(
             left: _position.dx > widget.size.width / 2 ? _dxMax : 0,
