@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/constants.dart';
 import 'package:getgoods/src/pages/login/login_page.dart';
+import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 
 import '../../../constants/colors.dart';
 
@@ -26,6 +29,50 @@ class _SignUpFormState extends State<SignUpForm> {
   bool iscfPasswordFocused = false;
   bool _obscurePassword = true;
   bool _obscureCfPassword = true;
+
+  final UserViewModel _userViewModel = UserViewModel();
+
+  Future<void> _signUp() async {
+    final String username = _usernameController.text.trim();
+    final String password = _passwordController.text.trim();
+    final String cfpassword = _confirmPasswordController.text.trim();
+    final String email = _emailController.text.trim();
+
+    if (username.isEmpty ||
+        password.isEmpty ||
+        cfpassword.isEmpty ||
+        email.isEmpty) {
+      return;
+    }
+
+    // Capture the context in a local variable
+    final BuildContext capturedContext = context;
+
+    final String res = await _userViewModel.signUp(username, email, password);
+    if (res != 'success') {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: capturedContext,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text('An error occurred. $res'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      log('Sign Up successful');
+      Navigator.pop(context);
+    }
+  }
 
   @override
   void dispose() {
@@ -272,6 +319,7 @@ class _SignUpFormState extends State<SignUpForm> {
             child: ElevatedButton(
               onPressed: () {
                 _submitSignUpForm();
+                _signUp();
               },
               style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(

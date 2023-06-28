@@ -3,7 +3,14 @@ import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/constants/constants.dart';
 
 class TotalPaymentDetail extends StatelessWidget {
-  const TotalPaymentDetail({super.key});
+  final double subTotal;
+  final double shippingFee;
+
+  const TotalPaymentDetail({
+    super.key,
+    required this.subTotal,
+    required this.shippingFee,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,18 +48,24 @@ class TotalPaymentDetail extends StatelessWidget {
             padding: const EdgeInsets.all(defaultpadding),
             child: Column(
               children: [
-                _buildSubtotalDetail(name: 'Merchandise Subtotal', amount: 12),
+                _buildSubtotalDetail(
+                  name: 'Merchandise Subtotal',
+                  amount: subTotal,
+                ),
                 const SizedBox(
                   height: defaultpadding / 2,
                 ),
-                _buildSubtotalDetail(name: 'Shipping Subtotal', amount: 40),
+                _buildSubtotalDetail(
+                  name: 'Shipping Subtotal',
+                  amount: shippingFee,
+                ),
                 const SizedBox(
                   height: defaultpadding / 2,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Total Payment',
                       style: TextStyle(
                         color: primaryTextColor,
@@ -62,8 +75,8 @@ class TotalPaymentDetail extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '12฿', //sum of amount
-                      style: TextStyle(
+                      '${subTotal + shippingFee}฿', //sum of amount
+                      style: const TextStyle(
                         color: primaryColor,
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
