@@ -15,7 +15,8 @@ import '../../../services/api_service.dart';
 
 class ChatRoom extends StatefulWidget {
   final String chatId;
-  const ChatRoom({Key? key, required this.chatId}) : super(key: key);
+  final String chatName;
+  const ChatRoom({Key? key, required this.chatId, required this.chatName}) : super(key: key);
 
   @override
   State<ChatRoom> createState() => _ChatRoomState();
@@ -24,9 +25,8 @@ class ChatRoom extends StatefulWidget {
 class _ChatRoomState extends State<ChatRoom> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _controller = TextEditingController();
-  late ChatViewModel chatViewModel;
   late UserViewModel userViewModel;
-  late UserDetail userDetail;
+  late User user;
   late String userId = "";
   List<ChatMessage> messages = [];
   bool _isEmpty = false;
@@ -82,10 +82,9 @@ class _ChatRoomState extends State<ChatRoom> {
   _getUser() async {
     await userViewModel.fetchUser();
     setState(() {
-      userDetail = userViewModel.userDetail;
-      userId = userDetail.id;
+      user = userViewModel.users[0];
+      userId = user.id;
     });
-    print('user detail $userDetail');
   }
 
   @override
@@ -180,7 +179,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     children: [
                       Text(
                         //user name
-                        widget.chatId,
+                        widget.chatName,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),

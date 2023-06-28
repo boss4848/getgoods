@@ -23,7 +23,6 @@ class Chats extends StatefulWidget {
 }
 
 class _ChatsState extends State<Chats> {
-  late UserDetail userDetail;
   late String roomId;
   List<ChatList> chatLists = [];
 
@@ -46,7 +45,6 @@ class _ChatsState extends State<Chats> {
     final List<dynamic> chatListData = data['chat'];
     chatLists = chatListData.map((e) => ChatList.fromJson(e)).toList();
 
-    log('chatLists: ${chatLists.length}');
     setState(() {});
   }
 
@@ -97,6 +95,7 @@ class _ChatsState extends State<Chats> {
           MaterialPageRoute(
             builder: (context) => ChatRoom(
               chatId: chatLists[index].chatId,
+              chatName: chatLists[index].member[0].name,
             ),
             //builder: (context) => ChatRoom(userDetail: UserDetail(name: name)),
           ),

@@ -20,7 +20,7 @@ exports.getChatList = catchAsync(async (req, res, next) => {
 });
 
 exports.getMessage = catchAsync(async (req, res, next) => {
-  const message = await Message.find({ chatId : { $in: req.params.chatId } }).populate("message");
+  const message = await Message.find({ chatId : { $in: req.params.chatId } });
 
   res.status(200).json({
     status: "success",
