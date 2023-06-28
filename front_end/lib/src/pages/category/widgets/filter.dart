@@ -150,6 +150,7 @@ class _ProductFilterState extends State<ProductFilter> {
           print('Category clicked: $category');
           print('Category 2 clicked: $_selectedCategory');
         });
+        filterProduct(convertToCamelCase(category));
       },
       child: Container(
         height: 40,

@@ -66,6 +66,9 @@ class _CategoryPageState extends State<CategoryPage> {
     });
     print('category: You set to default');
     _getAllProducts();
+    setState(() {
+      products = productViewModel.products;
+    });
   }
 
   @override
