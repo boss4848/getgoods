@@ -73,7 +73,7 @@ class _ProductFilterState extends State<ProductFilter> {
         });
       },
       child: Container(
-        height: 35,
+        height: 40,
         width: 110,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -95,7 +95,7 @@ class _ProductFilterState extends State<ProductFilter> {
               _selectedCategory.isNotEmpty ? _selectedCategory : 'Category',
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 12,
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -140,12 +140,12 @@ class _ProductFilterState extends State<ProductFilter> {
       return camelCaseText;
     }
 
-    bool isSelected = _selectedCategory == formattedCategory; // Add this line
+    bool isSelected = _selectedCategory == category; // Add this line
 
     return InkWell(
       onTap: () {
         setState(() {
-          _selectedCategory = formattedCategory;
+          _selectedCategory = category;
           _isCategorySelectorVisible = false;
           print('Category clicked: $category');
           print('Category 2 clicked: $_selectedCategory');
@@ -158,7 +158,7 @@ class _ProductFilterState extends State<ProductFilter> {
           title: Text(
             category,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 10,
               fontWeight: FontWeight.w600,
               color: isSelected ? Colors.green : primaryTextColor,
             ),
@@ -170,7 +170,7 @@ class _ProductFilterState extends State<ProductFilter> {
 
   Widget _sorting() {
     return SizedBox(
-      height: 35,
+      height: 40,
       width: 110,
       child: PopupMenuButton<String>(
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
