@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/chat_message_model.dart';
 import 'package:getgoods/src/models/user_model.dart';
+import 'package:getgoods/src/pages/Messages/widgets/chats.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 import 'package:getgoods/src/viewmodels/chat_viewmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../constants/constants.dart';
@@ -27,12 +29,14 @@ class _ChatRoomState extends State<ChatRoom> {
   final TextEditingController _controller = TextEditingController();
   late UserViewModel userViewModel;
   late User user;
-  late String userId = "";
+  late String? userId = "";
   List<ChatMessage> messages = [];
   bool _isEmpty = false;
   late IO.Socket _socket;
+  
 
-  _connectSocket() {
+  void _connectSocket() {
+    
     _socket.onConnect((data) {
       print('Connection established');
     });
@@ -74,33 +78,69 @@ class _ChatRoomState extends State<ChatRoom> {
     final Map<String, dynamic> data = response['data'];
     final List<dynamic> messageData = data['message'];
     messages = messageData.map((e) => ChatMessage.fromJson(e)).toList();
-
-    setState(() {});
+    
   }
 
-  _getUser() async {
-    await userViewModel.fetchUser();
+  Future<void> _getUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      user = userViewModel.users[0];
-      userId = user.id;
+      userId = prefs.getString('userId');
     });
+  }
+
+  Future<bool?> _checkSender(int index) async{
+    if(userId == messages[index].sender){
+        return true;
+    }
+    else{
+      return false;
+    }
+    
   }
 
   @override
   void initState() {
     super.initState();
+    _getMessage();
     // If testing app on Android then replace http://localhost:8000 with http://10.0.2.2:8000
     //platform.isIOS
     _socket = IO.io(
       "http://localhost:8000",
       IO.OptionBuilder()
           .setTransports(['websocket'])
-          .setQuery({'userName': '649020872f417fdf203f6ba9','chatId' : widget.chatId})
+          .setQuery({'userName': userId ,'chatId' : widget.chatId})
           .build(),
     );
-    _connectSocket();
-    _getMessage();
-    _getUser();
+
+    _socket.connect();
+
+    _socket.on('chat message', (data) {
+      setState(() {
+        messages.add(
+          ChatMessage(
+            message: data['message'],
+            sender: data['sender'],
+            chatId: data['chatId'],
+            createdAt: data['timestamp'],
+          ),
+        );
+      });
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+
+    // _socket.onConnectError((data) {
+    //   print('Connection Error: $data');
+    // });
+
+    // _socket.onDisconnect((data) {
+    //   print('Socket.IO server disconnect');
+    // });
+
+    _getUserId();
 
   }
 
@@ -119,6 +159,7 @@ class _ChatRoomState extends State<ChatRoom> {
       'chatId' : widget.chatId,
       'timestamp': timestamp,
     });
+
     setState(() {
       _isEmpty = false;
       // messages.add(
@@ -187,7 +228,8 @@ class _ChatRoomState extends State<ChatRoom> {
                         height: 6,
                       ),
                       Text(
-                        "Online",
+                        // "Online",
+                        userId!,
                         style: TextStyle(
                             color: Colors.grey.shade600, fontSize: 13),
                       ),
@@ -223,9 +265,9 @@ class _ChatRoomState extends State<ChatRoom> {
                     Container(
                       margin: EdgeInsets.only(
                         left:
-                            messages[index].sender== "receiver" ? 0 : 50,
+                            messages[index].sender != userId ? 0 : 50,
                         right:
-                            messages[index].sender == "receiver" ? 50 : 0,
+                            messages[index].sender != userId ? 50 : 0,
                       ),
                       padding: const EdgeInsets.only(
                         left: 14,
@@ -234,13 +276,13 @@ class _ChatRoomState extends State<ChatRoom> {
                         bottom: 10,
                       ),
                       child: Align(
-                        alignment: messages[index].sender == "receiver"
+                        alignment: messages[index].sender != userId
                             ? Alignment.topLeft
                             : Alignment.topRight,
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: messages[index].sender == "receiver"
+                            color: messages[index].sender != userId
                                 ? Colors.grey.shade200
                                 : Colors.green[200],
                           ),

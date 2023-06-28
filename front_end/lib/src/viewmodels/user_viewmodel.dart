@@ -1,7 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../constants/constants.dart';
 import '../models/user_model.dart';
 
@@ -35,12 +36,36 @@ class UserViewModel {
     }
   }
 
+  Future<String> signUp(String username, String email, String password) async {
+    print(username);
+    print(email);
+    print(password);
+    try {
+      updateState(UserState.loading);
+      final response =
+          await _dio.post('${ApiConstants.baseUrl}/users/signup', data: {
+        'name': username,
+        'email': email,
+        'password': password,
+      });
+      await _storeToken(response.data['token']);
+      await _storeUserId(response.data['data']['user']['_id']);
+      updateState(UserState.success);
+      return 'success';
+    } on DioException catch (e) {
+      print('Error logging in: $e');
+      updateState(UserState.error);
+      return _handleDioError(e);
+    }
+  }
+
   Future<String> login(String email, String password) async {
     try {
       updateState(UserState.loading);
       final response = await _dio.post('${ApiConstants.baseUrl}/users/login',
           data: {'email': email, 'password': password});
       await _storeToken(response.data['token']);
+      await _storeUserId(response.data['data']['user']['_id']);
       updateState(UserState.success);
       return 'success';
     } on DioException catch (e) {
@@ -54,6 +79,16 @@ class UserViewModel {
     await _removeToken();
     userDetail = UserDetail.empty();
     updateState(UserState.idle);
+  }
+
+  Future<void> _storeUserId(String userId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userId', userId);
+  }
+
+  Future<String?> _getUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userId');
   }
 
   Future<String?> _getToken() async {
