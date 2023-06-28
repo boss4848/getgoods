@@ -136,14 +136,14 @@ exports.getCart = catchAsync(async (req, res, next) => {
         populate: [
             {
                 path: 'product',
-                select: 'name description price discount',
+                select: 'name description price discount imageCover quantity',
             },
             {
                 path: 'shop',
                 select: 'name',
             },
         ],
-        select: 'product quantity',
+        select: 'product quantity imageCover',
     });
 
     if (!cart) {
@@ -169,6 +169,8 @@ exports.getCart = catchAsync(async (req, res, next) => {
                             price: item.product.price,
                             discount: item.product.discount,
                             quantity: item.quantity,
+                            stock: item.product.quantity,
+                            imageCover: `https://getgoods.blob.core.windows.net/product-photos/${item.product.imageCover}`,
                         },
                     ],
                 },
@@ -185,14 +187,20 @@ exports.getCart = catchAsync(async (req, res, next) => {
                 price: item.product.price,
                 discount: item.product.discount,
                 quantity: item.quantity,
+                stock: item.product.quantity,
+                imageCover: `https://getgoods.blob.core.windows.net/product-photos/${item.product.imageCover}`,
             });
         }
     }
+    const totalItems = formattedCart.reduce((acc, curr) => {
+        return acc + curr.shop.products.length;
+    }, 0);
 
     res.status(200).json({
         status: 'success',
         data: {
             cart: formattedCart,
+            totalItems,
         },
     });
 });
