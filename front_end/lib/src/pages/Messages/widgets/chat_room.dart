@@ -52,7 +52,7 @@ class _ChatRoomState extends State<ChatRoom> {
             message: data['message'],
             sender: data['sender'],
             chatId: data['chatId'],
-            timestamp: data['timestamp'],
+            createdAt: data['timestamp'],
           ),
         );
       });
@@ -75,8 +75,7 @@ class _ChatRoomState extends State<ChatRoom> {
     final List<dynamic> messageData = data['message'];
     messages = messageData.map((e) => ChatMessage.fromJson(e)).toList();
 
-    setState(() {
-    });
+    setState(() {});
   }
 
   _getUser() async {
@@ -114,6 +113,12 @@ class _ChatRoomState extends State<ChatRoom> {
 
   void _handleSubmitted(String text) {
     var timestamp = DateTime.now().toString().substring(10, 16);
+    _socket.emit('chat message', {
+      'message': text,
+      'sender': userId,
+      'chatId' : widget.chatId,
+      'timestamp': timestamp,
+    });
     setState(() {
       _isEmpty = false;
       // messages.add(
@@ -131,12 +136,7 @@ class _ChatRoomState extends State<ChatRoom> {
         curve: Curves.easeOut,
       );
     });
-    _socket.emit('chat message', {
-      'message': text,
-      'sender': userId,
-      'chatId' : widget.chatId,
-      'timestamp': timestamp,
-    });
+    
   }
 
   @override
@@ -256,7 +256,7 @@ class _ChatRoomState extends State<ChatRoom> {
                       padding: const EdgeInsets.only(right: 14),
                       alignment: Alignment.bottomRight,
                       child: Text(
-                        messages[index].timestamp,
+                        messages[index].createdAt.toString().substring(10, 16),
                         style: const TextStyle(
                           fontSize: 10,
                           color: Colors.grey,
