@@ -19,9 +19,19 @@ class _CategoryPageState extends State<CategoryPage> {
   final _scrollController = TrackingScrollController();
 
   String category = '';
+  List<String> categories = [
+    'processed',
+    'otop',
+    'medicinalPlant',
+    'driedGood'
+  ];
 
   late ProductViewModel productViewModel;
   List<Product> products = [];
+  List<Product> processedProducts = [];
+  List<Product> otopProducts = [];
+  List<Product> medicinalPlantProducts = [];
+  List<Product> driedGoodProducts = [];
 
   @override
   void initState() {
@@ -37,10 +47,36 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   _getAllProducts() async {
-    await productViewModel.fetchProducts();
+    await productViewModel.fetchCategory();
 
     setState(() {
       products = productViewModel.products;
+      log('print $products');
+      processedProducts =
+          products.where((element) => element.category == 'processed').toList();
+      if (processedProducts.length > 2) {
+        processedProducts = processedProducts.sublist(0, 2);
+      }
+      log('pdProcessed : $processedProducts');
+      otopProducts =
+          products.where((element) => element.category == 'otop').toList();
+      if (otopProducts.length > 2) {
+        otopProducts = otopProducts.sublist(0, 2);
+      }
+      log('pdOtop: $otopProducts');
+      medicinalPlantProducts = products
+          .where((element) => element.category == 'medicinalPlant')
+          .toList();
+      if (medicinalPlantProducts.length > 2) {
+        medicinalPlantProducts = medicinalPlantProducts.sublist(0, 2);
+      }
+      log('pdMedicPlant: $medicinalPlantProducts');
+      driedGoodProducts =
+          products.where((element) => element.category == 'driedGood').toList();
+      if (driedGoodProducts.length > 2) {
+        driedGoodProducts = driedGoodProducts.sublist(0, 2);
+      }
+      log('pdMedicPlant: $driedGoodProducts');
     });
   }
 
@@ -48,6 +84,7 @@ class _CategoryPageState extends State<CategoryPage> {
     await productViewModel.filteredProduct(category);
     setState(() {
       products = productViewModel.filterProduct;
+
       log('In $category category has ${products.length} products');
     });
   }
@@ -64,11 +101,8 @@ class _CategoryPageState extends State<CategoryPage> {
     setState(() {
       category = '';
     });
-    print('category: You set to default');
-    _getAllProducts();
-    setState(() {
-      products = productViewModel.products;
-    });
+    print('category in default: $category');
+    _getProducts(categories[0]);
   }
 
   @override
@@ -87,18 +121,15 @@ class _CategoryPageState extends State<CategoryPage> {
             ),
             Column(
               children: [
-                if (category.isEmpty) _buildHeader('Recommended'),
-                // CatContent(_scrollController,
-                //     onRefresh: () => _getAllProducts(),
-                //     products: products,
-                //     productViewModel: productViewModel),
+                if (category.isEmpty) _defaultCategoryPage(),
                 if (category.isNotEmpty) _buildHeader(category),
-                CatContent(
-                  _scrollController,
-                  products: products,
-                  productViewModel: productViewModel,
-                  onRefresh: () => _getProducts(category),
-                ),
+                if (category.isNotEmpty)
+                  CatContent(
+                    _scrollController,
+                    products: products,
+                    productViewModel: productViewModel,
+                    onRefresh: () => _getProducts(category),
+                  ),
                 ElevatedButton(
                   onPressed: () {
                     _getProducts(category);
@@ -110,6 +141,33 @@ class _CategoryPageState extends State<CategoryPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _defaultCategoryPage() {
+    return Column(
+      children: [
+        _buildHeader(categories[0]),
+        CatContent(_scrollController,
+            onRefresh: () => _getAllProducts(),
+            products: processedProducts,
+            productViewModel: productViewModel),
+        _buildHeader(categories[1]),
+        CatContent(_scrollController,
+            onRefresh: () => _getAllProducts(),
+            products: otopProducts,
+            productViewModel: productViewModel),
+        _buildHeader(categories[2]),
+        CatContent(_scrollController,
+            onRefresh: () => _getAllProducts(),
+            products: medicinalPlantProducts,
+            productViewModel: productViewModel),
+        _buildHeader(categories[3]),
+        CatContent(_scrollController,
+            onRefresh: () => _getAllProducts(),
+            products: driedGoodProducts,
+            productViewModel: productViewModel),
+      ],
     );
   }
 

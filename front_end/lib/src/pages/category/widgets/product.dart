@@ -78,7 +78,7 @@ class _ShowProductState extends State<ShowProduct> {
               return ProductItemCard(widget.products[index]);
             },
           ),
-          false ? const SizedBox(height: 150) : BottomLoader(),
+          //false ? const SizedBox(height: 150) : BottomLoader(),
         ],
       );
 }

@@ -24,7 +24,7 @@ class ProductViewModel {
 
   Future<void> fetchProducts() async {
     final String getProductsUrl =
-        '${ApiConstants.baseUrl}/products?fields=name,price,discount,sold,imageCover';
+        '${ApiConstants.baseUrl}/products?fields=name,price,discount,sold,imageCover,category';
 
     state = ProductState.loading;
     try {
@@ -78,6 +78,26 @@ class ProductViewModel {
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
       return 'error';
+    }
+  }
+
+  Future<void> fetchCategory() async {
+    final String getProductsUrl =
+        '${ApiConstants.baseUrl}/products?fields=name,price,discount,sold,imageCover,category';
+
+    state = ProductState.loading;
+    try {
+      final response = await _dio.get(getProductsUrl);
+      final data = response.data['data']['products'];
+      print(data);
+
+      products = List<Product>.from(data.map((product) {
+        return Product.fromJson(product);
+      }));
+      state = ProductState.success;
+    } catch (e) {
+      print('Error fetching products: $e');
+      state = ProductState.error;
     }
   }
 
@@ -139,7 +159,7 @@ class ProductViewModel {
 
   Future<void> filteredProduct(String category) async {
     final String getProductsCategoryUrl =
-        '${ApiConstants.baseUrl}/products?category=$category&fields=name,price,discount,sold,imageCover';
+        '${ApiConstants.baseUrl}/products?category=$category&fields=name,price,discount,sold,imageCover,category';
 
     state = ProductState.loading;
     try {

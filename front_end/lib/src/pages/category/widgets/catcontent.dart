@@ -74,9 +74,4 @@ class _CatContentState extends State<CatContent> {
       ),
     );
   }
-
-  Container _buildDivider() => Container(
-        height: 8,
-        color: Colors.grey[200],
-      );
 }
