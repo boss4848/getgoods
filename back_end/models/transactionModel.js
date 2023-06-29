@@ -20,13 +20,18 @@ const transactionSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'Product',
     }],
+    quantity: [
+        {
+            type: Number,
+        },
+    ],
     // stripeId: {
     //     type: String,
     //     required: [true, 'A transaction must have a stripeId'],
     // },// refer to stripe payment intent id
     status: {
         type: String,
-        enum: ['unpaid', 'paid', 'cancelled', 'delivered', 'received', 'completed'],
+        enum: ['unpaid', 'paid', 'cancelled', 'shipped', 'received', 'completed', 'rated'],
         default: 'unpaid',
     },
     paymentIntentId: {

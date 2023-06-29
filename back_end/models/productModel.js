@@ -50,6 +50,11 @@ const productSchema = new mongoose.Schema({
         default: 0,
         min: [0, 'Sold must be above 0']
     },
+    views: {
+        type: Number,
+        default: 0,
+        min: [0, 'Views must be above 0']
+    },
 
     // shipping: {
     //     type: String,
