@@ -33,15 +33,16 @@ const io = socketIO(server);
 // Socket.IO integration
 io.on('connection', (socket) => {
     const userName = socket.handshake.query.userName;
-    const chatId = socket.handshake.query.chatId;
+    // const chatId = socket.handshake.query.chatId;
 
     console.log('A user connected');
     console.log('username: ' + userName);
-    console.log('chatId: '+ chatId);
 
     socket.on('chat message', (message) => {
+        console.log('chatId: '+ message.chatId);
+
         Message.create({
-            chatId : chatId,
+            chatId : message.chatId,
             message : message.message,
             sender : userName
         });

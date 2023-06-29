@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/user_model.dart';
 import 'package:getgoods/src/viewmodels/chat_viewmodel.dart';
+import 'package:getgoods/src/viewmodels/shop_viewmodel.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -17,24 +18,24 @@ import '../../../services/api_service.dart';
 import 'chat_room.dart';
 
 class Chats extends StatefulWidget {
-  final Function getChatList;
-  final List<ChatList> chatLists;
-  const Chats({Key? key, required this.getChatList, required this.chatLists,}) : super(key: key);
+  const Chats({Key? key}) : super(key: key);
 
   @override
   State<Chats> createState() => _ChatsState();
 }
 
 class _ChatsState extends State<Chats> {
+  late ShopViewModel shopViewModel;
+  List<ChatList> chatLists = [];
   late String roomId;
   late String? userId = "";
-  // List<ChatList> chatLists = [];
 
   @override
   initState() {
     super.initState();
     _getUserId();
-    widget.getChatList();
+    shopViewModel = ShopViewModel();
+    getChatList();
   }
 
   Future<void> _getUserId() async {
@@ -44,30 +45,35 @@ class _ChatsState extends State<Chats> {
     });
   }
 
-  int isCurrentUser(int index) {
-    if(widget.chatLists[index].member[0].id == userId) {
-      return 1;
+  String _getShopName(int index) {
+    shopViewModel.fetchShop(chatLists[index].shopId);
+    return shopViewModel.shop.name;
+  }
+
+  bool isShopCurrentUser(int index) {
+    if(chatLists[index].userId == userId) {
+      return false;
     } else {
-      return 0;
+      return true;
     }
   }
 
-  // Future<void> getChatList() async {
-  //   final response = await ApiService.request(
-  //     'GET',
-  //     '${ApiConstants.baseUrl}/chats/chatList',
-  //     requiresAuth: true,
-  //   );
+  Future<void> getChatList() async {
+    final response = await ApiService.request(
+      'GET',
+      '${ApiConstants.baseUrl}/chats/chatList',
+      requiresAuth: true,
+    );
 
-  //   final Map<String, dynamic> data = response['data'];
+    final Map<String, dynamic> data = response['data'];
 
-  //   log('data: ${data['chat']}');
-  //   final List<dynamic> chatListData = data['chat'];
-  //   setState(() {
-  //     chatLists = chatListData.map((e) => ChatList.fromJson(e)).toList();
-  //   });
+    final List<dynamic> chatListData = data['chat'];
+    print('data111: ${chatListData.toString()}}');
+    setState(() {
+      chatLists = chatListData.map((e) => ChatList.fromJson(e)).toList();
+    });
 
-  // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,12 +89,12 @@ class _ChatsState extends State<Chats> {
           child: ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: widget.chatLists.length,
+            itemCount: chatLists.length,
             itemBuilder: (context, index) {
               return _buildChatItem(
                 index: index,
-                avatar: 'https://getgoods.blob.core.windows.net/user-photos/${widget.chatLists[index].member[(isCurrentUser(index))].photo}',
-                name: widget.chatLists[index].member[(isCurrentUser(index))].name,
+                avatar: !isShopCurrentUser(index) ? 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].shopPhoto}' : 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].userPhoto}',
+                name: isShopCurrentUser(index) ? chatLists[index].userName : chatLists[index].shopId,
                 message: 'Hello, how are you?',
                 time: '12:00 PM',
                 context: context,
@@ -114,9 +120,10 @@ class _ChatsState extends State<Chats> {
           context,
           MaterialPageRoute(
             builder: (context) => ChatRoom(
-              chatId: widget.chatLists[index].chatId,
-              chatName: widget.chatLists[index].member[(isCurrentUser(index))].name,
-              avatar : 'https://getgoods.blob.core.windows.net/user-photos/${widget.chatLists[index].member[(isCurrentUser(index))].photo}'
+              chatId: chatLists[index].chatId,
+              chatName: isShopCurrentUser(index) ? chatLists[index].userName : chatLists[index].shopId,
+              avatar : !isShopCurrentUser(index) ? 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].shopPhoto}' : 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].userPhoto}',
+              isShop: !isShopCurrentUser(index),
             ),
           ),
         );

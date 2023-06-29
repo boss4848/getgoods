@@ -16,23 +16,6 @@ class MessagesPage extends StatefulWidget {
 }
 
 class _MessagesPageState extends State<MessagesPage> {
-  List<ChatList> chatLists = [];
-    Future<void> getChatList() async {
-    final response = await ApiService.request(
-      'GET',
-      '${ApiConstants.baseUrl}/chats/chatList',
-      requiresAuth: true,
-    );
-
-    final Map<String, dynamic> data = response['data'];
-
-    log('data: ${data['chat']}');
-    final List<dynamic> chatListData = data['chat'];
-    setState(() {
-      chatLists = chatListData.map((e) => ChatList.fromJson(e)).toList();
-    });
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +35,9 @@ class _MessagesPageState extends State<MessagesPage> {
         child: SafeArea(
           child: Stack(
             children: [
-               TabBarView(
+               const TabBarView(
                 children: [
-                  Chats(chatLists: chatLists, getChatList: getChatList,),
+                  Chats(),
                   const Notifications(),
                 ],
               ),

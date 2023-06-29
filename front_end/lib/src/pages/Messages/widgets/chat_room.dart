@@ -19,11 +19,13 @@ class ChatRoom extends StatefulWidget {
   final String chatId;
   final String chatName;
   final String avatar;
+  final bool isShop;
   const ChatRoom(
       {Key? key,
       required this.chatId,
       required this.chatName,
-      required this.avatar})
+      required this.avatar,
+      required this.isShop})
       : super(key: key);
 
   @override
@@ -76,11 +78,10 @@ class _ChatRoomState extends State<ChatRoom> {
     _socket = IO.io(
       ApiConstants.socketUrl,
       IO.OptionBuilder().setTransports(['websocket']).setQuery(
-          {'userName': userId, 'chatId': widget.chatId}).build(),
+          {'userName': userId}).build(),
     );
     _socket.connect();
     _socket.onConnect((data) => print("data clied-connected"));
-    _socket.onDisconnect((data) => print("data cliend-disconncted"));
     _socket.on(
         'chat message',
         (data) => setState(() {
@@ -95,6 +96,7 @@ class _ChatRoomState extends State<ChatRoom> {
               //   curve: Curves.easeOut,
               // );
             }));
+    _socket.onDisconnect((data) => print("data cliend-disconncted"));
   }
 
   Future<void> _getMessage() async {
@@ -108,6 +110,7 @@ class _ChatRoomState extends State<ChatRoom> {
     setState(() {
       messages = messageData.map((e) => ChatMessage.fromJson(e)).toList();
     });
+    
   }
 
   Future<void> _getUserId() async {
@@ -156,6 +159,7 @@ class _ChatRoomState extends State<ChatRoom> {
     // _socket.onDisconnect((data) {
     //   print('Socket.IO server disconnect');
     // });
+    print('chat id ${widget.chatId}}');
   }
 
   @override
@@ -234,7 +238,7 @@ class _ChatRoomState extends State<ChatRoom> {
                       ),
                       Text(
                         // "Online",
-                        userId!,
+                        widget.isShop ? 'Shop' : 'Customer',
                         style: TextStyle(
                             color: Colors.grey.shade600, fontSize: 13),
                       ),
