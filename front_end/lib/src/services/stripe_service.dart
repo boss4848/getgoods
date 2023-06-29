@@ -39,6 +39,8 @@ class StripeService {
         (total, product) => total + product.price.toInt(),
       ),
       "shipping_cose": 40,
+      "shopId": products[0].shopId,
+
       // "shipping": {
       //   "name": "Jenny Rosen",
       //   "address": {
@@ -79,6 +81,48 @@ class StripeService {
     } catch (e) {
       log('Failed to create checkout session: $e');
       throw Exception('Failed to create checkout session');
+    }
+  }
+
+  static Future<dynamic> payNow(
+    context,
+    sessionId,
+    transactionId,
+    mounted, {
+    onSuccess,
+    onError,
+    onCancel,
+  }) async {
+    final result = await redirectToCheckout(
+      context: context,
+      sessionId: sessionId,
+      publishableKey: dotenv.env['STRIPE_PUBLISHABLE_KEY']!,
+      successUrl: "https://checkout.stripe.dev/success",
+      canceledUrl: "https://checkout.stripe.dev/cancel",
+    );
+
+    if (mounted) {
+      final text = result.when(
+        redirected: () => 'Redirected successfuly',
+        success: () async {
+          //update transaction
+          final url = '${ApiConstants.baseUrl}/payments/updatecharge';
+          final body = {
+            "sessionId": sessionId,
+            "transactionId": transactionId,
+          };
+          await ApiService.request(
+            'POST',
+            url,
+            requiresAuth: true,
+            data: body,
+          );
+          onSuccess();
+        },
+        error: (e) => 'Error: $e',
+        canceled: () => 'Checkout Session Cancelled',
+      );
+      print(text);
     }
   }
 

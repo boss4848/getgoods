@@ -49,24 +49,43 @@ exports.test = catchAsync(async (req, res, next) => {
 
 
 exports.getTransaction = catchAsync(async (req, res, next) => {
-    const transaction = await Transaction.findById(req.params.id);
+    const transactions = await Transaction.findById(req.params.id);
 
-    if (!transaction) {
+    if (!transactions) {
         return next(new AppError('No transaction found with that ID', 404));
     }
+    // Replace image URL with image file
+    // const newTransactions = transactions.map((transaction) => {
+    //     transaction.products.map((product) => {
+    //         let imageUrl = `https://getgoods.blob.core.windows.net/product-photos/${product.imageCover}`;
+    //         product.image = imageUrl;
+    //     });
+    //     return transaction;
+    // });
+
 
     res.status(200).json({
         status: 'success',
-        transaction,
+        // transactions: newTransactions,
+        transactions,
     });
 });
 
 exports.getAllTransactions = catchAsync(async (req, res, next) => {
     // find by user id
     const transactions = await Transaction.find({ user: req.user.id });
+    // Replace image URL with image file
+    // const newTransactions = transactions.map((transaction) => {
+    //     transaction.products.map((product) => {
+    //         let imageUrl = `https://getgoods.blob.core.windows.net/product-photos/${product.imageCover}`;
+    //         product.image = imageUrl;
+    //     });
+    //     return transaction;
+    // });
 
     res.status(200).json({
         status: 'success',
+        // transactions: newTransactions,
         transactions,
     });
 });

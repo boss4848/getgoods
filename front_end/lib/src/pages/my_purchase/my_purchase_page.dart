@@ -1,11 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/common_widgets/loading.dart';
 import 'package:getgoods/src/common_widgets/loading_dialog.dart';
 import 'package:getgoods/src/pages/my_purchase/widgets/completed.dart';
 import 'package:getgoods/src/pages/my_purchase/widgets/to_receive.dart';
 import 'package:getgoods/src/pages/my_purchase/widgets/to_ship.dart';
-import 'package:getgoods/src/pages/my_purchase/widgets/unpaid_list.dart';
+import 'package:getgoods/src/pages/my_purchase/widgets/transaction_list.dart';
 import 'package:getgoods/src/viewmodels/transaction_viewmodel.dart';
 
 import '../../models/transaction_model.dart';
@@ -23,9 +24,11 @@ class MyPurchasePage extends StatefulWidget {
 }
 
 class _MyPurchasePageState extends State<MyPurchasePage> {
-  late List<Transaction> transactions;
-  late List<Transaction> unpaidTransactions;
-  late List<Transaction> toShipTransactions;
+  List<Transaction> transactions = [];
+  List<Transaction> unpaidTransactions = [];
+  List<Transaction> toShipTransactions = [];
+  List<Transaction> toReceiveTransactions = [];
+  List<Transaction> completedTransactions = [];
   TransactionViewModel transactionViewModel = TransactionViewModel();
   @override
   void initState() {
@@ -34,13 +37,18 @@ class _MyPurchasePageState extends State<MyPurchasePage> {
   }
 
   getTransactions() async {
+    // loadingDialog(context);
     await transactionViewModel.getAllTransactions();
     setState(() {
       transactions = transactionViewModel.transactions;
       unpaidTransactions = transactionViewModel.unpaidTransactions;
       toShipTransactions = transactionViewModel.paidTransactions;
+      toReceiveTransactions = transactionViewModel.toReceiveTransactions;
+      completedTransactions = transactionViewModel.completedTransactions;
     });
     log(transactions.length.toString());
+    // ignore: use_build_context_synchronously
+    // Navigator.pop(context);
     // ignore: use_build_context_synchronously
   }
 
@@ -82,15 +90,32 @@ class _MyPurchasePageState extends State<MyPurchasePage> {
         ),
         body: TabBarView(
           children: [
-            UnpaidList(
+            TransactionList(
               transactions: unpaidTransactions,
+              getTransactions: getTransactions,
             ),
-            const ToShipList(),
-            const ToReceiveList(),
-            const CompletedList()
+            TransactionList(
+              transactions: toShipTransactions,
+              getTransactions: getTransactions,
+            ),
+            TransactionList(
+              transactions: toReceiveTransactions,
+              getTransactions: getTransactions,
+            ),
+            TransactionList(
+              transactions: completedTransactions,
+              getTransactions: getTransactions,
+            ),
+            // ToShipList(
+            //   transactions: toShipTransactions,
+            //   getTransactions: getTransactions,
+            // ),
+            // const ToReceiveList(),
+            // const CompletedList()
           ],
         ),
       ),
     );
   }
 }
+// 4242424242424242

@@ -48,7 +48,7 @@ exports.getShop = catchAsync(async (req, res, next) => {
         .populate(
             'products',
             // 'name price quantity',
-        );
+        ).populate('transactions');
     if (!shop) {
         return next(new AppError('No shop found for this user', 404));
     }
@@ -104,3 +104,4 @@ exports.createShop = catchAsync(async (req, res, next) => {
 
 exports.updateShop = factory.updateOne(Shop);
 
+// 4242424242424242

@@ -3,11 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/pages/shopping_cart/shopping_cart.dart';
 
+import '../../../models/cart_model.dart';
 import '../../cart/cart_page.dart';
 
 class CategoryHeader extends StatefulWidget {
   final TrackingScrollController scrollController;
-  const CategoryHeader({super.key, required this.scrollController});
+  final int totalCartItems;
+  // final List<CartItem> cart;
+  final Function getCart;
+  const CategoryHeader({
+    super.key,
+    required this.scrollController,
+    required this.totalCartItems,
+    // required this.cart,
+    required this.getCart,
+  });
 
   @override
   State<CategoryHeader> createState() => _CategoryHeaderState();
@@ -49,13 +59,23 @@ class _CategoryHeaderState extends State<CategoryHeader> {
               const SizedBox(width: 8),
               _buildIconButton(
                 onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CartPage(),
-                    )),
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CartPage(
+                        // cart: widget.cart,
+                        // getCart: widget.getCart,
+                        // totalCartItems: widget.totalCartItems,
+                        ),
+                  ),
+                ).then((_) => widget.getCart()),
                 icon: CupertinoIcons.cart_fill,
-                notification: 10,
+                notification: widget.totalCartItems,
               ),
+              // _buildIconButton(
+              //   onPressed: () => print('click'),
+              //   icon: Icons.chat,
+              //   notification: 1,
+              // ),
             ],
           ),
         ),
@@ -136,7 +156,7 @@ class _CategoryHeaderState extends State<CategoryHeader> {
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: Colors.green,
+                    color: primaryColor,
                     border: Border.all(
                       color: Colors.white,
                     ),
@@ -183,7 +203,7 @@ class _CategoryHeaderState extends State<CategoryHeader> {
         _offset = 0.0;
       } else {
         _backgroundColorSearch = Colors.grey.shade200;
-        _colorIcon = Colors.deepOrange;
+        _colorIcon = primaryColor;
       }
       _backgroundColor = Colors.white.withOpacity(_opacity);
     });

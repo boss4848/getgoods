@@ -68,6 +68,13 @@ shopSchema.virtual('products', {
     localField: '_id'
 });
 
+//transactions
+shopSchema.virtual('transactions', {
+    ref: 'Transaction',
+    foreignField: 'shop',
+    localField: '_id'
+});
+
 //user
 shopSchema.pre(/^find/, function (next) {
     this.populate({
@@ -76,6 +83,7 @@ shopSchema.pre(/^find/, function (next) {
     });
     next();
 });
+
 
 
 module.exports = mongoose.model('Shop', shopSchema);

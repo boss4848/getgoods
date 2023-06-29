@@ -15,13 +15,18 @@ class Transaction {
   final String checkoutUrl;
   final String chargeId;
   final UserTransaction user;
-  final ShopTransaction shop;
-  final ProductTransaction productTransaction;
+  // final ShopTransaction shop;
+  // final String shopId;
+  final Shop shop;
+  final List<ProductTransaction> products;
   final DateTime createdAt;
+  final List<int> quantity;
+  final double shippingFee;
 
   Transaction({
     required this.id,
     required this.amount,
+    required this.quantity,
     // required this.product,
     required this.shippingFree,
     required this.status,
@@ -31,9 +36,11 @@ class Transaction {
     required this.checkoutUrl,
     required this.chargeId,
     required this.user,
+    // required this.shopId,
     required this.shop,
-    required this.productTransaction,
+    required this.products,
     required this.createdAt,
+    required this.shippingFee,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -48,11 +55,17 @@ class Transaction {
       checkoutUrl: json['checkoutUrl'] ?? '',
       chargeId: json['chargeId'] ?? '',
       user: UserTransaction.fromJson(json['user'] ?? {}),
-      shop: ShopTransaction.fromJson(json['shop'] ?? {}),
-      productTransaction: ProductTransaction.fromJson(
-        json['productTransaction'] ?? {},
+      // shop: ShopTransaction.fromJson(json['shop'] ?? {}),
+      // shopId: json['shop'] ?? '',
+      shop: Shop.fromJson(json['shop'] ?? {}),
+      products: List<ProductTransaction>.from(
+        json['products'].map(
+          (product) => ProductTransaction.fromJson(product),
+        ),
       ),
       createdAt: DateTime.parse(json['createdAt']),
+      quantity: List<int>.from(json['quantity'].map((e) => e)),
+      shippingFee: (json['shippingFee'] ?? 0).toDouble(),
     );
   }
 }

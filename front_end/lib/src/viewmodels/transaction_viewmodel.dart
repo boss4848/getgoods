@@ -14,6 +14,8 @@ class TransactionViewModel {
   List<Transaction> transactions = [];
   List<Transaction> unpaidTransactions = [];
   List<Transaction> paidTransactions = [];
+  List<Transaction> toReceiveTransactions = [];
+  List<Transaction> completedTransactions = [];
 
   final String getTransactionsUrl = '${ApiConstants.baseUrl}/transactions';
 
@@ -40,6 +42,18 @@ class TransactionViewModel {
     paidTransactions = transactions
         .where(
           (element) => element.status == 'paid',
+        )
+        .toList();
+
+    toReceiveTransactions = transactions
+        .where(
+          (element) => element.status == 'shipped',
+        )
+        .toList();
+
+    completedTransactions = transactions
+        .where(
+          (element) => element.status == 'completed',
         )
         .toList();
   }
