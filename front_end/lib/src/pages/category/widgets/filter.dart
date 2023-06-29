@@ -15,7 +15,7 @@ class ProductFilter extends StatefulWidget {
 class _ProductFilterState extends State<ProductFilter> {
   bool _isCategorySelectorVisible = false;
   String _selectedCategory = '';
-  final String _selectedSortOption = 'Most Relevant';
+  String categoryItem = 'Category';
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +23,13 @@ class _ProductFilterState extends State<ProductFilter> {
       padding: const EdgeInsets.all(15),
       child: Column(
         children: [
-          Container(
+          SizedBox(
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 _filter(),
-                const SizedBox(
-                  width: 10,
-                ),
-                _sorting(),
                 const Spacer(),
                 _clear(widget.defaultProduct),
               ],
@@ -92,7 +88,7 @@ class _ProductFilterState extends State<ProductFilter> {
             ),
             const SizedBox(width: 5),
             Text(
-              _selectedCategory.isNotEmpty ? _selectedCategory : 'Category',
+              _selectedCategory.isNotEmpty ? _selectedCategory : categoryItem,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 10,
@@ -112,22 +108,19 @@ class _ProductFilterState extends State<ProductFilter> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();
         }
-        return Container(
-          child: Column(
-            children: [
-              _buildCategoryItem('Processed', filterProduct),
-              _buildCategoryItem('OTOP', filterProduct),
-              _buildCategoryItem('Medicinal Plant', filterProduct),
-              _buildCategoryItem('Dried Good', filterProduct),
-            ],
-          ),
+        return Column(
+          children: [
+            _buildCategoryItem('Processed', filterProduct),
+            _buildCategoryItem('OTOP', filterProduct),
+            _buildCategoryItem('Medicinal Plant', filterProduct),
+            _buildCategoryItem('Dried Good', filterProduct),
+          ],
         );
       },
     );
   }
 
   Widget _buildCategoryItem(String category, Function filterProduct) {
-    String formattedCategory = category.toLowerCase().replaceAll(' ', '');
     String convertToCamelCase(String text) {
       List<String> words = text.split(RegExp(r'\s+|_'));
       String camelCaseText = words[0].toLowerCase();
@@ -147,12 +140,10 @@ class _ProductFilterState extends State<ProductFilter> {
         setState(() {
           _selectedCategory = category;
           _isCategorySelectorVisible = false;
-          print('Category clicked: $category');
-          print('Category 2 clicked: $_selectedCategory');
         });
         filterProduct(convertToCamelCase(category));
       },
-      child: Container(
+      child: SizedBox(
         height: 40,
         child: ListTile(
           title: Text(
@@ -168,89 +159,6 @@ class _ProductFilterState extends State<ProductFilter> {
     );
   }
 
-  Widget _sorting() {
-    return SizedBox(
-      height: 40,
-      width: 110,
-      child: PopupMenuButton<String>(
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          const PopupMenuItem<String>(
-            value: 'Most Relevant',
-            child: Text(
-              'Most Relevant',
-              style: TextStyle(fontSize: 10),
-            ),
-          ),
-          const PopupMenuItem<String>(
-            value: 'Most Reviewed',
-            child: Text(
-              'Most Reviewed',
-              style: TextStyle(fontSize: 10),
-            ),
-          ),
-          const PopupMenuItem<String>(
-            value: 'Highest Rated',
-            child: Text(
-              'Highest Rated',
-              style: TextStyle(fontSize: 10),
-            ),
-          ),
-          const PopupMenuItem<String>(
-            value: 'Newest',
-            child: Text(
-              'Newest',
-              style: TextStyle(fontSize: 10),
-            ),
-          ),
-        ],
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(5),
-            color: primaryColor,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 2),
-                      child: const Text(
-                        'Sort by',
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      _selectedSortOption,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              const Icon(
-                Icons.arrow_drop_down,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _clear(Function defaultProduct) {
     return Flexible(
       child: Container(
@@ -258,8 +166,10 @@ class _ProductFilterState extends State<ProductFilter> {
         alignment: Alignment.bottomRight,
         child: GestureDetector(
           onTap: () {
+            setState(() {
+              _selectedCategory = categoryItem;
+            });
             defaultProduct();
-            print('set to default');
           },
           child: const Text(
             'Set to default',

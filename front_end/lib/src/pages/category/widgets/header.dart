@@ -54,11 +54,6 @@ class _CategoryHeaderState extends State<CategoryHeader> {
                 icon: CupertinoIcons.cart_fill,
                 notification: 10,
               ),
-              // _buildIconButton(
-              //   onPressed: () => print('click'),
-              //   icon: Icons.chat,
-              //   notification: 1,
-              // ),
             ],
           ),
         ),

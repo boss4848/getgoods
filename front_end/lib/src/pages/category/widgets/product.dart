@@ -24,20 +24,26 @@ class ShowProduct extends StatefulWidget {
 class _ShowProductState extends State<ShowProduct> {
   late String cateHeader = cateHeader;
 
+  List<String> categories = [
+    'processed',
+    'otop',
+    'medicinalPlant',
+    'driedGood'
+  ];
+
   @override
   Widget build(BuildContext context) {
     return widget.productViewModel.state == ProductState.loading
-        ? Container(
-            color: Colors.white,
+        ? const SizedBox(
             height: 600,
-            child: const Center(
+            child: Center(
               child: CircularProgressIndicator(
                 color: Colors.green,
               ),
             ),
           )
         : Container(
-            color: Colors.grey[200],
+            color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

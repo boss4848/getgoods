@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/pages/category/widgets/catcontent.dart';
 import 'package:getgoods/src/pages/category/widgets/filter.dart';
 import 'package:getgoods/src/pages/category/widgets/header.dart';
@@ -32,6 +33,13 @@ class _CategoryPageState extends State<CategoryPage> {
   List<Product> otopProducts = [];
   List<Product> medicinalPlantProducts = [];
   List<Product> driedGoodProducts = [];
+
+  List<Product> allProcessedProducts = [];
+  List<Product> allOtopProducts = [];
+  List<Product> allMedicinalPlantProducts = [];
+  List<Product> allDriedGoodProducts = [];
+
+  bool showAllProducts = false;
 
   @override
   void initState() {
@@ -77,6 +85,19 @@ class _CategoryPageState extends State<CategoryPage> {
         driedGoodProducts = driedGoodProducts.sublist(0, 2);
       }
       log('pdMedicPlant: $driedGoodProducts');
+
+      allProcessedProducts =
+          products.where((element) => element.category == 'processed').toList();
+
+      allOtopProducts =
+          products.where((element) => element.category == 'otop').toList();
+
+      allMedicinalPlantProducts = products
+          .where((element) => element.category == 'medicinalPlant')
+          .toList();
+
+      allDriedGoodProducts =
+          products.where((element) => element.category == 'driedGood').toList();
     });
   }
 
@@ -84,7 +105,6 @@ class _CategoryPageState extends State<CategoryPage> {
     await productViewModel.filteredProduct(category);
     setState(() {
       products = productViewModel.filterProduct;
-
       log('In $category category has ${products.length} products');
     });
   }
@@ -93,15 +113,14 @@ class _CategoryPageState extends State<CategoryPage> {
     setState(() {
       category = selectedCategory;
     });
-    print('category: $category');
     _getProducts(category);
   }
 
   _setToDefault() {
     setState(() {
       category = '';
+      showAllProducts = false;
     });
-    print('category in default: $category');
     _getProducts(categories[0]);
   }
 
@@ -119,25 +138,27 @@ class _CategoryPageState extends State<CategoryPage> {
               filterProduct: _setCategory,
               defaultProduct: _setToDefault,
             ),
-            Column(
-              children: [
-                if (category.isEmpty) _defaultCategoryPage(),
-                if (category.isNotEmpty) _buildHeader(category),
-                if (category.isNotEmpty)
+            if (category.isEmpty)
+              _defaultCategoryPage()
+            else if (!showAllProducts)
+              Column(
+                children: [
+                  _buildHeader(category),
                   CatContent(
                     _scrollController,
                     products: products,
                     productViewModel: productViewModel,
                     onRefresh: () => _getProducts(category),
                   ),
-                ElevatedButton(
-                  onPressed: () {
-                    _getProducts(category);
-                  },
-                  child: const Text('Refresh'),
-                ),
-              ],
-            ),
+                ],
+              )
+            else
+              CatContent(
+                _scrollController,
+                products: products,
+                productViewModel: productViewModel,
+                onRefresh: () => _getProducts(category),
+              ),
           ],
         ),
       ),
@@ -147,26 +168,118 @@ class _CategoryPageState extends State<CategoryPage> {
   Widget _defaultCategoryPage() {
     return Column(
       children: [
-        _buildHeader(categories[0]),
-        CatContent(_scrollController,
-            onRefresh: () => _getAllProducts(),
-            products: processedProducts,
-            productViewModel: productViewModel),
-        _buildHeader(categories[1]),
-        CatContent(_scrollController,
-            onRefresh: () => _getAllProducts(),
-            products: otopProducts,
-            productViewModel: productViewModel),
-        _buildHeader(categories[2]),
-        CatContent(_scrollController,
-            onRefresh: () => _getAllProducts(),
-            products: medicinalPlantProducts,
-            productViewModel: productViewModel),
-        _buildHeader(categories[3]),
-        CatContent(_scrollController,
-            onRefresh: () => _getAllProducts(),
-            products: driedGoodProducts,
-            productViewModel: productViewModel),
+        Column(
+          children: [
+            Row(
+              children: [
+                _buildHeader(categories[0]),
+                const Spacer(),
+                _buildIconButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShowAllCatProduct(
+                        categoryTitle: categories[0],
+                        products: allProcessedProducts,
+                      ),
+                    ),
+                  ),
+                  icon: Icons.keyboard_arrow_right,
+                  categoryTitle: categories[0],
+                  categoryProducts: allProcessedProducts,
+                ),
+              ],
+            ),
+            CatContent(_scrollController,
+                onRefresh: () => _getAllProducts(),
+                products: processedProducts,
+                productViewModel: productViewModel),
+          ],
+        ),
+        Column(
+          children: [
+            Row(
+              children: [
+                _buildHeader(categories[1]),
+                const Spacer(),
+                _buildIconButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShowAllCatProduct(
+                        categoryTitle: categories[1],
+                        products: allOtopProducts,
+                      ),
+                    ),
+                  ),
+                  icon: Icons.keyboard_arrow_right,
+                  categoryTitle: categories[1],
+                  categoryProducts: allOtopProducts,
+                ),
+              ],
+            ),
+            CatContent(_scrollController,
+                onRefresh: () => _getAllProducts(),
+                products: otopProducts,
+                productViewModel: productViewModel),
+          ],
+        ),
+        Column(
+          children: [
+            Row(
+              children: [
+                _buildHeader(categories[2]),
+                const Spacer(),
+                _buildIconButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShowAllCatProduct(
+                        categoryTitle: categories[2],
+                        products: allMedicinalPlantProducts,
+                      ),
+                    ),
+                  ),
+                  icon: Icons.keyboard_arrow_right,
+                  categoryTitle: categories[2],
+                  categoryProducts: allMedicinalPlantProducts,
+                ),
+              ],
+            ),
+            CatContent(_scrollController,
+                onRefresh: () => _getAllProducts(),
+                products: medicinalPlantProducts,
+                productViewModel: productViewModel),
+          ],
+        ),
+        Column(
+          children: [
+            Row(
+              children: [
+                _buildHeader(categories[3]),
+                const Spacer(),
+                _buildIconButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShowAllCatProduct(
+                        categoryTitle: categories[3],
+                        products: allDriedGoodProducts,
+                      ),
+                    ),
+                  ),
+                  icon: Icons.keyboard_arrow_right,
+                  categoryTitle: categories[3],
+                  categoryProducts: allDriedGoodProducts,
+                ),
+              ],
+            ),
+            CatContent(_scrollController,
+                onRefresh: () => _getAllProducts(),
+                products: driedGoodProducts,
+                productViewModel: productViewModel),
+          ],
+        ),
       ],
     );
   }
@@ -193,13 +306,117 @@ class _CategoryPageState extends State<CategoryPage> {
       color: Colors.white,
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.all(12),
-      child: Text(
-        modifiedTitle,
-        style: const TextStyle(
-          color: Colors.green,
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
+      child: Row(
+        children: [
+          Text(
+            modifiedTitle,
+            style: const TextStyle(
+              color: primaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIconButton({
+    required VoidCallback onPressed,
+    required IconData icon,
+    required String categoryTitle,
+    required List<Product> categoryProducts,
+  }) {
+    return Stack(
+      children: [
+        IconButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShowAllCatProduct(
+                categoryTitle: categoryTitle,
+                products: categoryProducts,
+              ),
+            ),
+          ),
+          icon: Icon(icon),
+          iconSize: 28,
         ),
+      ],
+    );
+  }
+}
+
+class ShowAllCatProduct extends StatefulWidget {
+  final String categoryTitle;
+  final List<Product> products;
+  const ShowAllCatProduct(
+      {Key? key, required this.categoryTitle, required this.products})
+      : super(key: key);
+
+  @override
+  _ShowAllCatProductState createState() => _ShowAllCatProductState();
+}
+
+class _ShowAllCatProductState extends State<ShowAllCatProduct> {
+  late ProductViewModel productViewModel;
+  List<Product> products = [];
+  List<Product> allProcessedProducts = [];
+  List<Product> allOtopProducts = [];
+  List<Product> allMedicinalPlantProducts = [];
+  List<Product> allDriedGoodProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    productViewModel = ProductViewModel();
+    _getAllProducts();
+  }
+
+  _getAllProducts() async {
+    await productViewModel.fetchCategory();
+
+    setState(
+      () {
+        products = productViewModel.products;
+        allProcessedProducts = products
+            .where((element) => element.category == 'processed')
+            .toList();
+        allOtopProducts =
+            products.where((element) => element.category == 'otop').toList();
+        allMedicinalPlantProducts = products
+            .where((element) => element.category == 'medicinalPlant')
+            .toList();
+        allDriedGoodProducts = products
+            .where((element) => element.category == 'driedGood')
+            .toList();
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+            widget.categoryTitle.characters.isNotEmpty
+                ? '${widget.categoryTitle[0].toUpperCase()}${widget.categoryTitle.substring(1)} Products'
+                : '',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            )),
+      ),
+      body: Column(
+        children: [
+          CatContent(
+            TrackingScrollController(),
+            products: widget.products,
+            productViewModel: productViewModel,
+            onRefresh: () => _getAllProducts(),
+          ),
+        ],
       ),
     );
   }
