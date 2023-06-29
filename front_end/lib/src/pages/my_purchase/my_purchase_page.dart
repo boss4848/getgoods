@@ -64,14 +64,8 @@ class _MyPurchasePageState extends State<MyPurchasePage> {
           bottom: TabBar(
             isScrollable: true,
             //padding: EdgeInsets.symmetric(horizontal: 10),
-            unselectedLabelColor: Colors.white,
-            labelColor: Colors.black,
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicator: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              color: Colors.grey[200],
-            ),
-            indicatorPadding: const EdgeInsets.symmetric(vertical: 10),
+            unselectedLabelColor: Colors.black.withOpacity(0.4),
+            labelColor: Colors.white,
             tabs: const [
               Tab(text: 'To pay'),
               Tab(text: 'To ship'),
