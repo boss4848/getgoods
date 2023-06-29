@@ -94,9 +94,9 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
       );
     }
 
-    // If user state is idle or success, show the user detail or a prompt to log in
     return Scaffold(
-      backgroundColor: primaryColor,
+      backgroundColor:
+          userState == UserState.idle ? primaryColor : secondaryBGColor,
       body: userState == UserState.idle
           ? Center(
               child: Column(

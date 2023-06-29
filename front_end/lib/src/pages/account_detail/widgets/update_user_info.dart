@@ -40,9 +40,9 @@ class _AddUserInfoPageState extends State<UpdateUserInfoPage> {
       Response response = await dio.patch(
         '${ApiConstants.baseUrl}/users/updateMe',
         data: {
+          'name': _userName.text,
           'phone': _phone.text,
           //'email': _email.text,
-          'name': _userName.text,
         },
       );
       log(response.data.toString());
@@ -101,7 +101,7 @@ class _AddUserInfoPageState extends State<UpdateUserInfoPage> {
     final UserDetail userDetail = _userViewModel.userDetail;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Update Product'),
+        title: const Text('Update User Account Info'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -111,7 +111,7 @@ class _AddUserInfoPageState extends State<UpdateUserInfoPage> {
               margin: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
+                color: primaryColor,
                 boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
@@ -121,54 +121,70 @@ class _AddUserInfoPageState extends State<UpdateUserInfoPage> {
                 ],
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildInputField(
-                    label: 'Username',
-                    hintText: 'Your new username',
-                    controller: _userName,
-                    totalLength: 20,
-                    keyboardType: TextInputType.text,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildInputField(
+                            label: 'Username',
+                            hintText: 'Your new username',
+                            controller: _userName,
+                            totalLength: 20,
+                            keyboardType: TextInputType.text,
+                          ),
+                          _buildDivider(),
+                          _buildFixedInputField(
+                            label: 'Email',
+                            data: userDetail.email,
+                            controller: _email,
+                            totalLength: 0,
+                            keyboardType: TextInputType.text,
+                          ),
+                          _buildDivider(),
+                          _buildInputField(
+                            label: 'Phone',
+                            hintText: 'Your phone number',
+                            controller: _phone,
+                            totalLength: 0,
+                            keyboardType: TextInputType.number,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  _buildDivider(),
-                  // _buildInputField(
-                  //   label: 'Email',
-                  //   hintText: 'you cannot change',
-                  //   totalLength: 0,
-                  //   controller: _email,
-                  //   keyboardType: TextInputType.text,
-                  // ),
-                  _buildFixedInputField(
-                    label: 'Email',
-                    data: userDetail.email,
-                    controller: _email,
-                    totalLength: 0,
-                    keyboardType: TextInputType.text,
-                  ),
-                  _buildDivider(),
-                  _buildInputField(
-                    label: 'Phone',
-                    hintText: 'Your phone number',
-                    controller: _phone,
-                    totalLength: 0,
-                    keyboardType: TextInputType.number,
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      width: double.infinity,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            sendRequest();
+                          },
+                          child: const Text(
+                            'UPDATE INFO',
+                            style: TextStyle(color: primaryColor),
+                          ),
+                          style: const ButtonStyle(
+                              backgroundColor:
+                                  MaterialStatePropertyAll(Colors.white))),
+                    ),
                   ),
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 12),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  sendRequest();
-                },
-                child: const Text('Update User'),
-              ),
-            ),
-            const SizedBox(height: 400),
           ],
         ),
       ),
