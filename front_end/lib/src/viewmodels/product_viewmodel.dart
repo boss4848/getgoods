@@ -24,7 +24,7 @@ class ProductViewModel {
 
   Future<void> fetchProducts() async {
     final String getProductsUrl =
-        '${ApiConstants.baseUrl}/products?fields=name,price,discount,sold,imageCover';
+        '${ApiConstants.baseUrl}/products?fields=name,price,discount,sold,imageCover,category';
 
     state = ProductState.loading;
     try {
@@ -78,6 +78,26 @@ class ProductViewModel {
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
       return 'error';
+    }
+  }
+
+  Future<void> fetchCategory() async {
+    final String getProductsUrl =
+        '${ApiConstants.baseUrl}/products?fields=name,price,discount,sold,imageCover,category';
+
+    state = ProductState.loading;
+    try {
+      final response = await _dio.get(getProductsUrl);
+      final data = response.data['data']['products'];
+      print(data);
+
+      products = List<Product>.from(data.map((product) {
+        return Product.fromJson(product);
+      }));
+      state = ProductState.success;
+    } catch (e) {
+      print('Error fetching products: $e');
+      state = ProductState.error;
     }
   }
 
@@ -138,19 +158,37 @@ class ProductViewModel {
   }
 
   Future<void> filteredProduct(String category) async {
-    final String getProductsUrl =
-        '${ApiConstants.baseUrl}/products?category=$category&fields=name,price,discount,sold,imageCover';
+    final String getProductsCategoryUrl =
+        '${ApiConstants.baseUrl}/products?category=$category&fields=name,price,discount,sold,imageCover,category';
 
     state = ProductState.loading;
     try {
-      final response = await _dio.get(getProductsUrl);
-      final data = response.data['data']['products'];
-      print(data);
+      final response = await _dio.get(getProductsCategoryUrl);
+      if (response.statusCode == 200) {
+        final data = response.data['data']['products'];
+        print(data);
 
-      products = List<Product>.from(data.map((product) {
-        return Product.fromJson(product);
-      }));
-      state = ProductState.success;
+        filterProduct = List<Product>.from(
+          data.map(
+            (product) {
+              return Product.fromJson(product);
+            },
+          ),
+        );
+        state = ProductState.success;
+      } else {
+        // Handle non-200 status code
+        print('Error fetching products. Status code: ${response.statusCode}');
+        state = ProductState.error;
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print(
+            'Error fetching products. Status code: ${e.response!.statusCode}');
+      } else {
+        print('Error fetching products: ${e.message}');
+      }
+      state = ProductState.error;
     } catch (e) {
       print('Error fetching products: $e');
       state = ProductState.error;

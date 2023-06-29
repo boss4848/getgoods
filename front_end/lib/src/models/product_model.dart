@@ -94,6 +94,7 @@ class Product {
   final String imageCover;
   final String id;
   final int quantity;
+  final String category;
 
   Product({
     required this.name,
@@ -103,6 +104,7 @@ class Product {
     this.imageCover = '',
     required this.id,
     required this.quantity,
+    required this.category,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -114,6 +116,7 @@ class Product {
       imageCover: json['imageCover'] ?? '',
       id: json['_id'] ?? '',
       quantity: json['quantity'] ?? 0,
+      category: json['category'] ?? '',
     );
   }
 }

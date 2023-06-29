@@ -3,7 +3,9 @@ import 'package:getgoods/src/constants/colors.dart';
 
 class ProductFilter extends StatefulWidget {
   final Function filterProduct;
-  const ProductFilter({Key? key, required this.filterProduct})
+  final Function defaultProduct;
+  const ProductFilter(
+      {Key? key, required this.filterProduct, required this.defaultProduct})
       : super(key: key);
 
   @override
@@ -13,50 +15,49 @@ class ProductFilter extends StatefulWidget {
 class _ProductFilterState extends State<ProductFilter> {
   bool _isCategorySelectorVisible = false;
   String _selectedCategory = '';
-  String _selectedSortOption =
-      'Most Relevant'; // Default selected sorting option
+  String categoryItem = 'Category';
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(15),
-          child: Column(
+    return Container(
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _filter(),
+                const Spacer(),
+                _clear(widget.defaultProduct),
+              ],
+            ),
+          ),
+          Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _filter(),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  _sorting(),
-                  const Spacer(),
-                  _clear(),
-                ],
-              ),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOutQuad,
-                height: _isCategorySelectorVisible ? 200 : 0,
+                height: _isCategorySelectorVisible ? 160 : 0,
                 child: _isCategorySelectorVisible
                     ? ClipRect(
                         child: Align(
                           alignment: Alignment.topCenter,
-                          child: _buildCategorySelector(),
+                          child: _buildCategorySelector(widget.filterProduct),
                         ),
                       )
                     : null,
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Divider(thickness: 1.5),
             ],
           ),
-        ),
-      ],
+          const SizedBox(
+            height: 2,
+          ),
+          const Divider(thickness: 1.5),
+        ],
+      ),
     );
   }
 
@@ -65,40 +66,34 @@ class _ProductFilterState extends State<ProductFilter> {
       onTap: () {
         setState(() {
           _isCategorySelectorVisible = !_isCategorySelectorVisible;
-          if (_isCategorySelectorVisible) {
-            Future.delayed(const Duration(milliseconds: 300)).then((_) {
-              setState(() {
-                // Additional state changes after the delay
-              });
-            });
-          } else {
-            // Additional state changes when hiding the category selector
-          }
         });
       },
       child: Container(
-        height: 48,
-        width: 160,
+        height: 40,
+        width: 120,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey,
-            ),
-            borderRadius: BorderRadius.circular(5),
-            color: primaryColor),
+          border: Border.all(
+            color: Colors.grey,
+          ),
+          borderRadius: BorderRadius.circular(5),
+          color: primaryColor,
+        ),
         child: Row(
           children: [
             const Icon(
               Icons.filter_list,
               color: Colors.white,
+              size: 10,
             ),
             const SizedBox(width: 5),
             Text(
-              _selectedCategory.isNotEmpty ? _selectedCategory : 'Category',
+              _selectedCategory.isNotEmpty ? _selectedCategory : categoryItem,
               style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold),
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -106,135 +101,88 @@ class _ProductFilterState extends State<ProductFilter> {
     );
   }
 
-  Widget _sorting() {
-    return SizedBox(
-      height: 48,
-      child: PopupMenuButton<String>(
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          const PopupMenuItem<String>(
-            value: 'Most Relevant',
-            child: Text('Most Relevant'),
-          ),
-          const PopupMenuItem<String>(
-            value: 'Most Reviewed',
-            child: Text('Most Reviewed'),
-          ),
-          const PopupMenuItem<String>(
-            value: 'Highest Rated',
-            child: Text('Highest Rated'),
-          ),
-          const PopupMenuItem<String>(
-            value: 'Newest',
-            child: Text('Newest'),
-          ),
-        ],
-        onSelected: (String value) {
-          setState(() {
-            _selectedSortOption = value;
-            // Perform sorting based on the selected option
-          });
-        },
-        child: Container(
-          width: 170,
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: (BorderRadius.circular(5)),
-              color: primaryColor),
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Sort by',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      _selectedSortOption,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              const Icon(
-                Icons.arrow_drop_down,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCategorySelector() {
-    return SizedBox(
-      height: 200,
-      child: Container(
-        color: Colors.white,
-        child: Column(
+  Widget _buildCategorySelector(Function filterProduct) {
+    return FutureBuilder(
+      future: Future.delayed(const Duration(milliseconds: 300)),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container();
+        }
+        return Column(
           children: [
-            _buildCategoryItem('Processed'),
-            _buildCategoryItem('OTOP'),
-            _buildCategoryItem('Medicinal Plant'),
-            _buildCategoryItem('Dried Food'),
+            _buildCategoryItem('Processed', filterProduct),
+            _buildCategoryItem('OTOP', filterProduct),
+            _buildCategoryItem('Medicinal Plant', filterProduct),
+            _buildCategoryItem('Dried Good', filterProduct),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildCategoryItem(String category) {
+  Widget _buildCategoryItem(String category, Function filterProduct) {
+    String convertToCamelCase(String text) {
+      List<String> words = text.split(RegExp(r'\s+|_'));
+      String camelCaseText = words[0].toLowerCase();
+      for (int i = 1; i < words.length; i++) {
+        String word = words[i];
+        camelCaseText += word.substring(0, 1).toUpperCase() +
+            word.substring(1).toLowerCase();
+      }
+
+      return camelCaseText;
+    }
+
+    bool isSelected = _selectedCategory == category; // Add this line
+
     return InkWell(
       onTap: () {
         setState(() {
           _selectedCategory = category;
-          _isCategorySelectorVisible = false; // Close the category selector
+          _isCategorySelectorVisible = false;
         });
+        filterProduct(convertToCamelCase(category));
       },
-      child: ListTile(
-        title: Text(
-          category,
-          style: TextStyle(
-            color: _selectedCategory == category ? primaryColor : null,
+      child: SizedBox(
+        height: 40,
+        child: ListTile(
+          title: Text(
+            category,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: isSelected ? Colors.green : primaryTextColor,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _clear() {
-    return SizedBox(
+  Widget _clear(Function defaultProduct) {
+    return Flexible(
       child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
+        width: double.infinity,
+        alignment: Alignment.bottomRight,
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              _selectedCategory = categoryItem;
+            });
+            defaultProduct();
+          },
+          child: const Text(
+            'Set to default',
+            maxLines: 2,
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+              fontSize: 12,
+              color: primaryColor,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ),
-        child: const Text('Clear'),
       ),
     );
   }
-
-  // Widget _buildHeader() => Container(
-  //       color: Colors.white,
-  //       padding: const EdgeInsets.all(12),
-  //       child: const Text(
-  //         "Filter your products",
-  //         style: TextStyle(
-  //           color: primaryColor,
-  //           fontWeight: FontWeight.bold,
-  //           fontSize: 20,
-  //         ),
-  //       ),
-  //     );
 }

@@ -29,6 +29,10 @@ router.route('/:id')
 
     )
 
+router.route('/getShopName/:id').get(
+    authController.protect,
+    shopController.getShopName);
+
 
 
 module.exports = router;

@@ -94,40 +94,147 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
       );
     }
 
-    // If user state is idle or success, show the user detail or a prompt to log in
     return Scaffold(
-      backgroundColor: secondaryBGColor,
+      backgroundColor:
+          userState == UserState.idle ? primaryColor : secondaryBGColor,
       body: userState == UserState.idle
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignUpPage(),
-                        ),
-                      ).then(
-                        (_) => _getUserDetail(),
-                      );
-                    },
-                    child: const Text('Sign up'),
+                  const SizedBox(
+                    height: defaultpadding,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      ).then(
-                        (_) => _getUserDetail(),
-                      ); // Fetch user details again after logging in
-                    },
-                    child: const Text('Log in'),
+                  CircleAvatar(
+                    backgroundColor: Colors.black12,
+                    maxRadius: 100,
+                    child: Image.asset('assets/images/logo_2.png'),
                   ),
+                  const SizedBox(
+                    height: defaultpadding,
+                  ),
+                  const Text(
+                    'Welcome to',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'SFTHONBURI'),
+                  ),
+                  RichText(
+                      text: const TextSpan(
+                          text: 'Get',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SFTHONBURI'),
+                          children: [
+                        TextSpan(
+                            text: 'Goods', style: TextStyle(color: accentColor))
+                      ])),
+                  const Text(
+                    'Marketplace for getting goods.',
+                    style: TextStyle(
+                        color: Colors.white, fontFamily: 'SFTHONBURI'),
+                  ),
+                  const SizedBox(
+                    height: defaultpadding * 2,
+                  ),
+                  // const Text(
+                  //   "Don't have an account?",
+                  //   style: TextStyle(
+                  //       color: Colors.white,
+                  //       fontSize: 18,
+                  //       fontWeight: FontWeight.w500,
+                  //       fontFamily: 'SFTHONBURI'),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SignUpPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Sign Up',
+                          style: TextStyle(
+                              color: primaryColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SFTHONBURI'),
+                        ),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: DividerWithText(
+                      text: 'or',
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'SFTHONBURI'),
+                      thickness: 1.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: defaultpadding / 2,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          ).then(
+                            (_) => _getUserDetail(),
+                          ); // Fetch user details again after logging in
+                        },
+                        child: const Text(
+                          'Log in',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SFTHONBURI'),
+                        ),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(secondaryColor),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             )
@@ -575,6 +682,13 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
     // );
   }
 
+  _buildDivider() {
+    return Divider(
+      color: Colors.white,
+      thickness: 1,
+    );
+  }
+
   _buildIconButton({
     required VoidCallback onPressed,
     required IconData icon,
@@ -615,6 +729,47 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                   ),
                 ),
               ),
+      ],
+    );
+  }
+}
+
+class DividerWithText extends StatelessWidget {
+  final String text;
+  final TextStyle textStyle;
+  final double thickness;
+  final Color color;
+
+  const DividerWithText({
+    required this.text,
+    this.textStyle = const TextStyle(fontSize: 16),
+    this.thickness = 1.0,
+    this.color = Colors.white,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Divider(
+            color: color,
+            thickness: thickness,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            text,
+            style: textStyle,
+          ),
+        ),
+        Expanded(
+          child: Divider(
+            color: color,
+            thickness: thickness,
+          ),
+        ),
       ],
     );
   }
