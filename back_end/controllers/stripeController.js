@@ -4,10 +4,11 @@ const User = require('../models/userModel');
 const Transaction = require('../models/transactionModel');
 
 exports.createCheckoutSession = catchAsync(async (req, res, next) => {
-    const { products, amount, coupons } = req.body;
+    const { products, amount, coupons, shopId, shippingFee } = req.body;
     const customer = req.user && req.user.stripeId;
     let subTotal = 0;
     const lineItems = products.map((product) => {
+        // console.log(product.shop);
         subTotal += product.price * product.quantity;
         console.log('product: ' + product.images);
         return {
@@ -15,7 +16,7 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
                 currency: 'thb',
                 product_data: {
                     name: product.name,
-                    images: [product.images],
+                    images: [product.images == 'default.jpg' ? 'https://getgoods.blob.core.windows.net/product-photos/https://getgoods.blob.core.windows.net/product-photos/default.jpeg' : product.images],
                 },
                 unit_amount: product.price * 100,
             },
@@ -91,14 +92,18 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
     }
 
     console.log(session);
+    console.log(products[0].shop);
 
     const transaction = await Transaction.create({
         user: req.user.id,
         products: products.map(product => product.id),
+        quantity: products.map(product => product.quantity),
+        shop: shopId,
         amount: subTotal,
         paymentIntentId: session.payment_intent,
         sessionId: session.id,
         checkoutUrl: session.url,
+        shippingFee: shippingFee,
     });
 
     if (!transaction) {

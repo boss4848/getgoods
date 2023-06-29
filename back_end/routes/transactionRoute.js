@@ -12,4 +12,10 @@ router
         transactionController.getAllTransactions,
     );
 
+router.route('/:id')
+    .patch(
+        authController.protect,
+        transactionController.updateTransaction,
+    )
+
 module.exports = router;
