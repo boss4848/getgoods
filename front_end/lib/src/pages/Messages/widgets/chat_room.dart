@@ -42,38 +42,6 @@ class _ChatRoomState extends State<ChatRoom> {
   bool _isEmpty = false;
   late IO.Socket _socket;
 
-  // void _connectSocket() {
-  //   _socket.onConnect((data) {
-  //     print('Connection established');
-  //   });
-
-  //   _socket.onConnectError((data) {
-  //     print('Connection Error: $data');
-  //   });
-
-  //   _socket.onDisconnect((data) {
-  //     print('Socket.IO server disconnect');
-  //   });
-
-  //   _socket.on('chat message', (data) {
-  //     setState(() {
-  //       messages.add(
-  //         ChatMessage(
-  //           message: data['message'],
-  //           sender: data['sender'],
-  //           chatId: data['chatId'],
-  //           createdAt: data['timestamp'],
-  //         ),
-  //       );
-  //     });
-  //     _scrollController.animateTo(
-  //       _scrollController.position.maxScrollExtent,
-  //       duration: const Duration(milliseconds: 300),
-  //       curve: Curves.easeOut,
-  //     );
-  //   });
-  // }
-
   _connectionSocket() {
     _socket = IO.io(
       ApiConstants.socketUrl,
@@ -90,11 +58,6 @@ class _ChatRoomState extends State<ChatRoom> {
                   sender: data['sender'],
                   chatId: data['chatId'],
                   createdAt: DateTime.now()));
-              // _scrollController.animateTo(
-              //   _scrollController.position.maxScrollExtent,
-              //   duration: const Duration(milliseconds: 300),
-              //   curve: Curves.easeOut,
-              // );
             }));
     _socket.onDisconnect((data) => print("data cliend-disconncted"));
   }
@@ -125,41 +88,6 @@ class _ChatRoomState extends State<ChatRoom> {
     super.initState();
     _getMessage();
     _getUserId().then((value) => _connectionSocket());
-    // _getMessage();
-
-    // _connectionSocket();
-    // _socket.connect();
-
-    // _socket.on('chat message', (data) {
-    //   print(data);
-    // });
-
-    // _socket.on('chat message', (data) {
-    //   setState(() {
-    //     messages.add(
-    //       ChatMessage(
-    //         message: data['message'],
-    //         sender: data['sender'],
-    //         chatId: data['chatId'],
-    //         createdAt: data['timestamp'],
-    //       ),
-    //     );
-    //   });
-    //   _scrollController.animateTo(
-    //     _scrollController.position.maxScrollExtent,
-    //     duration: const Duration(milliseconds: 300),
-    //     curve: Curves.easeOut,
-    //   );
-    // });
-
-    // _socket.onConnectError((data) {
-    //   print('Connection Error: $data');
-    // });
-
-    // _socket.onDisconnect((data) {
-    //   print('Socket.IO server disconnect');
-    // });
-    print('chat id ${widget.chatId}}');
   }
 
   @override

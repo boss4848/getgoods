@@ -2,6 +2,7 @@ const Shop = require('../models/shopModel');
 const factory = require('./handlerFactory');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const User = require('../models/userModel');
 
 // Middleware to restrict access to shop owners only
 exports.restrictToOwner = catchAsync(async (req, res, next) => {
@@ -63,6 +64,21 @@ exports.getShop = catchAsync(async (req, res, next) => {
         status: 'success',
         data: {
             data: shop
+        }
+    });
+});
+
+exports.getShopName = catchAsync(async (req, res, next) => {
+    const ownerID = req.params.id;
+
+    const shop = await Shop.findOne({ owner: ownerID });
+
+    const shopName = shop.name;
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            shopName
         }
     });
 });

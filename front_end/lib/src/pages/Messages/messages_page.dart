@@ -35,7 +35,7 @@ class _MessagesPageState extends State<MessagesPage> {
         child: SafeArea(
           child: Stack(
             children: [
-               const TabBarView(
+               TabBarView(
                 children: [
                   Chats(),
                   const Notifications(),

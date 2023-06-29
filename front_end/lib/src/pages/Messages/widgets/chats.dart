@@ -27,6 +27,7 @@ class Chats extends StatefulWidget {
 class _ChatsState extends State<Chats> {
   late ShopViewModel shopViewModel;
   List<ChatList> chatLists = [];
+  List<String> shopNameList = [];
   late String roomId;
   late String? userId = "";
 
@@ -36,6 +37,7 @@ class _ChatsState extends State<Chats> {
     _getUserId();
     shopViewModel = ShopViewModel();
     getChatList();
+
   }
 
   Future<void> _getUserId() async {
@@ -45,10 +47,31 @@ class _ChatsState extends State<Chats> {
     });
   }
 
-  String _getShopName(int index) {
-    shopViewModel.fetchShop(chatLists[index].shopId);
-    return shopViewModel.shop.name;
+  Future<void> _getShopName(int index) async{
+    final response = await ApiService.request(
+      'GET',
+      '${ApiConstants.baseUrl}/shops/getShopName/${chatLists[index].shopId}',
+      requiresAuth: true,
+    );
+
+    setState(() {
+      shopNameList[index] = response['data']['shopName'];
+    });
   }
+
+  Future<void> _generateName() async {
+  shopNameList = List<String>.filled(chatLists.length, ''); // Initialize with empty strings
+
+  final futures = List<Future<void>>.generate(chatLists.length, (i) {
+    if (i < chatLists.length) {
+      return _getShopName(i);
+    } else {
+      return Future.value(); // Return a completed future for out-of-range indices
+    }
+  });
+
+  await Future.wait(futures);
+}
 
   bool isShopCurrentUser(int index) {
     if(chatLists[index].userId == userId) {
@@ -57,6 +80,7 @@ class _ChatsState extends State<Chats> {
       return true;
     }
   }
+
 
   Future<void> getChatList() async {
     final response = await ApiService.request(
@@ -68,10 +92,11 @@ class _ChatsState extends State<Chats> {
     final Map<String, dynamic> data = response['data'];
 
     final List<dynamic> chatListData = data['chat'];
-    print('data111: ${chatListData.toString()}}');
+
     setState(() {
       chatLists = chatListData.map((e) => ChatList.fromJson(e)).toList();
     });
+    _generateName();
 
   }
 
@@ -94,9 +119,9 @@ class _ChatsState extends State<Chats> {
               return _buildChatItem(
                 index: index,
                 avatar: !isShopCurrentUser(index) ? 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].shopPhoto}' : 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].userPhoto}',
-                name: isShopCurrentUser(index) ? chatLists[index].userName : chatLists[index].shopId,
-                message: 'Hello, how are you?',
-                time: '12:00 PM',
+                name: isShopCurrentUser(index) ? chatLists[index].userName : shopNameList[index],
+                message: !isShopCurrentUser(index) ? 'Shop' : 'Customer',
+                time: '',
                 context: context,
               );
             },
@@ -121,7 +146,7 @@ class _ChatsState extends State<Chats> {
           MaterialPageRoute(
             builder: (context) => ChatRoom(
               chatId: chatLists[index].chatId,
-              chatName: isShopCurrentUser(index) ? chatLists[index].userName : chatLists[index].shopId,
+              chatName: isShopCurrentUser(index) ? chatLists[index].userName : shopNameList[index],
               avatar : !isShopCurrentUser(index) ? 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].shopPhoto}' : 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].userPhoto}',
               isShop: !isShopCurrentUser(index),
             ),
@@ -143,7 +168,7 @@ class _ChatsState extends State<Chats> {
           ],
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
               backgroundImage: NetworkImage(
@@ -162,7 +187,7 @@ class _ChatsState extends State<Chats> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   message,
                   style: const TextStyle(

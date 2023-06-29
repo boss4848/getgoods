@@ -15,6 +15,7 @@ exports.getChatList = catchAsync(async (req, res, next) => {
     // const shop = await Shop.find({owner: chat[0].members[1].shop.id});
     //update chat with shop name
 
+
     const updatedChat = chat.map((item) => {
       console.log('members: ', item.members[1].shop._id);
       // console.log('members: ', item.members[1]._id);

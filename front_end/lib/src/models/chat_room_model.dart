@@ -5,6 +5,7 @@ class ChatList {
   final String userId;
   final String shopId;
   final String userName;
+  final String shopName;
   final String userPhoto;
   final String shopPhoto;
 
@@ -13,6 +14,7 @@ class ChatList {
     required this.userId,
     required this.shopId,
     required this.userName,
+    required this.shopName,
     required this.userPhoto,
     required this.shopPhoto,
   });
@@ -27,6 +29,7 @@ class ChatList {
     userId: user['_id'] ?? '',
     shopId: shop['_id'] ?? '',
     userName: user['name'] ?? '',
+    shopName: shop['name'] ?? '',
     userPhoto: user['photo'] ?? '',
     shopPhoto: shop['photo'] ?? '',
   );
