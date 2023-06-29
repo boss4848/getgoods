@@ -7,7 +7,6 @@ import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/constants/constants.dart';
 import 'package:getgoods/src/models/user_model.dart';
 import 'package:getgoods/src/pages/account_detail/account_datail_page.dart';
-import 'package:getgoods/src/pages/address_detail/address_detail_page.dart';
 import 'package:getgoods/src/pages/bank_info_detail/bank_info_page.dart';
 import 'package:getgoods/src/pages/help_center/help_center.dart';
 import 'package:getgoods/src/pages/login/login_page.dart';
@@ -95,51 +94,147 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
       );
     }
 
-    // If user state is idle or success, show the user detail or a prompt to log in
     return Scaffold(
-      backgroundColor: secondaryBGColor,
+      backgroundColor:
+          userState == UserState.idle ? primaryColor : secondaryBGColor,
       body: userState == UserState.idle
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignUpPage(),
-                        ),
-                      );
-                    },
-                    child: const Text('Sign up'),
+                  const SizedBox(
+                    height: defaultpadding,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      ).then(
-                        (_) => _getUserDetail(),
-                      ); // Fetch user details again after logging in
-                    },
-                    child: const Text('Log in'),
+                  CircleAvatar(
+                    backgroundColor: Colors.black12,
+                    maxRadius: 100,
+                    child: Image.asset('assets/images/logo_2.png'),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyPurchasePage(
-                            tabIndex: 0,
+                  const SizedBox(
+                    height: defaultpadding,
+                  ),
+                  const Text(
+                    'Welcome to',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'SFTHONBURI'),
+                  ),
+                  RichText(
+                      text: const TextSpan(
+                          text: 'Get',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SFTHONBURI'),
+                          children: [
+                        TextSpan(
+                            text: 'Goods', style: TextStyle(color: accentColor))
+                      ])),
+                  const Text(
+                    'Marketplace for getting goods.',
+                    style: TextStyle(
+                        color: Colors.white, fontFamily: 'SFTHONBURI'),
+                  ),
+                  const SizedBox(
+                    height: defaultpadding * 2,
+                  ),
+                  // const Text(
+                  //   "Don't have an account?",
+                  //   style: TextStyle(
+                  //       color: Colors.white,
+                  //       fontSize: 18,
+                  //       fontWeight: FontWeight.w500,
+                  //       fontFamily: 'SFTHONBURI'),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SignUpPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Sign Up',
+                          style: TextStyle(
+                              color: primaryColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SFTHONBURI'),
+                        ),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                           ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
                         ),
-                      );
-                    },
-                    child: const Text('My purchase'),
+                      ),
+                    ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: DividerWithText(
+                      text: 'or',
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'SFTHONBURI'),
+                      thickness: 1.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: defaultpadding / 2,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          ).then(
+                            (_) => _getUserDetail(),
+                          ); // Fetch user details again after logging in
+                        },
+                        child: const Text(
+                          'Log in',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SFTHONBURI'),
+                        ),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(secondaryColor),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             )
@@ -326,7 +421,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           child: Row(
                             children: const [
                               Icon(
-                                Icons.storefront_rounded,
+                                Icons.assignment_rounded,
                                 color: primaryColor,
                                 size: 28,
                               ),
@@ -371,7 +466,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => MyAccountDetailPage(
-                                      shopId: userDetail.shop.id,
+                                      userId: userDetail.shop.id,
                                     )),
                           );
                         },
@@ -393,7 +488,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                                 width: 10,
                               ),
                               Text(
-                                'My Account',
+                                'Account & Address Info',
                                 style: TextStyle(
                                   color: primaryTextColor,
                                   fontSize: 16,
@@ -513,13 +608,32 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await userViewModel.logout();
-                          userViewModel.updateState(UserState.idle);
-                          setState(() {});
-                        },
-                        child: const Text('Log out'),
+                      Padding(
+                        padding: const EdgeInsets.all(defaultpadding),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50))),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await userViewModel.logout();
+                              userViewModel.updateState(UserState.idle);
+                              setState(() {});
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Log out',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -568,6 +682,13 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
     // );
   }
 
+  _buildDivider() {
+    return Divider(
+      color: Colors.white,
+      thickness: 1,
+    );
+  }
+
   _buildIconButton({
     required VoidCallback onPressed,
     required IconData icon,
@@ -608,6 +729,47 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                   ),
                 ),
               ),
+      ],
+    );
+  }
+}
+
+class DividerWithText extends StatelessWidget {
+  final String text;
+  final TextStyle textStyle;
+  final double thickness;
+  final Color color;
+
+  const DividerWithText({
+    required this.text,
+    this.textStyle = const TextStyle(fontSize: 16),
+    this.thickness = 1.0,
+    this.color = Colors.white,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Divider(
+            color: color,
+            thickness: thickness,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            text,
+            style: textStyle,
+          ),
+        ),
+        Expanded(
+          child: Divider(
+            color: color,
+            thickness: thickness,
+          ),
+        ),
       ],
     );
   }

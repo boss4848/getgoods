@@ -19,6 +19,16 @@ const shopSchema = new mongoose.Schema({
     },
     location: {
         type: Object,
+        default: {
+            detail: '',
+            province_th: '',
+            province_en: '',
+            district_th: '',
+            district_en: '',
+            sub_district_th: '',
+            sub_district_en: '',
+            post_code: '',
+        },
         // required: [true, 'A shop must have a location']
     },
     owner: {

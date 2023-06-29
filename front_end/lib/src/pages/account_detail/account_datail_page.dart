@@ -1,32 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
-
-import '../../viewmodels/shop_viewmodel.dart';
+import 'package:getgoods/src/models/user_model.dart';
+import 'package:getgoods/src/pages/account_detail/widgets/update_user_address.dart';
+import 'package:getgoods/src/pages/account_detail/widgets/update_user_info.dart';
+import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 
 class MyAccountDetailPage extends StatefulWidget {
-  final String shopId;
-  const MyAccountDetailPage({super.key, required this.shopId});
+  final String userId;
+  const MyAccountDetailPage({super.key, required this.userId});
 
   @override
   State<MyAccountDetailPage> createState() => _MyAccountDetailPageState();
 }
 
 class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
-  final ShopViewModel _shopViewModel = ShopViewModel();
+  final UserViewModel _userViewModel = UserViewModel();
 
   @override
   void initState() {
     super.initState();
-    _fetchShopDetails();
+    _fetchUserDetails();
   }
 
-  Future<void> _fetchShopDetails() async {
-    await _shopViewModel.fetchShop(widget.shopId);
+  Future<void> _fetchUserDetails() async {
+    await _userViewModel.fetchUser();
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final UserDetail userDetail = _userViewModel.userDetail;
+
     // final ShopDetail shop = _shopViewModel.shop;
     // if (_shopViewModel.state == ShopState.loading) {
     //   return const Loading();
@@ -38,15 +42,42 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
     return Scaffold(
       backgroundColor: primaryBGColor,
       appBar: AppBar(
-        title: const Text('My Account'),
+        title: const Text('My Account & Address'),
+        backgroundColor: primaryColor,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // _buildMerchantProfile(),
-            // _buildWarehouseAddress(),
-            _buildUsername(context),
-            _buildMyaddress(context),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: double.infinity,
+              color: primaryColor.withOpacity(0.5),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: const [
+                    Icon(
+                      Icons.info_rounded,
+                      color: primaryColor,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      'This information will be use for shipping address.',
+                      style: TextStyle(
+                          color: primaryColor,
+                          fontSize: 14,
+                          fontFamily: 'SFTHONBURI'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            _buildUserInfo(context, userDetail),
+            _buildUserAddress(context, userDetail),
             const SizedBox(height: 200),
           ],
         ),
@@ -54,7 +85,7 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
     );
   }
 
-  Container _buildUsername(BuildContext context) {
+  Container _buildUserInfo(BuildContext context, UserDetail user) {
     return Container(
       margin: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -87,7 +118,14 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    print('Edit');
+                    print('Edit user info');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UpdateUserInfoPage()
+                          // product: _product,
+                          ),
+                    ).then((_) => _fetchUserDetails());
                   },
                   child: const Text(
                     'Edit',
@@ -105,24 +143,24 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
           _buildDivider(),
           _buildSetInput(
             label: 'Username',
-            value: 'test5',
+            value: user.name,
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'Email',
-            value: 'user@gmail.com',
+            value: user.email,
           ),
           _buildDivider(),
           _buildSetInput(
             label: 'Phone Number',
-            value: '09487654321',
+            value: user.phone,
           ),
         ],
       ),
     );
   }
 
-  Container _buildMyaddress(BuildContext context) {
+  Container _buildUserAddress(BuildContext context, UserDetail address) {
     return Container(
       margin: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -141,11 +179,11 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
+            padding: EdgeInsets.only(top: 12, left: 12, right: 12),
             child: Row(
               children: [
                 const Text(
-                  'My Address',
+                  'Address',
                   style: TextStyle(
                     color: primaryTextColor,
                     fontSize: 18,
@@ -155,7 +193,14 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    print('Edit');
+                    print('Edit Address');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UpdateUserAddressPage()
+                          // product: _product,
+                          ),
+                    ).then((_) => _fetchUserDetails());
                   },
                   child: const Text(
                     'Edit',
@@ -170,193 +215,43 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
             ),
           ),
           const SizedBox(height: 4),
+          // const Padding(
+          //   padding: EdgeInsets.only(bottom: 8, left: 12, right: 12),
+          //   child: Text(
+          //     'This information will be use as shipping address.',
+          //     style: TextStyle(
+          //       color: grey,
+          //       fontSize: 14,
+          //     ),
+          //   ),
+          // ),
+          _buildDivider(),
+          _buildSetInput(label: 'Address', value: address.address.detail),
           _buildDivider(),
           _buildSetInput(
-            label: 'Firstname',
-            value: 'Vachajo',
+            label: 'Province',
+            value: address.address.provinceEn,
           ),
-          _buildDivider(),
-          _buildSetInput(label: 'Surname', value: 'RodRoo'),
           _buildDivider(),
           _buildSetInput(
-            label: 'Phone Number',
-            value: '09487654321',
+            label: 'District',
+            value: address.address.districtEn,
           ),
           _buildDivider(),
-          _buildSetInput(label: 'Address', value: 'BangNa Bansue BangYai'),
-          const SizedBox(height: 4),
+          _buildSetInput(
+            label: 'Sub-District',
+            value: address.address.subDistrictEn,
+          ),
+          _buildDivider(),
+          _buildSetInput(
+            label: 'Postal Code',
+            value: address.address.postCode,
+          ),
+          const SizedBox(height: 12),
         ],
       ),
     );
   }
-
-  // Container _buildWarehouseAddress() {
-  //   return Container(
-  //     margin: const EdgeInsets.all(12),
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(10),
-  //       color: Colors.white,
-  //       boxShadow: const [
-  //         BoxShadow(
-  //           color: Colors.black26,
-  //           blurRadius: 1.5,
-  //           spreadRadius: 0.1,
-  //         )
-  //       ],
-  //     ),
-  //     width: double.infinity,
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Padding(
-  //           padding: EdgeInsets.only(top: 12, left: 12, right: 12),
-  //           child: Row(
-  //             children: [
-  //               const Text(
-  //                 'Warehouse Address',
-  //                 style: TextStyle(
-  //                   color: primaryTextColor,
-  //                   fontSize: 16,
-  //                   fontWeight: FontWeight.bold,
-  //                 ),
-  //               ),
-  //               const Spacer(),
-  //               GestureDetector(
-  //                 onTap: () {
-  //                   print('Edit');
-  //                 },
-  //                 child: const Text(
-  //                   'Edit',
-  //                   style: TextStyle(
-  //                     color: primaryColor,
-  //                     fontSize: 14,
-  //                     fontWeight: FontWeight.bold,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //         const SizedBox(height: 4),
-  //         Padding(
-  //           padding: const EdgeInsets.only(bottom: 8, left: 12, right: 12),
-  //           child: Text(
-  //             //shop.location.detail,
-  //             'location',
-  //             style: const TextStyle(
-  //               color: grey,
-  //               fontSize: 14,
-  //             ),
-  //           ),
-  //         ),
-  //         _buildDivider(),
-  //         _buildSetInput(
-  //           label: 'Province',
-  //           value: 'shop.location.provinceEn',
-  //         ),
-  //         _buildDivider(),
-  //         _buildSetInput(
-  //           label: 'District',
-  //           value: 'shop.location.districtEn',
-  //         ),
-  //         _buildDivider(),
-  //         _buildSetInput(
-  //           label: 'Sub-District',
-  //           value: 'shop.location.subDistrictEn',
-  //         ),
-  //         _buildDivider(),
-  //         _buildSetInput(
-  //           label: 'Postal Code',
-  //           value: 'shop.location.postCode',
-  //         ),
-  //         const SizedBox(height: 12),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Container _buildMerchantProfile() {
-  //   return Container(
-  //     margin: const EdgeInsets.all(12),
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(10),
-  //       color: Colors.white,
-  //       boxShadow: const [
-  //         BoxShadow(
-  //           color: Colors.black26,
-  //           blurRadius: 1.5,
-  //           spreadRadius: 0.1,
-  //         )
-  //       ],
-  //     ),
-  //     width: double.infinity,
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Padding(
-  //           padding: const EdgeInsets.only(
-  //             top: 12,
-  //             left: 12,
-  //             right: 12,
-  //           ),
-  //           child: Row(
-  //             children: [
-  //               const Text(
-  //                 'Merchant Profile',
-  //                 style: TextStyle(
-  //                   color: primaryTextColor,
-  //                   fontSize: 16,
-  //                   fontWeight: FontWeight.bold,
-  //                 ),
-  //               ),
-  //               const Spacer(),
-  //               GestureDetector(
-  //                 onTap: () {
-  //                   print('Edit');
-  //                 },
-  //                 child: const Text(
-  //                   'Edit',
-  //                   style: TextStyle(
-  //                     color: primaryColor,
-  //                     fontSize: 14,
-  //                     fontWeight: FontWeight.bold,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //         const SizedBox(height: 4),
-  //         const Padding(
-  //           padding: EdgeInsets.only(bottom: 8, left: 12, right: 12),
-  //           child: Text(
-  //             'Verified',
-  //             style: TextStyle(
-  //               color: grey,
-  //               fontSize: 14,
-  //             ),
-  //           ),
-  //         ),
-  //         _buildDivider(),
-  //         _buildSetInput(
-  //           label: 'Name and Surname',
-  //           value: 'data',
-  //         ),
-  //         _buildDivider(),
-  //         _buildSetInput(
-  //           label: 'Email',
-  //           value: 'data',
-  //         ),
-  //         _buildDivider(),
-  //         _buildSetInput(
-  //           label: 'Phone Number',
-  //           value: '0123456789',
-  //         ),
-  //         const SizedBox(height: 12),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   _buildSetInput({
     required String label,

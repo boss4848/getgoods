@@ -53,7 +53,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     setState(() {
       product = productViewModel.productDetail;
       log('product: ${product.name}');
-      log('owner id: ${product.shop.ownerId}');
+      log('ownerId: ${product.shop.ownerId}');
     });
   }
 
@@ -316,7 +316,9 @@ Future<String?> _getToken() async {
                     ],
                   ),
                 ),
-                const CustomAppBar(),
+                CustomAppBar(
+                  product: product,
+                ),
 
                 // const CustomBottomBar(),
 

@@ -23,6 +23,7 @@
     "multer": "^1.4.5-lts.1",
     "sharp": "^0.32.1",
     "socket.io": "^4.6.2",
+    "stripe": "^12.10.0",
     "validator": "^13.9.0"
   },
   "devDependencies": {

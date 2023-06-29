@@ -94,6 +94,7 @@ class Product {
   final String imageCover;
   final String id;
   final int quantity;
+  final String category;
 
   Product({
     required this.name,
@@ -103,6 +104,7 @@ class Product {
     this.imageCover = '',
     required this.id,
     required this.quantity,
+    required this.category,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -114,6 +116,58 @@ class Product {
       imageCover: json['imageCover'] ?? '',
       id: json['_id'] ?? '',
       quantity: json['quantity'] ?? 0,
+      category: json['category'] ?? '',
     );
+  }
+}
+
+class CheckoutProduct {
+  final String id;
+  final String name;
+  final double price;
+  final double discount;
+  final int quantity;
+  final String imageCover;
+
+  CheckoutProduct({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.discount,
+    required this.quantity,
+    required this.imageCover,
+  });
+
+  factory CheckoutProduct.fromJson(Map<String, dynamic> json) {
+    return CheckoutProduct(
+      id: json['_id'],
+      name: json['name'],
+      price: json['price'].toDouble(),
+      discount: json['discount'].toDouble(),
+      quantity: json['quantity'],
+      imageCover: json['imageCover'],
+    );
+  }
+
+  factory CheckoutProduct.empty() {
+    return CheckoutProduct(
+      id: '',
+      name: '',
+      price: 0.0,
+      discount: 0.0,
+      quantity: 0,
+      imageCover: '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'name': name,
+      'price': price,
+      'discount': discount,
+      'quantity': quantity,
+      'imageCover': imageCover,
+    };
   }
 }

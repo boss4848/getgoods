@@ -66,9 +66,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
             )
         );
     }
-
+console.log(req.body);
     // Filtered out unwanted fields names that are not allowed to be updated
-    const filteredBody = filterObj(req.body, 'name', 'email');
+    const filteredBody = filterObj(req.body,'name', 'phone','address');
     if (req.file) filteredBody.photo = req.file.filename;
 
     // Update user document
@@ -99,8 +99,10 @@ exports.getMe = catchAsync(async (req, res, next) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                phone : user.phone,
                 photo: fileUrl, // Add the file URL to the response
                 shop: user.shop,
+                address : user.address,
             }
         }
     });
