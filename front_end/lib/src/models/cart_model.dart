@@ -1,3 +1,5 @@
+import 'shop_model.dart';
+
 class CartItem {
   final String shopName;
   final List<ProductCart> products;
@@ -34,6 +36,8 @@ class ProductCart {
   final int quantity;
   final String imageCover;
   final int stock;
+  final Shop shop;
+  bool isSelected;
 
   ProductCart({
     required this.cartItemId,
@@ -45,6 +49,8 @@ class ProductCart {
     required this.quantity,
     required this.imageCover,
     required this.stock,
+    required this.shop,
+    this.isSelected = false,
   });
 
   factory ProductCart.fromJson(Map<String, dynamic> json) {
@@ -58,6 +64,7 @@ class ProductCart {
       quantity: json['quantity'] ?? 0,
       imageCover: json['imageCover'] ?? '',
       stock: json['stock'] ?? 0,
+      shop: Shop.fromJson(json['shop']),
     );
   }
 }

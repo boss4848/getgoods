@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/models/cart_model.dart';
 
 import '../../../constants/colors.dart';
 import '../../../models/product_model.dart';
 import '../../../utils/format.dart';
 
 class CustomBottomBar extends StatefulWidget {
+  final List<CartItem> selectedProducts;
   const CustomBottomBar({
+    required this.selectedProducts,
     super.key,
   });
 
@@ -15,6 +18,28 @@ class CustomBottomBar extends StatefulWidget {
 }
 
 class _CustomBottomBarState extends State<CustomBottomBar> {
+  int totalSelectedItems = 0;
+  double totalPrice = 0;
+  List<ProductCart> products = [];
+  double discount = 0;
+  @override
+  void initState() {
+    super.initState();
+    totalSelectedItems = widget.selectedProducts.length;
+    products = widget.selectedProducts.fold(
+      [],
+      (previousValue, element) => [...previousValue, ...element.products],
+    );
+    totalPrice = products.fold(
+      0,
+      (previousValue, element) => previousValue + element.price,
+    );
+    discount = products.fold(
+      0,
+      (previousValue, element) => previousValue + element.discount,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,24 +60,56 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
           Container(
             height: 80,
             color: primaryBGColor,
-            width: 200,
-            child: Row(
+            width: 250,
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
-                  CupertinoIcons.shopping_cart,
-                  color: primaryColor,
-                  size: 32,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  'Add to Cart',
-                  style: TextStyle(
-                    color: primaryColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    text: '฿ ${products.length}',
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: [
+                      if (discount == 0)
+                        TextSpan(
+                          text: Format().currency(totalPrice, decimal: false),
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      if (discount != 0) ...[
+                        TextSpan(
+                          text: Format().currency(
+                            totalPrice - (totalPrice * discount / 100),
+                            decimal: false,
+                          ),
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                        const TextSpan(text: ' '),
+                        TextSpan(
+                          text: Format().currency(totalPrice, decimal: false),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
+                // Text('Total'),
+                // _buildPrice(
+                //   widget.selectedProducts.fold(
+                //     0,
+                //     (previousValue, element) =>
+                //         previousValue + element.totalPrice,
+                //   ),
+                //   0,
               ],
             ),
           ),
@@ -62,10 +119,10 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
               child: Container(
                 height: 80,
                 color: primaryColor,
-                child: const Center(
+                child: Center(
                   child: Text(
-                    'Buy Now',
-                    style: TextStyle(
+                    'Check out ($totalSelectedItems)',
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

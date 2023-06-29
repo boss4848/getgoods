@@ -25,6 +25,8 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
   void initState() {
     super.initState();
     product = CheckoutProduct(
+      shopId: widget.product.shop.id,
+      shopName: widget.product.shop.name,
       id: widget.product.id,
       name: widget.product.name,
       price: widget.product.price -
@@ -39,6 +41,8 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
     setState(() {
       selectedQuantity = value;
       product = CheckoutProduct(
+        shopId: widget.product.shop.id,
+        shopName: widget.product.shop.name,
         id: widget.product.id,
         name: widget.product.name,
         price: widget.product.price -
