@@ -66,9 +66,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
             )
         );
     }
-
+console.log(req.body);
     // Filtered out unwanted fields names that are not allowed to be updated
-    const filteredBody = filterObj(req.body, 'name', 'email');
+    const filteredBody = filterObj(req.body,'name', 'phone','address');
     if (req.file) filteredBody.photo = req.file.filename;
 
     // Update user document
@@ -88,7 +88,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 exports.getMe = catchAsync(async (req, res, next) => {
     // Get the current user
     const user = await User.findById(req.user.id).populate('shop');
-
+    //const user = await User.findById(req.user.id).select('');
     // Retrieve the file URL from Azure Blob Storage
     const fileUrl = `https://getgoods.blob.core.windows.net/user-photos/${user.photo}`;
 
@@ -102,7 +102,10 @@ exports.getMe = catchAsync(async (req, res, next) => {
                 phone : user.phone,
                 photo: fileUrl, // Add the file URL to the response
                 shop: user.shop,
+                address : user.address,
             }
         }
     });
 });
+
+

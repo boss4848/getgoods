@@ -94,6 +94,7 @@ class Product {
   final String imageCover;
   final String id;
   final int quantity;
+  final String category;
 
   Product({
     required this.name,
@@ -103,6 +104,7 @@ class Product {
     this.imageCover = '',
     required this.id,
     required this.quantity,
+    required this.category,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -114,11 +116,14 @@ class Product {
       imageCover: json['imageCover'] ?? '',
       id: json['_id'] ?? '',
       quantity: json['quantity'] ?? 0,
+      category: json['category'] ?? '',
     );
   }
 }
 
 class CheckoutProduct {
+  final String shopId;
+  final String shopName;
   final String id;
   final String name;
   final double price;
@@ -127,6 +132,8 @@ class CheckoutProduct {
   final String imageCover;
 
   CheckoutProduct({
+    required this.shopId,
+    required this.shopName,
     required this.id,
     required this.name,
     required this.price,
@@ -137,6 +144,8 @@ class CheckoutProduct {
 
   factory CheckoutProduct.fromJson(Map<String, dynamic> json) {
     return CheckoutProduct(
+      shopId: json['shopId'],
+      shopName: json['shopName'],
       id: json['_id'],
       name: json['name'],
       price: json['price'].toDouble(),
@@ -148,6 +157,8 @@ class CheckoutProduct {
 
   factory CheckoutProduct.empty() {
     return CheckoutProduct(
+      shopId: '',
+      shopName: '',
       id: '',
       name: '',
       price: 0.0,
@@ -159,6 +170,8 @@ class CheckoutProduct {
 
   Map<String, dynamic> toJson() {
     return {
+      'shopId': shopId,
+      'shopName': shopName,
       '_id': id,
       'name': name,
       'price': price,

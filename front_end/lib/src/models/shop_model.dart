@@ -1,33 +1,37 @@
 import 'product_model.dart';
 
 class Shop {
+  final String ownerId;
   final String id;
   final String name;
   final Location location;
-  final String ownerId;
+  // final String ownerId;
 
   Shop({
+    required this.ownerId,
     required this.id,
     required this.name,
     required this.location,
-    required this.ownerId,
+    // required this.ownerId,
   });
 
   factory Shop.fromJson(Map<String, dynamic> json) {
     return Shop(
+      ownerId: json['owner']['_id'] ?? '',
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       location: Location.fromJson(json['location'] ?? {}),
-      ownerId: json['owner']['_id'] ?? '',
+      // ownerId: json['owner']['_id'] ?? '',
     );
   }
 
   factory Shop.empty() {
     return Shop(
+      ownerId: '',
       id: '',
       name: '',
       location: Location.empty(),
-      ownerId: '',
+      // ownerId: '',
     );
   }
 }
@@ -133,7 +137,7 @@ class Owner {
   final String email;
   final String phoneNumber;
   final String photo;
-  final String address;
+  final Location address;
 
   Owner({
     required this.id,
@@ -151,7 +155,7 @@ class Owner {
       email: json['email'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       photo: json['photo'] ?? '',
-      address: json['address'] ?? '',
+      address: Location.fromJson(json['address'] ?? {}),
     );
   }
 
@@ -162,7 +166,7 @@ class Owner {
       email: '',
       phoneNumber: '',
       photo: '',
-      address: '',
+      address: Location.empty(),
     );
   }
 }

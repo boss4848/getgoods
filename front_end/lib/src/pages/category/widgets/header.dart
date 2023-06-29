@@ -1,28 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/pages/shopping_cart/shopping_cart.dart';
 
-import '../../../models/cart_model.dart';
 import '../../cart/cart_page.dart';
 
-class Header extends StatefulWidget {
+class CategoryHeader extends StatefulWidget {
   final TrackingScrollController scrollController;
-  final int totalCartItems;
-  // final List<CartItem> cart;
-  final Function getCart;
-  const Header({
-    super.key,
-    required this.scrollController,
-    required this.totalCartItems,
-    // required this.cart,
-    required this.getCart,
-  });
+  const CategoryHeader({super.key, required this.scrollController});
 
   @override
-  State<Header> createState() => _HeaderState();
+  State<CategoryHeader> createState() => _CategoryHeaderState();
 }
 
-class _HeaderState extends State<Header> {
+class _CategoryHeaderState extends State<CategoryHeader> {
   late Color _backgroundColor;
   late Color _backgroundColorSearch;
   late Color _colorIcon;
@@ -33,7 +24,7 @@ class _HeaderState extends State<Header> {
 
   @override
   void initState() {
-    _backgroundColor = Colors.transparent;
+    _backgroundColor = primaryColor;
     _backgroundColorSearch = Colors.white;
     _colorIcon = Colors.white;
     _opacity = 0.0;
@@ -58,23 +49,13 @@ class _HeaderState extends State<Header> {
               const SizedBox(width: 8),
               _buildIconButton(
                 onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CartPage(
-                        // cart: widget.cart,
-                        // getCart: widget.getCart,
-                        // totalCartItems: widget.totalCartItems,
-                        ),
-                  ),
-                ).then((_) => widget.getCart()),
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CartPage(),
+                    )),
                 icon: CupertinoIcons.cart_fill,
-                notification: widget.totalCartItems,
+                notification: 10,
               ),
-              // _buildIconButton(
-              //   onPressed: () => print('click'),
-              //   icon: Icons.chat,
-              //   notification: 1,
-              // ),
             ],
           ),
         ),

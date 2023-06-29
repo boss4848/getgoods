@@ -49,6 +49,7 @@ class UserViewModel {
         'password': password,
       });
       await _storeToken(response.data['token']);
+      await _storeUserId(response.data['data']['user']['_id']);
       updateState(UserState.success);
       return 'success';
     } on DioException catch (e) {
@@ -64,6 +65,7 @@ class UserViewModel {
       final response = await _dio.post('${ApiConstants.baseUrl}/users/login',
           data: {'email': email, 'password': password});
       await _storeToken(response.data['token']);
+      await _storeUserId(response.data['data']['user']['_id']);
       updateState(UserState.success);
       return 'success';
     } on DioException catch (e) {
@@ -77,6 +79,16 @@ class UserViewModel {
     await _removeToken();
     userDetail = UserDetail.empty();
     updateState(UserState.idle);
+  }
+
+  Future<void> _storeUserId(String userId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userId', userId);
+  }
+
+  Future<String?> _getUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userId');
   }
 
   Future<String?> _getToken() async {
