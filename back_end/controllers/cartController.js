@@ -136,14 +136,14 @@ exports.getCart = catchAsync(async (req, res, next) => {
         populate: [
             {
                 path: 'product',
-                select: 'name description price discount imageCover quantity',
+                select: 'name description price discount imageCover quantity shop',
             },
             {
                 path: 'shop',
                 select: 'name',
             },
         ],
-        select: 'product quantity imageCover',
+        select: 'product quantity imageCover shop',
     });
 
     if (!cart) {
@@ -171,6 +171,7 @@ exports.getCart = catchAsync(async (req, res, next) => {
                             quantity: item.quantity,
                             stock: item.product.quantity,
                             imageCover: `https://getgoods.blob.core.windows.net/product-photos/${item.product.imageCover}`,
+                            shop: item.shop,
                         },
                     ],
                 },
@@ -189,6 +190,7 @@ exports.getCart = catchAsync(async (req, res, next) => {
                 quantity: item.quantity,
                 stock: item.product.quantity,
                 imageCover: `https://getgoods.blob.core.windows.net/product-photos/${item.product.imageCover}`,
+                shop: item.shop,
             });
         }
     }
