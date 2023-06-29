@@ -7,7 +7,10 @@ import 'package:getgoods/src/pages/category/widgets/filter.dart';
 import 'package:getgoods/src/pages/category/widgets/header.dart';
 import 'package:getgoods/src/viewmodels/product_viewmodel.dart';
 
+import '../../constants/constants.dart';
+import '../../models/cart_model.dart';
 import '../../models/product_model.dart';
+import '../../services/api_service.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({Key? key}) : super(key: key);
@@ -18,6 +21,8 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   final _scrollController = TrackingScrollController();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   String category = '';
   List<String> categories = [
@@ -121,45 +126,73 @@ class _CategoryPageState extends State<CategoryPage> {
       category = '';
       showAllProducts = false;
     });
-    _getProducts(categories[0]);
+    _getProducts(category);
+  }
+
+  List<CartItem> cart = [CartItem.empty()];
+  int totalCartItems = 0;
+
+  Future<void> getCart() async {
+    final getCartUrl = '${ApiConstants.baseUrl}/cart';
+    final res = await ApiService.request(
+      'GET',
+      getCartUrl,
+      requiresAuth: true,
+    );
+
+    final Map<String, dynamic> data = res['data'];
+    log('data: $data');
+    log("totalItems: ${data['totalItems']}");
+    totalCartItems = data['totalItems'];
+    setState(() {});
+
+    // final List<dynamic> cartData = data['cart'];
+    // cart = cartData.map((e) => CartItem.fromJson(e)).toList();
+    // log('cart: ${cart[0].shopName}');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            CategoryHeader(
-              scrollController: _scrollController,
-            ),
-            ProductFilter(
-              filterProduct: _setCategory,
-              defaultProduct: _setToDefault,
-            ),
-            if (category.isEmpty)
-              _defaultCategoryPage()
-            else if (!showAllProducts)
-              Column(
-                children: [
-                  _buildHeader(category),
-                  CatContent(
-                    _scrollController,
-                    products: products,
-                    productViewModel: productViewModel,
-                    onRefresh: () => _getProducts(category),
-                  ),
-                ],
-              )
-            else
-              CatContent(
-                _scrollController,
-                products: products,
-                productViewModel: productViewModel,
-                onRefresh: () => _getProducts(category),
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () => _getAllProducts(),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              CategoryHeader(
+                scrollController: _scrollController,
+                getCart: getCart,
+                totalCartItems: totalCartItems,
               ),
-          ],
+              ProductFilter(
+                filterProduct: _setCategory,
+                defaultProduct: _setToDefault,
+              ),
+              if (category.isEmpty)
+                _defaultCategoryPage()
+              else if (!showAllProducts)
+                Column(
+                  children: [
+                    _buildHeader(category),
+                    CatContent(
+                      _scrollController,
+                      products: products,
+                      productViewModel: productViewModel,
+                      onRefresh: () => _getProducts(category),
+                    ),
+                  ],
+                )
+              else
+                CatContent(
+                  _scrollController,
+                  products: products,
+                  productViewModel: productViewModel,
+                  onRefresh: () => _getProducts(category),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -408,15 +441,17 @@ class _ShowAllCatProductState extends State<ShowAllCatProduct> {
               fontSize: 20,
             )),
       ),
-      body: Column(
-        children: [
-          CatContent(
-            TrackingScrollController(),
-            products: widget.products,
-            productViewModel: productViewModel,
-            onRefresh: () => _getAllProducts(),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            CatContent(
+              TrackingScrollController(),
+              products: widget.products,
+              productViewModel: productViewModel,
+              onRefresh: () => _getAllProducts(),
+            ),
+          ],
+        ),
       ),
     );
   }

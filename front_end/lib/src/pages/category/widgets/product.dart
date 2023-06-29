@@ -34,7 +34,7 @@ class _ShowProductState extends State<ShowProduct> {
   @override
   Widget build(BuildContext context) {
     return widget.productViewModel.state == ProductState.loading
-        ? const SizedBox(
+        ? Container(
             height: 600,
             child: Center(
               child: CircularProgressIndicator(
@@ -53,19 +53,6 @@ class _ShowProductState extends State<ShowProduct> {
             ),
           );
   }
-
-  // Widget _buildHeader(String headTitle) => Container(
-  //       color: Colors.white,
-  //       padding: const EdgeInsets.all(12),
-  //       child: Text(
-  //         headTitle,
-  //         style: const TextStyle(
-  //           color: Colors.green,
-  //           fontWeight: FontWeight.bold,
-  //           fontSize: 20,
-  //         ),
-  //       ),
-  //     );
 
   Widget _buildProductList() => Column(
         children: [
@@ -160,8 +147,6 @@ class ProductItemCard extends StatelessWidget {
               ),
             ),
             errorWidget: (context, url, error) {
-              print(url);
-              print(error);
               return const Center(
                 child: Icon(
                   Icons.error_outline,
