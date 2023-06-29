@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/common_widgets/loading_dialog.dart';
 // import 'package:getgoods/src/common_widgets/image_box.dart';
 // import 'package:getgoods/src/common_widgets/shadow_container.dart';
 import 'package:getgoods/src/constants/colors.dart';
@@ -30,7 +31,6 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   List<CartItem> cart = [];
-  List<ProductCart> selectedProductCart = [];
 
   @override
   void initState() {
@@ -49,27 +49,46 @@ class _CartPageState extends State<CartPage> {
     setState(() {});
   }
 
-  void updateSelectedProductCart(ProductCart productCart) {
+  List<CartItem> selectedProducts = [];
+
+  onUpdateCurrentIndex(int index) {
     setState(() {
-      if (selectedProductCart.contains(productCart)) {
-        selectedProductCart.clear();
-      } else {
-        selectedProductCart = [productCart];
-      }
-      log('selectedProductCart 1: $selectedProductCart');
+      currentIndex = index;
     });
+    for (var cartItem in cart) {
+      if (currentIndex != cart.indexOf(cartItem)) {
+        for (var element in cartItem.products) {
+          element.isSelected = false;
+          selectedProducts.remove(cartItem);
+        }
+        // selectedProducts.remove(cartItem);
+      }
+    }
+    log('selectedProducts: ${selectedProducts.length}');
+    log(currentIndex.toString());
   }
 
-  void onSelectCartItem(ProductCart cartItem) {
-    setState(() {
-      if (selectedProductCart.contains(cartItem)) {
-        selectedProductCart.remove(cartItem);
-      } else {
-        selectedProductCart.add(cartItem);
-      }
-      log('selectedProductCart 2: $selectedProductCart');
-    });
+  removeProductFromCart(
+    String shopId,
+    String productId,
+    String cartItemId,
+    context,
+  ) async {
+    loadingDialog(context);
+    final res = await ApiService.request(
+      'DELETE',
+      '${ApiConstants.baseUrl}/cart/$cartItemId',
+      requiresAuth: true,
+    );
+    log('res: $res');
+    if (res['status'] == 'success') {
+      getCart();
+    }
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
   }
+
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -102,9 +121,12 @@ class _CartPageState extends State<CartPage> {
                     children: [
                       for (var cartitem in cart)
                         CartItemBox(
+                          removeProduct: removeProductFromCart,
                           productCart: cartitem,
-                          onSelect: onSelectCartItem,
-                          isSelected: selectedProductCart.contains(cartitem),
+                          index: cart.indexOf(cartitem),
+                          currentIndex: currentIndex,
+                          updateCurrentIndex: onUpdateCurrentIndex,
+                          selectedProducts: selectedProducts,
                         ),
                       const SizedBox(
                         height: 200,
@@ -115,7 +137,9 @@ class _CartPageState extends State<CartPage> {
 
                 // const ProductInCart(),
                 // const CustomBar(),
-                const CustomBottomBar(),
+                // CustomBottomBar(
+                //   selectedProducts: selectedProducts,
+                // ),
               ],
             ),
     );

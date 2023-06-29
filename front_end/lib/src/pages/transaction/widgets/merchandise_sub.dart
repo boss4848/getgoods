@@ -30,15 +30,15 @@ class MerchandiseSub extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(defaultpadding),
             child: Row(
-              children: const [
-                Icon(
+              children: [
+                const Icon(
                   Icons.storefront_rounded,
                   color: primaryColor,
                   size: 30,
                 ),
                 Text(
-                  ' Store Name',
-                  style: TextStyle(
+                  products[0].shopName,
+                  style: const TextStyle(
                     color: primaryTextColor,
                     fontSize: 18,
                     fontWeight: FontWeight.w700,

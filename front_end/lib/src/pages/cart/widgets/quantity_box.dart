@@ -8,6 +8,7 @@ class QuantityBox extends StatefulWidget {
   final int stock;
   final String cartItemId;
   final int quantity;
+  final Function fetchData;
 
   // final Function updateQuantity;
   const QuantityBox({
@@ -15,6 +16,7 @@ class QuantityBox extends StatefulWidget {
     required this.stock,
     required this.cartItemId,
     required this.quantity,
+    required this.fetchData,
     // required this.updateQuantity,
   });
 
@@ -41,6 +43,7 @@ class _QuantityBoxState extends State<QuantityBox> {
           'quantity': (updatedQuantity + 1),
         },
       );
+      widget.fetchData();
       setState(() {
         updatedQuantity++;
       });
@@ -64,6 +67,7 @@ class _QuantityBoxState extends State<QuantityBox> {
           'quantity': (updatedQuantity - 1),
         },
       );
+      widget.fetchData();
 
       setState(() {
         updatedQuantity--;
