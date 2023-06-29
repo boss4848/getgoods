@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/pages/shopping_cart/shopping_cart.dart';
 
 import '../../../models/cart_model.dart';
@@ -155,7 +156,7 @@ class _HeaderState extends State<Header> {
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: Colors.green,
+                    color: primaryColor,
                     border: Border.all(
                       color: Colors.white,
                     ),
@@ -202,7 +203,7 @@ class _HeaderState extends State<Header> {
         _offset = 0.0;
       } else {
         _backgroundColorSearch = Colors.grey.shade200;
-        _colorIcon = Colors.deepOrange;
+        _colorIcon = primaryColor;
       }
       _backgroundColor = Colors.white.withOpacity(_opacity);
     });
