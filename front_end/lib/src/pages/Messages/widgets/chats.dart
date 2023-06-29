@@ -17,7 +17,9 @@ import '../../../services/api_service.dart';
 import 'chat_room.dart';
 
 class Chats extends StatefulWidget {
-  const Chats({Key? key}) : super(key: key);
+  final Function getChatList;
+  final List<ChatList> chatLists;
+  const Chats({Key? key, required this.getChatList, required this.chatLists,}) : super(key: key);
 
   @override
   State<Chats> createState() => _ChatsState();
@@ -26,13 +28,13 @@ class Chats extends StatefulWidget {
 class _ChatsState extends State<Chats> {
   late String roomId;
   late String? userId = "";
-  List<ChatList> chatLists = [];
+  // List<ChatList> chatLists = [];
 
   @override
   initState() {
     super.initState();
     _getUserId();
-    getChatList();
+    widget.getChatList();
   }
 
   Future<void> _getUserId() async {
@@ -43,29 +45,29 @@ class _ChatsState extends State<Chats> {
   }
 
   int isCurrentUser(int index) {
-    if(chatLists[index].member[0].id == userId) {
+    if(widget.chatLists[index].member[0].id == userId) {
       return 1;
     } else {
       return 0;
     }
   }
 
-  Future<void> getChatList() async {
-    final response = await ApiService.request(
-      'GET',
-      '${ApiConstants.baseUrl}/chats/chatList',
-      requiresAuth: true,
-    );
+  // Future<void> getChatList() async {
+  //   final response = await ApiService.request(
+  //     'GET',
+  //     '${ApiConstants.baseUrl}/chats/chatList',
+  //     requiresAuth: true,
+  //   );
 
-    final Map<String, dynamic> data = response['data'];
+  //   final Map<String, dynamic> data = response['data'];
 
-    log('data: ${data['chat']}');
-    final List<dynamic> chatListData = data['chat'];
-    setState(() {
-      chatLists = chatListData.map((e) => ChatList.fromJson(e)).toList();
-    });
+  //   log('data: ${data['chat']}');
+  //   final List<dynamic> chatListData = data['chat'];
+  //   setState(() {
+  //     chatLists = chatListData.map((e) => ChatList.fromJson(e)).toList();
+  //   });
 
-  }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -81,12 +83,12 @@ class _ChatsState extends State<Chats> {
           child: ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: chatLists.length,
+            itemCount: widget.chatLists.length,
             itemBuilder: (context, index) {
               return _buildChatItem(
                 index: index,
-                avatar: 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].member[(isCurrentUser(index))].photo}',
-                name: chatLists[index].member[(isCurrentUser(index))].name,
+                avatar: 'https://getgoods.blob.core.windows.net/user-photos/${widget.chatLists[index].member[(isCurrentUser(index))].photo}',
+                name: widget.chatLists[index].member[(isCurrentUser(index))].name,
                 message: 'Hello, how are you?',
                 time: '12:00 PM',
                 context: context,
@@ -112,11 +114,10 @@ class _ChatsState extends State<Chats> {
           context,
           MaterialPageRoute(
             builder: (context) => ChatRoom(
-              chatId: chatLists[index].chatId,
-              chatName: chatLists[index].member[(isCurrentUser(index))].name,
-              avatar : 'https://getgoods.blob.core.windows.net/user-photos/${chatLists[index].member[(isCurrentUser(index))].photo}'
+              chatId: widget.chatLists[index].chatId,
+              chatName: widget.chatLists[index].member[(isCurrentUser(index))].name,
+              avatar : 'https://getgoods.blob.core.windows.net/user-photos/${widget.chatLists[index].member[(isCurrentUser(index))].photo}'
             ),
-            //builder: (context) => ChatRoom(userDetail: UserDetail(name: name)),
           ),
         );
       },

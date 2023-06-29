@@ -19,7 +19,11 @@ class ChatRoom extends StatefulWidget {
   final String chatId;
   final String chatName;
   final String avatar;
-  const ChatRoom({Key? key, required this.chatId, required this.chatName, required this.avatar})
+  const ChatRoom(
+      {Key? key,
+      required this.chatId,
+      required this.chatName,
+      required this.avatar})
       : super(key: key);
 
   @override
@@ -70,11 +74,11 @@ class _ChatRoomState extends State<ChatRoom> {
 
   _connectionSocket() {
     _socket = IO.io(
-      "http://localhost:8000",
+      ApiConstants.socketUrl,
       IO.OptionBuilder().setTransports(['websocket']).setQuery(
           {'userName': userId, 'chatId': widget.chatId}).build(),
     );
-     _socket.connect();
+    _socket.connect();
     _socket.onConnect((data) => print("data clied-connected"));
     _socket.onDisconnect((data) => print("data cliend-disconncted"));
     _socket.on(
@@ -85,6 +89,11 @@ class _ChatRoomState extends State<ChatRoom> {
                   sender: data['sender'],
                   chatId: data['chatId'],
                   createdAt: DateTime.now()));
+              // _scrollController.animateTo(
+              //   _scrollController.position.maxScrollExtent,
+              //   duration: const Duration(milliseconds: 300),
+              //   curve: Curves.easeOut,
+              // );
             }));
   }
 
