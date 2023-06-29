@@ -92,7 +92,7 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    getCart();
+    // getCart();
     return Scaffold(
       backgroundColor: primaryBGColor,
       appBar: AppBar(

@@ -1,3 +1,5 @@
+import 'package:getgoods/src/models/transaction_model.dart';
+
 import 'product_model.dart';
 
 class Shop {
@@ -43,6 +45,7 @@ class ShopDetail {
   final String description;
   final Owner owner;
   final List<Product> products;
+  final List<Transaction> transactions;
 
   ShopDetail({
     required this.owner,
@@ -51,6 +54,7 @@ class ShopDetail {
     required this.location,
     required this.description,
     required this.products,
+    required this.transactions,
   });
 
   factory ShopDetail.fromJson(Map<String, dynamic> json) {
@@ -62,6 +66,10 @@ class ShopDetail {
       owner: Owner.fromJson(json['owner'] ?? {}),
       products: (json['products'] as List<dynamic>?)
               ?.map((e) => Product.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      transactions: (json['transactions'] as List<dynamic>?)
+              ?.map((e) => Transaction.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
       // products: (json['products'] as List<dynamic>?)
@@ -79,6 +87,7 @@ class ShopDetail {
       description: '',
       owner: Owner.empty(),
       products: [],
+      transactions: [],
     );
   }
 }

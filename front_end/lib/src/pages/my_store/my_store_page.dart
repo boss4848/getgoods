@@ -88,7 +88,9 @@ class _MyStorePageState extends State<MyStorePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const OrderStatus(),
+            OrderStatus(
+              transactions: shopViewModel.shop.transactions,
+            ),
             _buildNavigation(
               name: 'Store Detail',
               page: StoreDetailPage(

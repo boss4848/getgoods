@@ -2,12 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:getgoods/src/common_widgets/loading_dialog.dart';
 import 'package:getgoods/src/constants/colors.dart';
+import 'package:getgoods/src/services/api_service.dart';
 import 'package:getgoods/src/viewmodels/review_viewmodel.dart';
+
+import '../../../constants/constants.dart';
 
 class ReviewForm extends StatefulWidget {
   final String shopId;
   final String productId;
-  const ReviewForm({super.key, required this.shopId, required this.productId});
+  final String transactionId;
+  const ReviewForm({
+    super.key,
+    required this.shopId,
+    required this.productId,
+    required this.transactionId,
+  });
 
   @override
   _ReviewFormState createState() => _ReviewFormState();
@@ -32,6 +41,14 @@ class _ReviewFormState extends State<ReviewForm> {
       widget.productId,
       _reviewText,
       _rating,
+    );
+    final url = '${ApiConstants.baseUrl}/transactions/${widget.transactionId}';
+    final res = await ApiService.request(
+      'PATCH',
+      url,
+      data: {
+        'status': 'rated',
+      },
     );
     if (response == 'success') {
       Navigator.pop(context);
