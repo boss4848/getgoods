@@ -2,9 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/pages/shopping_cart/shopping_cart.dart';
 
+import '../../../models/cart_model.dart';
+import '../../cart/cart_page.dart';
+
 class Header extends StatefulWidget {
   final TrackingScrollController scrollController;
-  const Header({super.key, required this.scrollController});
+  final int totalCartItems;
+  // final List<CartItem> cart;
+  final Function getCart;
+  const Header({
+    super.key,
+    required this.scrollController,
+    required this.totalCartItems,
+    // required this.cart,
+    required this.getCart,
+  });
 
   @override
   State<Header> createState() => _HeaderState();
@@ -46,12 +58,17 @@ class _HeaderState extends State<Header> {
               const SizedBox(width: 8),
               _buildIconButton(
                 onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ShoppingCart(),
-                    )),
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CartPage(
+                        // cart: widget.cart,
+                        // getCart: widget.getCart,
+                        // totalCartItems: widget.totalCartItems,
+                        ),
+                  ),
+                ).then((_) => widget.getCart()),
                 icon: CupertinoIcons.cart_fill,
-                notification: 10,
+                notification: widget.totalCartItems,
               ),
               // _buildIconButton(
               //   onPressed: () => print('click'),
