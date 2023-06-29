@@ -31,7 +31,8 @@ class UserDetail {
   final String name;
   final String email;
   final String phone;
-  final String address;
+  //final String address;
+  final Address address;
   final ShopDetail shop;
 
   UserDetail({
@@ -60,7 +61,7 @@ class UserDetail {
       email: json['email'] ?? '',
       photo: json['photo'] ?? '',
       phone: json['phone'] ?? '',
-      address: json['address'] ?? '',
+      address: Address.fromJson(json['address'] ?? {}),
       shop: shop,
     );
   }
@@ -72,8 +73,56 @@ class UserDetail {
       name: '',
       email: '',
       phone: '',
-      address: '',
+      address: Address.empty(),
       shop: ShopDetail.empty(),
+    );
+  }
+}
+
+class Address {
+  final String provinceTh;
+  final String provinceEn;
+  final String districtTh;
+  final String districtEn;
+  final String subDistrictTh;
+  final String subDistrictEn;
+  final String postCode;
+  final String detail;
+
+  Address({
+    required this.provinceTh,
+    required this.provinceEn,
+    required this.districtTh,
+    required this.districtEn,
+    required this.subDistrictTh,
+    required this.subDistrictEn,
+    required this.postCode,
+    required this.detail,
+  });
+
+  factory Address.fromJson(Map<String, dynamic> json) {
+    return Address(
+      provinceTh: json['province_th'] ?? '',
+      provinceEn: json['province_en'] ?? '',
+      districtTh: json['district_th'] ?? '',
+      districtEn: json['district_en'] ?? '',
+      subDistrictTh: json['sub_district_th'] ?? '',
+      subDistrictEn: json['sub_district_en'] ?? '',
+      postCode: json['post_code'] ?? '',
+      detail: json['detail'] ?? '',
+    );
+  }
+
+  factory Address.empty() {
+    return Address(
+      provinceTh: '',
+      provinceEn: '',
+      districtTh: '',
+      districtEn: '',
+      subDistrictTh: '',
+      subDistrictEn: '',
+      postCode: '',
+      detail: '',
     );
   }
 }

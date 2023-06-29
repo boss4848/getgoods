@@ -133,7 +133,7 @@ class Owner {
   final String email;
   final String phoneNumber;
   final String photo;
-  final String address;
+  final Location address;
 
   Owner({
     required this.id,
@@ -151,7 +151,7 @@ class Owner {
       email: json['email'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       photo: json['photo'] ?? '',
-      address: json['address'] ?? '',
+      address: Location.fromJson(json['address'] ?? {}),
     );
   }
 
@@ -162,7 +162,7 @@ class Owner {
       email: '',
       phoneNumber: '',
       photo: '',
-      address: '',
+      address: Location.empty(),
     );
   }
 }
