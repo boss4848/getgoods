@@ -1,59 +1,71 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-// import 'package:getgoods/src/services/api_service.dart';
-import '../../../constants/colors.dart';
+
 import '../../../models/product_model.dart';
 import '../../../utils/format.dart';
 import '../../../viewmodels/product_viewmodel.dart';
 import '../../product_detail/product_detail_page.dart';
 
 class ShowProduct extends StatefulWidget {
-  const ShowProduct({Key? key}) : super(key: key);
+  final List<Product> products;
+  final ProductViewModel productViewModel;
+  const ShowProduct({
+    Key? key,
+    required this.products,
+    required this.productViewModel,
+  }) : super(
+          key: key,
+        );
 
   @override
-  State<ShowProduct> createState() => _ProductLoadMoreState();
+  State<ShowProduct> createState() => _ShowProductState();
 }
 
-class _ProductLoadMoreState extends State<ShowProduct> {
-  late List<Product> products;
-  late ProductViewModel productViewModel;
+class _ShowProductState extends State<ShowProduct> {
+  late String cateHeader = cateHeader;
+
+  List<String> categories = [
+    'processed',
+    'otop',
+    'medicinalPlant',
+    'driedGood'
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return productViewModel.state == ProductState.loading
-        ? Container(
-            color: Colors.white,
+    return widget.productViewModel.state == ProductState.loading
+        ? const SizedBox(
             height: 600,
-            child: const Center(
+            child: Center(
               child: CircularProgressIndicator(
-                color: primaryColor,
+                color: Colors.green,
               ),
             ),
           )
         : Container(
-            color: Colors.grey[200],
+            color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeader(),
+                //_buildHeader(cateHeader),
                 _buildProductList(),
               ],
             ),
           );
   }
 
-  Widget _buildHeader() => Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(12),
-        child: const Text(
-          "Recommended",
-          style: TextStyle(
-            color: primaryColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-      );
+  // Widget _buildHeader(String headTitle) => Container(
+  //       color: Colors.white,
+  //       padding: const EdgeInsets.all(12),
+  //       child: Text(
+  //         headTitle,
+  //         style: const TextStyle(
+  //           color: Colors.green,
+  //           fontWeight: FontWeight.bold,
+  //           fontSize: 20,
+  //         ),
+  //       ),
+  //     );
 
   Widget _buildProductList() => Column(
         children: [
@@ -61,7 +73,7 @@ class _ProductLoadMoreState extends State<ShowProduct> {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: products.length,
+            itemCount: widget.products.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: 0.75,
               crossAxisCount: 2,
@@ -69,10 +81,10 @@ class _ProductLoadMoreState extends State<ShowProduct> {
               crossAxisSpacing: 15,
             ),
             itemBuilder: (BuildContext context, int index) {
-              return ProductItemCard(products[index]);
+              return ProductItemCard(widget.products[index]);
             },
           ),
-          false ? const SizedBox(height: 150) : BottomLoader(),
+          //false ? const SizedBox(height: 150) : BottomLoader(),
         ],
       );
 }
@@ -144,7 +156,7 @@ class ProductItemCard extends StatelessWidget {
             fit: BoxFit.cover,
             placeholder: (context, url) => const Center(
               child: CircularProgressIndicator(
-                color: primaryColor,
+                color: Colors.green,
               ),
             ),
             errorWidget: (context, url, error) {
@@ -176,7 +188,7 @@ class ProductItemCard extends StatelessWidget {
               Text(
                 "${product.discount}%",
                 style: const TextStyle(
-                  color: primaryColor,
+                  color: Colors.green,
                   fontWeight: FontWeight.bold,
                   fontSize: 11,
                 ),
@@ -184,7 +196,7 @@ class ProductItemCard extends StatelessWidget {
               const Text(
                 "OFF",
                 style: TextStyle(
-                  color: primaryColor,
+                  color: Colors.green,
                   fontWeight: FontWeight.bold,
                   fontSize: 10,
                 ),
@@ -226,17 +238,37 @@ class ProductItemCard extends StatelessWidget {
         text: TextSpan(
           text: '฿ ',
           style: const TextStyle(
-            color: primaryColor,
+            color: Colors.green,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
           children: [
-            TextSpan(
-              text: Format().currency(product.price, decimal: false),
-              style: const TextStyle(
-                fontSize: 16,
+            if (product.discount == 0)
+              TextSpan(
+                text: Format().currency(product.price, decimal: false),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
               ),
-            ),
+            if (product.discount != 0) ...[
+              TextSpan(
+                text: Format().currency(
+                  product.price - (product.price * product.discount / 100),
+                  decimal: false,
+                ),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              const TextSpan(text: ' '),
+              TextSpan(
+                text: Format().currency(product.price, decimal: false),
+                style: const TextStyle(
+                  fontSize: 12,
+                  decoration: TextDecoration.lineThrough,
+                ),
+              ),
+            ],
           ],
         ),
       );
@@ -262,7 +294,7 @@ class BottomLoader extends StatelessWidget {
         child: Text(
           "Loading...",
           style: TextStyle(
-            color: primaryColor,
+            color: Colors.green,
             fontWeight: FontWeight.w500,
           ),
         ),
