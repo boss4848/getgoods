@@ -1,13 +1,19 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/models/product_model.dart';
+import 'package:getgoods/src/pages/Messages/widgets/chat_room.dart';
+import 'package:getgoods/src/viewmodels/chat_viewmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common_widgets/custom_app_bar.dart';
+import '../../constants/constants.dart';
 import '../../models/review_model.dart';
+import '../../services/api_service.dart';
 import '../../utils/format.dart';
 import '../../viewmodels/product_viewmodel.dart';
 import '../../viewmodels/review_viewmodel.dart';
@@ -25,6 +31,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   late ProductViewModel productViewModel;
   late List<ReviewDetail> reviews;
   late ReviewViewModel reviewViewModel;
+  late ChatViewModel chatViewModel;
+
+  Dio dio = Dio();
 
   @override
   void initState() {
@@ -34,7 +43,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     reviewViewModel = ReviewViewModel();
     reviews = reviewViewModel.reviews;
-
+    
     _getProduct();
     _getReview();
   }
@@ -55,6 +64,32 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       log('reviews: ${reviews.length}');
       // log('product: ${product.name}');
     });
+  }
+
+  Future<void> createChat() async {
+    final response = await ApiService.request(
+        'POST',
+        '${ApiConstants.baseUrl}/chats/createChat',
+        requiresAuth: true,
+        data: {
+        'ownerId': product.shop.ownerId
+      },
+      );
+
+    log(response);
+
+}
+
+Future<String?> _getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  void _setAuthToken(String? token) {
+    if (token == null) {
+      throw Exception('No token found');
+    }
+    dio.options.headers['Authorization'] = 'Bearer $token';
   }
 
   @override
@@ -205,7 +240,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                     ],
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      createChat();
+                                    },
                                     //outlined
                                     style: ElevatedButton.styleFrom(
                                       padding: const EdgeInsets.symmetric(

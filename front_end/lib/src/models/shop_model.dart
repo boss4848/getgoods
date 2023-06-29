@@ -1,12 +1,14 @@
 import 'product_model.dart';
 
 class Shop {
+  final String ownerId;
   final String id;
   final String name;
   final Location location;
   final String ownerId;
 
   Shop({
+    required this.ownerId,
     required this.id,
     required this.name,
     required this.location,
@@ -15,6 +17,7 @@ class Shop {
 
   factory Shop.fromJson(Map<String, dynamic> json) {
     return Shop(
+      ownerId: json['owner']['_id'] ?? '',
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       location: Location.fromJson(json['location'] ?? {}),
@@ -24,6 +27,7 @@ class Shop {
 
   factory Shop.empty() {
     return Shop(
+      ownerId: '',
       id: '',
       name: '',
       location: Location.empty(),
