@@ -253,7 +253,8 @@ class ProductItemCard extends StatelessWidget {
               const TextSpan(text: ' '),
               TextSpan(
                 text: Format().currency(product.price, decimal: false),
-                style: const TextStyle(
+                style: TextStyle(
+                  color: Colors.black.withOpacity(0.3),
                   fontSize: 12,
                   decoration: TextDecoration.lineThrough,
                 ),

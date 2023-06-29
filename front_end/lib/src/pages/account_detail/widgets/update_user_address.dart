@@ -259,7 +259,10 @@ class _UpdateUserAddressPageState extends State<UpdateUserAddressPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryBGColor,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: primaryColor,
         title: const Text(
           'Update Address',
         ),

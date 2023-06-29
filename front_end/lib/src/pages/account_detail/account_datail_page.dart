@@ -42,6 +42,7 @@ class _MyAccountDetailPageState extends State<MyAccountDetailPage> {
     return Scaffold(
       backgroundColor: primaryBGColor,
       appBar: AppBar(
+        elevation: 0,
         title: const Text('My Account & Address'),
         backgroundColor: primaryColor,
       ),

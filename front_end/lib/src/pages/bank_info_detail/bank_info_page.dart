@@ -38,7 +38,9 @@ class _BankInfoPageState extends State<BankInfoPage> {
     return Scaffold(
       backgroundColor: primaryBGColor,
       appBar: AppBar(
-        title: const Text('BANK INFORMATION'),
+        backgroundColor: primaryColor,
+        elevation: 0,
+        title: const Text('Bank information'),
       ),
       body: SingleChildScrollView(
         child: Column(

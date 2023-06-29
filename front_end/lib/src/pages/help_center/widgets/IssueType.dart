@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/pages/help_center/widgets/problem_detail/hProblemDetail.dart';
 
 import 'problem_detail/ggProblemDetail.dart';
@@ -92,8 +93,8 @@ class WidgetButton extends StatelessWidget {
   final bool isActive;
   final String buttonText;
   final Icon icon;
-  final Color activeColor = Colors.green;
-  final Color deactiveColor = Colors.grey;
+  final Color activeColor = primaryColor;
+  final Color deactiveColor = Colors.black.withOpacity(0.3);
 
   WidgetButton(
       {required this.onPressed,
