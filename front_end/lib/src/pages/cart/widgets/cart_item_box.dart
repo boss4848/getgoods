@@ -18,6 +18,7 @@ class CartItemBox extends StatefulWidget {
   final int currentIndex;
   final Function updateCurrentIndex;
   final List<CartItem> selectedProducts;
+  final Function removeProduct;
 
   const CartItemBox({
     Key? key,
@@ -26,6 +27,7 @@ class CartItemBox extends StatefulWidget {
     required this.currentIndex,
     required this.updateCurrentIndex,
     required this.selectedProducts,
+    required this.removeProduct,
   }) : super(key: key);
 
   @override
@@ -72,6 +74,7 @@ class _CartItemBoxState extends State<CartItemBox> {
           widget.productCart.products.length,
           (index) {
             return ProductCartItem(
+              removeProduct: widget.removeProduct,
               fetchData: fetchData,
               productCart: widget.productCart.products[index],
               value: widget.productCart.products[index].isSelected,
@@ -296,6 +299,7 @@ class ProductCartItem extends StatefulWidget {
   final ProductCart productCart;
   final bool value;
   final Function fetchData;
+  final Function removeProduct;
 
   const ProductCartItem({
     Key? key,
@@ -303,6 +307,7 @@ class ProductCartItem extends StatefulWidget {
     required this.onChange,
     required this.value,
     required this.fetchData,
+    required this.removeProduct,
   }) : super(key: key);
 
   @override
@@ -346,15 +351,32 @@ class _ProductCartItemState extends State<ProductCartItem> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  productCart.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: primaryTextColor,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                Row(
+                  children: [
+                    Text(
+                      productCart.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: primaryTextColor,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () => widget.removeProduct(
+                        productCart.shop.id,
+                        productCart.productId,
+                        productCart.cartItemId,
+                        context,
+                      ),
+                      child: const Icon(
+                        Icons.delete,
+                        color: grey,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 Text(

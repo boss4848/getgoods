@@ -138,31 +138,31 @@ class _HomePageState extends State<HomePage> {
               height: 50,
             ),
           ),
-          Positioned(
-            left: 0,
-            top: 0,
-            child: Container(
-              width: 22,
-              height: 22,
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2,
-                ),
-              ),
-              child: const Text(
-                '1',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
+          // Positioned(
+          //   left: 0,
+          //   top: 0,
+          //   child: Container(
+          //     width: 22,
+          //     height: 22,
+          //     padding: const EdgeInsets.all(2),
+          //     decoration: BoxDecoration(
+          //       color: Colors.green,
+          //       borderRadius: BorderRadius.circular(20),
+          //       border: Border.all(
+          //         color: Colors.white,
+          //         width: 2,
+          //       ),
+          //     ),
+          //     child: const Text(
+          //       '0',
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //         fontSize: 12,
+          //       ),
+          //       textAlign: TextAlign.center,
+          //     ),
+          //   ),
+          // ),
           const Positioned(
             right: 0,
             top: -10,

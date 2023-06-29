@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/common_widgets/loading_dialog.dart';
 // import 'package:getgoods/src/common_widgets/image_box.dart';
 // import 'package:getgoods/src/common_widgets/shadow_container.dart';
 import 'package:getgoods/src/constants/colors.dart';
@@ -67,6 +68,26 @@ class _CartPageState extends State<CartPage> {
     log(currentIndex.toString());
   }
 
+  removeProductFromCart(
+    String shopId,
+    String productId,
+    String cartItemId,
+    context,
+  ) async {
+    loadingDialog(context);
+    final res = await ApiService.request(
+      'DELETE',
+      '${ApiConstants.baseUrl}/cart/$cartItemId',
+      requiresAuth: true,
+    );
+    log('res: $res');
+    if (res['status'] == 'success') {
+      getCart();
+    }
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
+  }
+
   int currentIndex = 0;
 
   @override
@@ -100,6 +121,7 @@ class _CartPageState extends State<CartPage> {
                     children: [
                       for (var cartitem in cart)
                         CartItemBox(
+                          removeProduct: removeProductFromCart,
                           productCart: cartitem,
                           index: cart.indexOf(cartitem),
                           currentIndex: currentIndex,
