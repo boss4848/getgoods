@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/pages/shopping_cart/shopping_cart.dart';
 
+import '../../cart/cart_page.dart';
+
 class CategoryHeader extends StatefulWidget {
   final TrackingScrollController scrollController;
   const CategoryHeader({super.key, required this.scrollController});
@@ -49,7 +51,7 @@ class _CategoryHeaderState extends State<CategoryHeader> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ShoppingCart(),
+                      builder: (context) => const CartPage(),
                     )),
                 icon: CupertinoIcons.cart_fill,
                 notification: 10,

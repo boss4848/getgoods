@@ -70,7 +70,7 @@ class _ProductFilterState extends State<ProductFilter> {
       },
       child: Container(
         height: 40,
-        width: 110,
+        width: 120,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           border: Border.all(
