@@ -7,7 +7,10 @@ import 'package:getgoods/src/pages/category/widgets/filter.dart';
 import 'package:getgoods/src/pages/category/widgets/header.dart';
 import 'package:getgoods/src/viewmodels/product_viewmodel.dart';
 
+import '../../constants/constants.dart';
+import '../../models/cart_model.dart';
 import '../../models/product_model.dart';
+import '../../services/api_service.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({Key? key}) : super(key: key);
@@ -124,6 +127,28 @@ class _CategoryPageState extends State<CategoryPage> {
     _getProducts(categories[0]);
   }
 
+  List<CartItem> cart = [CartItem.empty()];
+  int totalCartItems = 0;
+
+  Future<void> getCart() async {
+    final getCartUrl = '${ApiConstants.baseUrl}/cart';
+    final res = await ApiService.request(
+      'GET',
+      getCartUrl,
+      requiresAuth: true,
+    );
+
+    final Map<String, dynamic> data = res['data'];
+    log('data: $data');
+    log("totalItems: ${data['totalItems']}");
+    totalCartItems = data['totalItems'];
+    setState(() {});
+
+    // final List<dynamic> cartData = data['cart'];
+    // cart = cartData.map((e) => CartItem.fromJson(e)).toList();
+    // log('cart: ${cart[0].shopName}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,6 +158,8 @@ class _CategoryPageState extends State<CategoryPage> {
           children: [
             CategoryHeader(
               scrollController: _scrollController,
+              getCart: getCart,
+              totalCartItems: totalCartItems,
             ),
             ProductFilter(
               filterProduct: _setCategory,
