@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/common_widgets/loading.dart';
 import 'package:getgoods/src/common_widgets/loading_dialog.dart';
+import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/pages/my_purchase/widgets/completed.dart';
 import 'package:getgoods/src/pages/my_purchase/widgets/to_receive.dart';
 import 'package:getgoods/src/pages/my_purchase/widgets/to_ship.dart';
@@ -58,11 +59,14 @@ class _MyPurchasePageState extends State<MyPurchasePage> {
       initialIndex: widget.tabIndex,
       length: 4,
       child: Scaffold(
+        backgroundColor: primaryBGColor,
         appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.black),
+          backgroundColor: Colors.white,
           elevation: 0,
           title: const Text(
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontSize: 24,
               fontWeight: FontWeight.w700,
               fontFamily: 'SFTHONBURI',
@@ -72,15 +76,16 @@ class _MyPurchasePageState extends State<MyPurchasePage> {
           bottom: TabBar(
             isScrollable: true,
             //padding: EdgeInsets.symmetric(horizontal: 10),
-            unselectedLabelColor: Colors.white,
-            labelColor: Colors.black,
+            unselectedLabelColor: Colors.black.withOpacity(0.7),
+            labelColor: primaryColor,
+            indicatorColor: primaryColor,
             indicatorSize: TabBarIndicatorSize.tab,
-            indicator: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              color: Colors.grey[200],
-            ),
-            indicatorPadding: const EdgeInsets.symmetric(vertical: 10),
-            tabs: const [
+
+            // indicator: BoxDecoration(
+            //   borderRadius: BorderRadius.circular(50),
+            //   color: Colors.grey[200],
+            // ),
+            tabs: [
               Tab(text: 'To pay'),
               Tab(text: 'To ship'),
               Tab(text: 'To receive'),

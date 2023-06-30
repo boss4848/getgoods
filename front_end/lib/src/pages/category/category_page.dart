@@ -203,25 +203,28 @@ class _CategoryPageState extends State<CategoryPage> {
       children: [
         Column(
           children: [
-            Row(
-              children: [
-                _buildHeader(categories[0]),
-                const Spacer(),
-                _buildIconButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShowAllCatProduct(
-                        categoryTitle: categories[0],
-                        products: allProcessedProducts,
+            Container(
+              color: primaryBGColor,
+              child: Row(
+                children: [
+                  _buildHeader(categories[0]),
+                  const Spacer(),
+                  _buildIconButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShowAllCatProduct(
+                          categoryTitle: categories[0],
+                          products: allProcessedProducts,
+                        ),
                       ),
                     ),
+                    icon: Icons.keyboard_arrow_right,
+                    categoryTitle: categories[0],
+                    categoryProducts: allProcessedProducts,
                   ),
-                  icon: Icons.keyboard_arrow_right,
-                  categoryTitle: categories[0],
-                  categoryProducts: allProcessedProducts,
-                ),
-              ],
+                ],
+              ),
             ),
             CatContent(_scrollController,
                 onRefresh: () => _getAllProducts(),
@@ -231,25 +234,28 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
         Column(
           children: [
-            Row(
-              children: [
-                _buildHeader(categories[1]),
-                const Spacer(),
-                _buildIconButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShowAllCatProduct(
-                        categoryTitle: categories[1],
-                        products: allOtopProducts,
+            Container(
+              color: primaryBGColor,
+              child: Row(
+                children: [
+                  _buildHeader(categories[1]),
+                  const Spacer(),
+                  _buildIconButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShowAllCatProduct(
+                          categoryTitle: categories[1],
+                          products: allOtopProducts,
+                        ),
                       ),
                     ),
+                    icon: Icons.keyboard_arrow_right,
+                    categoryTitle: categories[1],
+                    categoryProducts: allOtopProducts,
                   ),
-                  icon: Icons.keyboard_arrow_right,
-                  categoryTitle: categories[1],
-                  categoryProducts: allOtopProducts,
-                ),
-              ],
+                ],
+              ),
             ),
             CatContent(_scrollController,
                 onRefresh: () => _getAllProducts(),
@@ -259,25 +265,28 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
         Column(
           children: [
-            Row(
-              children: [
-                _buildHeader(categories[2]),
-                const Spacer(),
-                _buildIconButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShowAllCatProduct(
-                        categoryTitle: categories[2],
-                        products: allMedicinalPlantProducts,
+            Container(
+              color: primaryBGColor,
+              child: Row(
+                children: [
+                  _buildHeader(categories[2]),
+                  const Spacer(),
+                  _buildIconButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShowAllCatProduct(
+                          categoryTitle: categories[2],
+                          products: allMedicinalPlantProducts,
+                        ),
                       ),
                     ),
+                    icon: Icons.keyboard_arrow_right,
+                    categoryTitle: categories[2],
+                    categoryProducts: allMedicinalPlantProducts,
                   ),
-                  icon: Icons.keyboard_arrow_right,
-                  categoryTitle: categories[2],
-                  categoryProducts: allMedicinalPlantProducts,
-                ),
-              ],
+                ],
+              ),
             ),
             CatContent(_scrollController,
                 onRefresh: () => _getAllProducts(),
@@ -287,25 +296,28 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
         Column(
           children: [
-            Row(
-              children: [
-                _buildHeader(categories[3]),
-                const Spacer(),
-                _buildIconButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShowAllCatProduct(
-                        categoryTitle: categories[3],
-                        products: allDriedGoodProducts,
+            Container(
+              color: primaryBGColor,
+              child: Row(
+                children: [
+                  _buildHeader(categories[3]),
+                  const Spacer(),
+                  _buildIconButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShowAllCatProduct(
+                          categoryTitle: categories[3],
+                          products: allDriedGoodProducts,
+                        ),
                       ),
                     ),
+                    icon: Icons.keyboard_arrow_right,
+                    categoryTitle: categories[3],
+                    categoryProducts: allDriedGoodProducts,
                   ),
-                  icon: Icons.keyboard_arrow_right,
-                  categoryTitle: categories[3],
-                  categoryProducts: allDriedGoodProducts,
-                ),
-              ],
+                ],
+              ),
             ),
             CatContent(_scrollController,
                 onRefresh: () => _getAllProducts(),
@@ -336,17 +348,19 @@ class _CategoryPageState extends State<CategoryPage> {
           modifiedTitle[0].toUpperCase() + modifiedTitle.substring(1);
     }
     return Container(
-      color: Colors.white,
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.all(12),
       child: Row(
         children: [
-          Text(
-            modifiedTitle,
-            style: const TextStyle(
-              color: primaryColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+          Container(
+            padding: const EdgeInsets.only(top: 10),
+            child: Text(
+              modifiedTitle,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+              ),
             ),
           ),
         ],
@@ -360,22 +374,25 @@ class _CategoryPageState extends State<CategoryPage> {
     required String categoryTitle,
     required List<Product> categoryProducts,
   }) {
-    return Stack(
-      children: [
-        IconButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ShowAllCatProduct(
-                categoryTitle: categoryTitle,
-                products: categoryProducts,
+    return Container(
+      color: primaryBGColor,
+      child: Stack(
+        children: [
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ShowAllCatProduct(
+                  categoryTitle: categoryTitle,
+                  products: categoryProducts,
+                ),
               ),
             ),
+            icon: Icon(icon),
+            iconSize: 28,
           ),
-          icon: Icon(icon),
-          iconSize: 28,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -430,7 +447,10 @@ class _ShowAllCatProductState extends State<ShowAllCatProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryBGColor,
       appBar: AppBar(
+        backgroundColor: primaryColor,
+        elevation: 0,
         title: Text(
             widget.categoryTitle.characters.isNotEmpty
                 ? '${widget.categoryTitle[0].toUpperCase()}${widget.categoryTitle.substring(1)} Products'
@@ -442,15 +462,18 @@ class _ShowAllCatProductState extends State<ShowAllCatProduct> {
             )),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            CatContent(
-              TrackingScrollController(),
-              products: widget.products,
-              productViewModel: productViewModel,
-              onRefresh: () => _getAllProducts(),
-            ),
-          ],
+        child: Container(
+          padding: const EdgeInsets.only(top: 15),
+          child: Column(
+            children: [
+              CatContent(
+                TrackingScrollController(),
+                products: widget.products,
+                productViewModel: productViewModel,
+                onRefresh: () => _getAllProducts(),
+              ),
+            ],
+          ),
         ),
       ),
     );

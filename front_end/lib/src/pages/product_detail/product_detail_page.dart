@@ -43,7 +43,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     reviewViewModel = ReviewViewModel();
     reviews = reviewViewModel.reviews;
-    
+
     _getProduct();
     _getReview();
   }
@@ -68,19 +68,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   Future<void> createChat() async {
     final response = await ApiService.request(
-        'POST',
-        '${ApiConstants.baseUrl}/chats/createChat',
-        requiresAuth: true,
-        data: {
-        'ownerId': product.shop.ownerId
-      },
-      );
+      'POST',
+      '${ApiConstants.baseUrl}/chats/createChat',
+      requiresAuth: true,
+      data: {'ownerId': product.shop.ownerId},
+    );
 
     log(response);
+  }
 
-}
-
-Future<String?> _getToken() async {
+  Future<String?> _getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
@@ -189,7 +186,7 @@ Future<String?> _getToken() async {
                                   ),
                                   const Spacer(),
                                   const Icon(
-                                    CupertinoIcons.heart_fill,
+                                    CupertinoIcons.heart_solid,
                                     color: pastelRed,
                                     size: 26,
                                   )
@@ -261,11 +258,11 @@ Future<String?> _getToken() async {
 
                                     child: Row(
                                       children: const [
-                                        Icon(
-                                          CupertinoIcons.bubble_right,
-                                          color: primaryColor,
-                                        ),
-                                        SizedBox(width: 7),
+                                        // Icon(
+                                        //   CupertinoIcons.bubble_right,
+                                        //   color: primaryColor,
+                                        // ),
+                                        // SizedBox(width: 7),
                                         Text(
                                           'Chat Now',
                                           style: TextStyle(
@@ -381,7 +378,8 @@ Future<String?> _getToken() async {
               const TextSpan(text: ' '),
               TextSpan(
                 text: Format().currency(product.price, decimal: false),
-                style: const TextStyle(
+                style: TextStyle(
+                  color: Colors.black.withOpacity(0.3),
                   fontSize: 16,
                   decoration: TextDecoration.lineThrough,
                 ),
@@ -503,7 +501,7 @@ class Stars extends StatelessWidget {
           padding: const EdgeInsets.only(right: 5),
           child: Icon(
             index < rate ? CupertinoIcons.star_fill : CupertinoIcons.star,
-            color: Colors.yellow,
+            color: Colors.yellow[600],
             size: size,
           ),
         ),
