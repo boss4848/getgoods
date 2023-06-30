@@ -12,6 +12,7 @@ import 'package:getgoods/src/pages/help_center/help_center.dart';
 import 'package:getgoods/src/pages/login/login_page.dart';
 import 'package:getgoods/src/pages/my_purchase/my_purchase_page.dart';
 import 'package:getgoods/src/pages/profile/widgets/purchase_bar.dart';
+import 'package:getgoods/src/pages/profile/widgets/update_user_profile.dart';
 import 'package:getgoods/src/pages/signup/signup_page.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 
@@ -27,6 +28,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
   late UserViewModel userViewModel;
+  bool isImageClicked = false;
 
   @override
   void initState() {
@@ -267,38 +269,95 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              CircleAvatar(
-                                maxRadius: 40,
-                                child: CachedNetworkImage(
-                                  imageBuilder: (context, imageProvider) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              child: CachedNetworkImage(
+                                                imageUrl: userDetail.photo,
+                                                fit: BoxFit.contain,
+                                                placeholder: (context, url) =>
+                                                    const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) {
+                                                  print(url);
+                                                  print(error);
+                                                  return const Center(
+                                                    child: Icon(
+                                                      Icons.error_outline,
+                                                      color: Colors.red,
+                                                      size: 40,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Positioned(
+                                                top: 0,
+                                                right: 0,
+                                                child: GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const UpdateImageProfilePage()),
+                                                      );
+                                                    },
+                                                    child: Icon(
+                                                      Icons.edit,
+                                                      color: secondaryColor
+                                                          .withOpacity(0.5),
+                                                    ))),
+                                          ],
                                         ),
+                                      );
+                                    },
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  maxRadius: 40,
+                                  child: CachedNetworkImage(
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    imageUrl: userDetail.photo,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.green,
                                       ),
-                                    );
-                                  },
-                                  imageUrl: userDetail.photo,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator(
-                                      color: Colors.green,
                                     ),
+                                    errorWidget: (context, url, error) {
+                                      print(url);
+                                      print(error);
+                                      return const Center(
+                                        child: Icon(
+                                          Icons.error_outline,
+                                          color: Colors.red,
+                                          size: 40,
+                                        ),
+                                      );
+                                    },
                                   ),
-                                  errorWidget: (context, url, error) {
-                                    print(url);
-                                    print(error);
-                                    return const Center(
-                                      child: Icon(
-                                        Icons.error_outline,
-                                        color: Colors.red,
-                                        size: 40,
-                                      ),
-                                    );
-                                  },
                                 ),
                               ),
                               const SizedBox(width: 20),
