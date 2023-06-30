@@ -49,6 +49,7 @@ class _ReviewFormState extends State<ReviewForm> {
       data: {
         'status': 'rated',
       },
+      requiresAuth: true,
     );
     if (response == 'success') {
       Navigator.pop(context);

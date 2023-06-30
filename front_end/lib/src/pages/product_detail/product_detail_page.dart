@@ -185,11 +185,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                     ),
                                   ),
                                   const Spacer(),
-                                  const Icon(
-                                    CupertinoIcons.heart_solid,
-                                    color: pastelRed,
-                                    size: 26,
-                                  )
+                                  // const Icon(
+                                  //   CupertinoIcons.heart_solid,
+                                  //   color: pastelRed,
+                                  //   size: 26,
+                                  // )
                                 ],
                               ),
                               const SizedBox(height: 12),

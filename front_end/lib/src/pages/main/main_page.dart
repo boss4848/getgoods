@@ -1,5 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
+import '../../constants/constants.dart';
+import '../../models/cart_model.dart';
+import '../../services/api_service.dart';
 import '../Messages/messages_page.dart';
 import '../category/category_page.dart';
 import '../../models/menu_model.dart';
@@ -17,6 +22,29 @@ class MainPage extends StatefulWidget {
 class _MyWidgetState extends State<MainPage> {
   final List<MenuModel> _menuViewModel = MenuViewModel().getMenus();
   int _selectedIndex = 0;
+
+  List<CartItem> cart = [CartItem.empty()];
+  int totalCartItems = 0;
+
+  Future<void> getCart() async {
+    final getCartUrl = '${ApiConstants.baseUrl}/cart';
+    final res = await ApiService.request(
+      'GET',
+      getCartUrl,
+      requiresAuth: true,
+    );
+
+    final Map<String, dynamic> data = res['data'];
+    log('data: $data');
+    log("totalItems: ${data['totalItems']}");
+    totalCartItems = data['totalItems'];
+    setState(() {});
+
+    // final List<dynamic> cartData = data['cart'];
+    // cart = cartData.map((e) => CartItem.fromJson(e)).toList();
+    // log('cart: ${cart[0].shopName}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -33,7 +61,10 @@ class _MyWidgetState extends State<MainPage> {
             ),
             const CategoryPage(),
             const MessagesPage(),
-            const ProfilePage(),
+            ProfilePage(
+              getCart: getCart,
+              totalCartItems: totalCartItems,
+            ),
           ],
         ),
         bottomNavigationBar: Container(

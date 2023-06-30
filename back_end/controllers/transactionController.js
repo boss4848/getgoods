@@ -3,8 +3,168 @@ const AppError = require('../utils/appError');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Transaction = require('../models/transactionModel');
 const { default: Stripe } = require('stripe');
+const Product = require('../models/productModel');
+
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+const moment = require('moment');
+const Shop = require('../models/shopModel');
+
+
+exports.updateSold = catchAsync(async (req, res, next) => {
+    const products = req.body.products;
+    console.log('products', products);
+
+    for (let i = 0; i < products.length; i++) {
+        console.log('product id', products[i].id);
+
+        const productStockQuery = Product.updateMany(
+            { _id: products[i].id },
+            { $inc: { quantity: -products[i].quantity } },
+            { new: true }
+        ).exec();
+
+        const soldProductQuery = Product.updateMany(
+            { _id: products[i].id },
+            { $inc: { sold: +products[i].quantity } },
+            { new: true }
+        ).exec();
+
+        const [productStock, soldProduct] = await Promise.all([
+            productStockQuery,
+            soldProductQuery,
+        ]);
+
+    }
+
+
+    res.status(200).json({
+        status: 'success',
+        products
+    });
+
+});
+
+
+exports.getStatss = async (req, res, next) => {
+    console.log(req.user);
+    const shop = await Shop.findOne({ owner: req.user.id });
+    console.log('shop', shop);
+    // console.log('req.params', req.params);
+    const shopId = req.params.shopId;
+    // console.log('shopId', shopId);
+    const pipeline = [
+        // Filter documents with payStatus = 'paid' and matching shopId
+        {
+            $match: {
+                payStatus: 'paid',
+                shop: shop._id,
+                // shop: shopId,
+                // shop: ObjectId(shopId),
+                // shop: req.params.shopId.toString(),
+            },
+        },
+        // Calculate the total number of sold items
+        {
+            $group: {
+                _id: null,
+                sold: {
+                    $sum: {
+                        $sum: '$quantity',
+                    },
+                },
+                revenue: {
+                    $sum: {
+                        $multiply: ['$amount', { $arrayElemAt: ['$quantity', 0] }],
+                    },
+                },
+            },
+        },
+        // Calculate the net income based on sold items
+        {
+            $addFields: {
+                netIncome: {
+                    $cond: {
+                        if: { $lt: ['$sold', 150] },
+                        then: { $multiply: ['$revenue', 0.85] }, // Deduct 15% if sold items are less than 150
+                        else: {
+                            $multiply: [
+                                '$revenue',
+                                { $add: [1, { $divide: [{ $subtract: ['$sold', 150] }, 70] }] },
+                            ], // Increase by 2% for every 70 additional sold items
+                        },
+                    },
+                },
+            },
+        },
+        // Project the desired fields
+        {
+            $project: {
+                _id: 0,
+                sold: 1,
+                income: '$revenue',
+                totalNetIncome: '$netIncome',
+            },
+        },
+    ];
+
+
+
+    const result = await Transaction.aggregate(pipeline);
+    res.status(200).json({
+        status: 'success',
+        data: {
+            ...result[0],
+            email: req.user.email,
+            shopName: shop.name,
+        },
+    });
+
+};
+
+
+
+exports.getStats = async (req, res, next) => {
+    try {
+        // Calculate the start and end dates for the past 7 days
+        const endDate = moment().endOf('day');
+        const startDate = moment().subtract(7, 'days').startOf('day');
+
+        // Find transactions with status "paid" and within the date range
+        const transactions = await Transaction.find({
+            payStatus: 'paid',
+            createdAt: { $gte: startDate, $lte: endDate }
+        });
+
+        // Calculate the total revenue and sold quantity
+        let totalRevenue = 0;
+        let totalSold = 0;
+
+        transactions.forEach(transaction => {
+            transaction.products.forEach((product, index) => {
+                const quantity = transaction.quantity[index];
+                totalRevenue += product.price * quantity;
+                totalSold += quantity;
+            });
+        });
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                revenue: totalRevenue,
+                sold: totalSold
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 
 exports.updateTransaction = catchAsync(async (req, res, next) => {
+    // console.log(req.params)
+
     const updatedTransaction = await Transaction.findByIdAndUpdate(
         req.params.id,
         req.body,

@@ -99,7 +99,9 @@ class _MyStorePageState extends State<MyStorePage> {
             ),
             _buildNavigation(
               name: 'Store Analytics',
-              page: const StoreAnalyticsPage(),
+              page: StoreAnalyticsPage(
+                shopId: widget.shopId,
+              ),
               last: true,
             ),
             ProductList(
