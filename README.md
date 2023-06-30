@@ -113,8 +113,8 @@ flutter run
 - MVVM (Model-View-ViewModel): Architectural pattern for the frontend.
 
 ## Cloud Storage
-Azure Cloud Storage Blob (used for images)
-Atlas MongoDB Cloud (used for database storage)
+- Azure Cloud Storage Blob (used for images)
+- Atlas MongoDB Cloud (used for database storage)
 
 ## Base API URL
 The base API URL for the backend is 
