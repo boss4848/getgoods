@@ -34,6 +34,11 @@ const transactionSchema = new mongoose.Schema({
         enum: ['unpaid', 'paid', 'cancelled', 'shipped', 'received', 'completed', 'rated'],
         default: 'unpaid',
     },
+    payStatus: {
+        type: String,
+        enum: ['unpaid', 'paid'],
+        default: 'unpaid',
+    },
     paymentIntentId: {
         type: String,
     },
