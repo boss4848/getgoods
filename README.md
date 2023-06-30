@@ -101,13 +101,16 @@ flutter run
 
 ## Tech Stack
 - Flutter.
-- MVVM (Model-View-ViewModel): Architectural pattern for the frontend.
 - Node.js.
 - Express.
 - MongoDB.
 - Mongoose.
-- MVC (Model-View-Controller): Architectural pattern for the backend.
 - Socket.io
+- Stripe (Payment)
+
+## Folder Architecture
+- MVC (Model-View-Controller): Architectural pattern for the backend.
+- MVVM (Model-View-ViewModel): Architectural pattern for the frontend.
 
 ## Cloud Storage
 Azure Cloud Storage Blob (used for images)
@@ -116,5 +119,5 @@ Atlas MongoDB Cloud (used for database storage)
 ## Base API URL
 The base API URL for the backend is 
 ```
-http://localhost:8000/api/v1.
+http://localhost:8000/api/v1
 ```
