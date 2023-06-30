@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/pages/help_center/widgets/IssueType.dart';
 
+import '../../constants/colors.dart';
+
 class HelpCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryBGColor,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: primaryColor,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
@@ -27,7 +32,6 @@ class HelpCenterPage extends StatefulWidget {
 }
 
 class _HelpCenterState extends State<HelpCenterPage> {
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -54,7 +58,7 @@ class _HelpCenterState extends State<HelpCenterPage> {
               Text(
                 "FAQ",
                 style: TextStyle(
-                    color: Colors.green,
+                    color: primaryColor,
                     fontWeight: FontWeight.w800,
                     fontSize: 20),
               ),
@@ -71,35 +75,46 @@ class _HelpCenterState extends State<HelpCenterPage> {
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("Contact Us",
-                  style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 20)),
-              const SizedBox(height: 15,),
-              Row(
-                children: const [
-                  Icon(Icons.call, size: 20,),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text("0643285827", style: TextStyle(fontSize: 16),)
-                ],
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Text("Contact Us",
+              style: TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 20)),
+          const SizedBox(
+            height: 15,
+          ),
+          Row(
+            children: const [
+              Icon(
+                Icons.call,
+                size: 20,
               ),
-              const SizedBox(height: 15,),
-              Row(
-                children: const [
-                  Icon(Icons.email, size : 20),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text("getgoods@goose.com", style: TextStyle(fontSize: 16),)
-                ],
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                "0643285827",
+                style: TextStyle(fontSize: 16),
               )
-            ]),
+            ],
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Row(
+            children: const [
+              Icon(Icons.email, size: 20),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                "getgoods@goose.com",
+                style: TextStyle(fontSize: 16),
+              )
+            ],
+          )
+        ]),
       ),
     );
   }

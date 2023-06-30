@@ -20,19 +20,22 @@ class _ProductFilterState extends State<ProductFilter> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: EdgeInsets.only(top: 10),
       child: Column(
         children: [
           SizedBox(
             width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                _filter(),
-                const Spacer(),
-                _clear(widget.defaultProduct),
-              ],
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _filter(),
+                  const Spacer(),
+                  _clear(widget.defaultProduct),
+                ],
+              ),
             ),
           ),
           Column(
@@ -53,9 +56,9 @@ class _ProductFilterState extends State<ProductFilter> {
             ],
           ),
           const SizedBox(
-            height: 2,
+            height: 12,
           ),
-          const Divider(thickness: 1.5),
+          // const Divider(),
         ],
       ),
     );
@@ -70,30 +73,28 @@ class _ProductFilterState extends State<ProductFilter> {
       },
       child: Container(
         height: 40,
-        width: 120,
-        padding: const EdgeInsets.all(10),
+        // width: 120,
+        //padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.grey,
-          ),
           borderRadius: BorderRadius.circular(5),
-          color: primaryColor,
+          // color: primaryColor,
         ),
         child: Row(
           children: [
-            const Icon(
-              Icons.filter_list,
-              color: Colors.white,
-              size: 10,
-            ),
-            const SizedBox(width: 5),
+            //const SizedBox(width: 5),
             Text(
               _selectedCategory.isNotEmpty ? _selectedCategory : categoryItem,
               style: const TextStyle(
-                color: Colors.white,
-                fontSize: 10,
+                color: primaryColor,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            SizedBox(width: 3),
+            const Icon(
+              Icons.arrow_drop_down_sharp,
+              color: primaryColor,
+              size: 20,
             ),
           ],
         ),
@@ -149,9 +150,9 @@ class _ProductFilterState extends State<ProductFilter> {
           title: Text(
             category,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: isSelected ? Colors.green : primaryTextColor,
+              color: isSelected ? primaryColor : primaryTextColor,
             ),
           ),
         ),
@@ -177,7 +178,7 @@ class _ProductFilterState extends State<ProductFilter> {
             style: TextStyle(
               decoration: TextDecoration.underline,
               fontSize: 12,
-              color: primaryColor,
+              color: Colors.grey,
               overflow: TextOverflow.ellipsis,
             ),
           ),

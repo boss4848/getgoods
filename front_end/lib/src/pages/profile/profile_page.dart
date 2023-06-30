@@ -508,9 +508,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: defaultpadding,
-                      ),
+                      Container(color: primaryBGColor, child: Divider()),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -559,8 +557,9 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: defaultpadding,
+                      Container(
+                        color: primaryBGColor,
+                        child: Divider(),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -612,24 +611,21 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                         padding: const EdgeInsets.all(defaultpadding),
                         child: Container(
                           width: double.infinity,
-                          decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(50))),
-                          child: ElevatedButton(
+                          child: TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(
+                                    grey.withOpacity(0.6))),
                             onPressed: () async {
                               await userViewModel.logout();
                               userViewModel.updateState(UserState.idle);
                               setState(() {});
                             },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                'Log out',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            child: Text(
+                              'Log out',
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.7),
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -645,15 +641,15 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        _buildIconButton(
-                          onPressed: () => print('click'),
-                          icon: CupertinoIcons.heart,
-                          notification: 1,
-                        ),
+                        // _buildIconButton(
+                        //   onPressed: () => print('click'),
+                        //   icon: CupertinoIcons.heart,
+                        //   notification: 1,
+                        // ),
                         _buildIconButton(
                           onPressed: () => print('click'),
                           icon: CupertinoIcons.cart_fill,
-                          notification: 10,
+                          // notification: 10,
                         ),
                       ],
                     ),

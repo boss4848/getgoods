@@ -100,26 +100,29 @@ class _AddUserInfoPageState extends State<UpdateUserInfoPage> {
   Widget build(BuildContext context) {
     final UserDetail userDetail = _userViewModel.userDetail;
     return Scaffold(
+      backgroundColor: primaryBGColor,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: primaryColor,
         title: const Text('Update User Account Info'),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              width: double.infinity,
-              margin: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: primaryColor,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 1.5,
-                    spreadRadius: 0.1,
-                  )
-                ],
-              ),
+              // width: double.infinity,
+              // margin: const EdgeInsets.all(12),
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(10),
+              //   color: primaryColor,
+              //   boxShadow: const [
+              //     BoxShadow(
+              //       color: Colors.black26,
+              //       blurRadius: 1.5,
+              //       spreadRadius: 0.1,
+              //     )
+              //   ],
+              // ),
               child: Column(
                 children: [
                   Padding(
@@ -174,12 +177,12 @@ class _AddUserInfoPageState extends State<UpdateUserInfoPage> {
                             sendRequest();
                           },
                           child: const Text(
-                            'UPDATE INFO',
-                            style: TextStyle(color: primaryColor),
+                            'Update Info',
+                            style: TextStyle(color: Colors.white),
                           ),
                           style: const ButtonStyle(
                               backgroundColor:
-                                  MaterialStatePropertyAll(Colors.white))),
+                                  MaterialStatePropertyAll(primaryColor))),
                     ),
                   ),
                 ],

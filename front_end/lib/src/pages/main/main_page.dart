@@ -37,14 +37,17 @@ class _MyWidgetState extends State<MainPage> {
           ],
         ),
         bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 1.5,
-                spreadRadius: 0.5,
-              )
-            ],
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: grey.withOpacity(0.2),
+            ),
+            //boxShadow: [
+            // BoxShadow(
+            //   color: Colors.black26,
+            //   blurRadius: 1.5,
+            //   spreadRadius: 0.5,
+            // )
+            //],
             color: Colors.white,
           ),
           child: SafeArea(
@@ -87,7 +90,7 @@ class CustomTabBar extends StatelessWidget {
             (int index, MenuModel menuModel) {
               final isSelect = index == selectedIndex;
 
-              final color = isSelect ? Colors.green : Colors.black54;
+              final color = isSelect ? primaryColor : Colors.black54;
 
               String text = menuModel.label;
 

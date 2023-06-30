@@ -86,15 +86,18 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
       height: 80,
       width: double.infinity,
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            offset: const Offset(0, -1),
-            blurRadius: 10,
+          border: Border.all(
+        color: grey.withOpacity(0.3),
+      )
+          // boxShadow: [
+          // BoxShadow(
+          //   color: Colors.black.withOpacity(0.3),
+          //   offset: const Offset(0, -1),
+          //   blurRadius: 10,
+          // ),
+          //],
+          // color: Colors.green,
           ),
-        ],
-        // color: Colors.green,
-      ),
       child: Row(
         children: [
           GestureDetector(

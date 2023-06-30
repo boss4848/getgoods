@@ -207,7 +207,10 @@ class _RegisterShopPageState extends State<RegisterShopPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryBGColor,
       appBar: AppBar(
+        backgroundColor: primaryColor,
+        elevation: 0,
         title: const Text(
           'Store Registration',
         ),
@@ -447,9 +450,15 @@ class _RegisterShopPageState extends State<RegisterShopPage> {
             Container(
               padding: const EdgeInsets.all(14),
               width: double.infinity,
-              child: ElevatedButton(
+              child: TextButton(
+                style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(primaryColor),
+                ),
                 onPressed: () => onSubmit(),
-                child: const Text('Submit'),
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
             const SizedBox(height: 300),
@@ -481,7 +490,7 @@ class _RegisterShopPageState extends State<RegisterShopPage> {
             children: [
               Icon(
                 icon,
-                color: Colors.green,
+                color: primaryColor,
               ),
               const SizedBox(width: 12),
               Text(
