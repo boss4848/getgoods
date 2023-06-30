@@ -11,6 +11,9 @@ const cartRouter = require('./cartRoute');
 router.use('/:productId/reviews', reviewRouter);
 router.use('/:productId/cart', cartRouter);
 
+router.route('/search/:name')
+    .get(productController.searchProductByName);
+
 //Routes
 router
     .route('/')
@@ -21,6 +24,7 @@ router
         shopController.restrictToOwner,
         productController.createProduct
     );
+
 
 router
     .route('/:id')

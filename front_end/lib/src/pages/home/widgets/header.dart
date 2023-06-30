@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/common_widgets/shadow_container.dart';
 import 'package:getgoods/src/constants/colors.dart';
+import 'package:getgoods/src/constants/constants.dart';
 import 'package:getgoods/src/pages/shopping_cart/shopping_cart.dart';
+import 'package:getgoods/src/services/api_service.dart';
 
 import '../../../models/cart_model.dart';
+import '../../../models/product_model.dart';
 import '../../cart/cart_page.dart';
+import '../../product_detail/product_detail_page.dart';
 
 class Header extends StatefulWidget {
   final TrackingScrollController scrollController;
@@ -32,6 +37,32 @@ class _HeaderState extends State<Header> {
 
   final _opacityMax = 0.01;
 
+  List<String> searchProducts = [];
+  List<String> productId = [];
+  // List<String> searchProductsName = [];
+
+  onSearch(String value) async {
+    print(value);
+
+    final String url = '${ApiConstants.baseUrl}/products/search/$value';
+    final res = await ApiService.request('GET', url);
+
+    setState(() {
+      // Map into a list and cast to String
+      searchProducts = res['data']['products']
+          .map((e) => e['name'].toString())
+          .cast<String>()
+          .toList();
+
+      productId = res['data']['products']
+          .map((e) => e['id'].toString())
+          .cast<String>()
+          .toList();
+
+      print(searchProducts);
+    });
+  }
+
   @override
   void initState() {
     _backgroundColor = Colors.transparent;
@@ -47,43 +78,75 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: _backgroundColor,
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              _buildInputSearch(),
-              const SizedBox(width: 8),
-              _buildIconButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CartPage(
-                        // cart: widget.cart,
-                        // getCart: widget.getCart,
-                        // totalCartItems: widget.totalCartItems,
-                        ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          color: _backgroundColor,
+          child: SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  _buildInputSearch(onSearch),
+                  const SizedBox(width: 8),
+                  _buildIconButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartPage(
+                            // cart: widget.cart,
+                            // getCart: widget.getCart,
+                            // totalCartItems: widget.totalCartItems,
+                            ),
+                      ),
+                    ).then((_) => widget.getCart()),
+                    icon: CupertinoIcons.cart_fill,
+                    notification: widget.totalCartItems,
                   ),
-                ).then((_) => widget.getCart()),
-                icon: CupertinoIcons.cart_fill,
-                notification: widget.totalCartItems,
+                  // _buildIconButton(
+                  //   onPressed: () => print('click'),
+                  //   icon: Icons.chat,
+                  //   notification: 1,
+                  // ),
+                ],
               ),
-              // _buildIconButton(
-              //   onPressed: () => print('click'),
-              //   icon: Icons.chat,
-              //   notification: 1,
-              // ),
-            ],
+            ),
           ),
         ),
-      ),
+        // Container(
+        //   width: double.infinity,
+        //   margin: const EdgeInsets.symmetric(horizontal: 12),
+        //   padding: const EdgeInsets.all(12),
+        //   color: Colors.white,
+        //   child: const Text('data'),
+        // ),
+        ...List.generate(
+          searchProducts.length,
+          (index) => GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductDetailPage(
+                  productId: productId[index],
+                ),
+              ),
+            ),
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.all(12),
+              color: Colors.white,
+              child: Text(searchProducts[index]),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  _buildInputSearch() {
+  _buildInputSearch(Function onSearch) {
     const sizeIcon = BoxConstraints(
       minWidth: 40,
       minHeight: 40,
@@ -108,6 +171,7 @@ class _HeaderState extends State<Header> {
           )
         ]),
         child: TextField(
+          onChanged: (value) => onSearch(value),
           style: const TextStyle(
             fontSize: 18,
             color: Colors.green,
@@ -156,7 +220,7 @@ class _HeaderState extends State<Header> {
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: primaryColor,
+                    color: Colors.green,
                     border: Border.all(
                       color: Colors.white,
                     ),
@@ -203,7 +267,7 @@ class _HeaderState extends State<Header> {
         _offset = 0.0;
       } else {
         _backgroundColorSearch = Colors.grey.shade200;
-        _colorIcon = primaryColor;
+        _colorIcon = Colors.deepOrange;
       }
       _backgroundColor = Colors.white.withOpacity(_opacity);
     });

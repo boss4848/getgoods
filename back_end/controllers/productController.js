@@ -180,3 +180,29 @@ exports.updateProduct = factory.updateOne(Product);
 
 exports.createProduct = factory.createOne(Product);
 exports.deleteProduct = factory.deleteOne(Product);
+
+exports.searchProductByName = catchAsync(async (req, res, next) => {
+    const name = req.params.name;
+
+    const products = await Product.find({
+        name: { $regex: new RegExp(name, 'i') }
+    });
+
+    // Retrieve the image from Azure Blob Storage
+    const filesUrl = products.map((product) => {
+        return `https://getgoods.blob.core.windows.net/product-photos/${product.imageCover}`;
+    });
+
+    // Replace the imageCover property with the file URL
+    products.forEach((product, i) => {
+        product.imageCover = filesUrl[i];
+    });
+
+    res.status(200).json({
+        status: 'success',
+        results: products.length,
+        data: {
+            products
+        }
+    });
+});
