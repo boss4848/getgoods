@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:getgoods/src/constants/colors.dart';
 // import 'package:getgoods/src/services/api_service.dart';
 import '../../../models/product_model.dart';
 import '../../../utils/format.dart';
@@ -28,12 +29,14 @@ class _ProductLoadMoreState extends State<ProductLoadMore> {
             height: 600,
             child: const Center(
               child: CircularProgressIndicator(
-                color: Colors.green,
+                color: primaryColor,
               ),
             ),
           )
         : Container(
-            color: Colors.grey[200],
+            padding: const EdgeInsets.only(top: 10),
+            // color: Colors.grey[200],
+            color: primaryBGColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -45,12 +48,12 @@ class _ProductLoadMoreState extends State<ProductLoadMore> {
   }
 
   Widget _buildHeader() => Container(
-        color: Colors.white,
+        color: primaryBGColor,
         padding: const EdgeInsets.all(12),
         child: const Text(
-          "Recommended",
+          "Recommended products",
           style: TextStyle(
-            color: Colors.green,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),

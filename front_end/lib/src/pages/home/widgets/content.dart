@@ -1,6 +1,7 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:getgoods/src/constants/colors.dart';
 
 import '../../../models/product_model.dart';
 import '../../../viewmodels/product_viewmodel.dart';
@@ -69,8 +70,11 @@ class _ContentState extends State<Content> {
           children: [
             const BannerSlider(),
             // _buildDivider(),
-            const Coupon(),
-            _buildDivider(),
+            //const Coupon(),
+            // Container(
+            //   color: primaryBGColor,
+            //   child: _buildDivider(),
+            // ),
             ProductLoadMore(
               products: widget.products,
               productViewModel: widget.productViewModel,
