@@ -15,11 +15,16 @@ import 'package:getgoods/src/pages/profile/widgets/purchase_bar.dart';
 import 'package:getgoods/src/pages/signup/signup_page.dart';
 import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 
+import '../cart/cart_page.dart';
 import '../my_store/my_store_page.dart';
 import '../register_shop/register_shop_page.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  final int totalCartItems;
+  final Function getCart;
+  const ProfilePage(
+      {Key? key, required this.totalCartItems, required this.getCart})
+      : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -647,9 +652,18 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                         //   notification: 1,
                         // ),
                         _buildIconButton(
-                          onPressed: () => print('click'),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CartPage(
+                                  // cart: widget.cart,
+                                  // getCart: widget.getCart,
+                                  // totalCartItems: widget.totalCartItems,
+                                  ),
+                            ),
+                          ).then((_) => widget.getCart()),
                           icon: CupertinoIcons.cart_fill,
-                          // notification: 10,
+                          notification: widget.totalCartItems,
                         ),
                       ],
                     ),
