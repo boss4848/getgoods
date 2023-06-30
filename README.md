@@ -3,7 +3,7 @@ A platform for new merchants and farmers to sell local and processed products, o
 
 ## Getting Started
 To get started with the GetGoods app, follow these steps
-- Download and unzip the zip file source code or clone the Haan R Haan repository: git clone
+- Download and unzip the zip file source code or clone the GetGoods repository: git clone
 `https://github.com/boss4848/getgoods.git`
 
 ## Prerequisites
