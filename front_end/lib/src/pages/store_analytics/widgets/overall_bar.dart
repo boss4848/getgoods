@@ -3,7 +3,13 @@ import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/constants/constants.dart';
 
 class OverAllStoreBar extends StatelessWidget {
-  const OverAllStoreBar({super.key});
+  final String orders;
+  final String revenues;
+  const OverAllStoreBar({
+    super.key,
+    required this.orders,
+    required this.revenues,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +25,17 @@ class OverAllStoreBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            OverAllData(icon: Icons.money, title: 'Revenues', data: '0' '฿'),
-            Borderline(),
-            OverAllData(icon: Icons.list_rounded, title: 'Orders', data: '0'),
-            Borderline(),
+          children: [
             OverAllData(
-                icon: Icons.remove_red_eye_rounded,
-                title: 'Visitors',
-                data: '0')
+                icon: Icons.money, title: 'Revenues', data: '$revenues ฿'),
+            const Borderline(),
+            OverAllData(
+                icon: Icons.list_rounded, title: 'Orders', data: orders),
+            // const Borderline(),
+            // const OverAllData(
+            //     icon: Icons.remove_red_eye_rounded,
+            //     title: 'Visitors',
+            //     data: '0')
           ],
         ),
       ),

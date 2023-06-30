@@ -3,7 +3,15 @@ import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/constants/constants.dart';
 
 class SummaryIncomeInfo extends StatelessWidget {
-  const SummaryIncomeInfo({super.key});
+  final String soldItems;
+  final String totalIncome;
+  final String totalNetIncome;
+  const SummaryIncomeInfo({
+    super.key,
+    required this.soldItems,
+    required this.totalIncome,
+    required this.totalNetIncome,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,30 +23,30 @@ class SummaryIncomeInfo extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(defaultpadding),
         child: Column(
-          children: const [
+          children: [
             detailInfo(
               title: 'All item sold',
-              data: '0',
+              data: soldItems,
               unit: 'items',
               fSize: 20,
             ),
-            SizedBox(
+            const SizedBox(
               height: defaultpadding / 2,
             ),
             detailInfo(
-                title: 'Total income', data: '100000', unit: '฿', fSize: 20),
-            SizedBox(
+                title: 'Total income', data: totalIncome, unit: '฿', fSize: 20),
+            const SizedBox(
               height: defaultpadding / 2,
             ),
             detailInfo(title: 'Fee Rate', data: '15', unit: '%', fSize: 28),
-            SizedBox(
+            const SizedBox(
               height: defaultpadding / 2,
             ),
             horizontalBorderline(),
-            SizedBox(
+            const SizedBox(
               height: defaultpadding / 2,
             ),
-            Text(
+            const Text(
               'TOTAL NET INCOME',
               style: TextStyle(
                 color: Colors.white,
@@ -48,8 +56,8 @@ class SummaryIncomeInfo extends StatelessWidget {
               ),
             ),
             Text(
-              '15000' '฿',
-              style: TextStyle(
+              '$totalNetIncome ฿',
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 28,
                 fontWeight: FontWeight.w700,

@@ -154,6 +154,7 @@ class StripeService {
           final body = {
             "sessionId": response.sessionId,
             "transactionId": response.transactionId,
+            "payStatus": "paid",
           };
           await ApiService.request(
             'POST',

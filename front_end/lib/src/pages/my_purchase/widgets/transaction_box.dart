@@ -233,6 +233,28 @@ class _TransactionBoxState extends State<TransactionBox> {
                     ).then(
                       (_) => widget.getTransactions(),
                     );
+                    final urlUpdate =
+                        '${ApiConstants.baseUrl}/transactions/updateSold';
+                    final responseUpdate = await ApiService.request(
+                      'PATCH',
+                      urlUpdate,
+                      data: {
+                        'products': widget.transaction.products
+                            .map(
+                              (e) => {
+                                'id': e.id,
+                                'quantity':
+                                    widget.transaction.quantity.elementAt(
+                                  widget.transaction.products.indexOf(e),
+                                ),
+                              },
+                            )
+                            .toList(),
+                      },
+                      requiresAuth: true,
+                    ).then(
+                      (_) => widget.getTransactions(),
+                    );
                   },
                   child: const Text('Update shipping status'),
                 ),
