@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/constants/constants.dart';
+import 'package:getgoods/src/models/user_model.dart';
 import 'package:getgoods/src/pages/transaction/widgets/merchandise_sub.dart';
 import 'package:getgoods/src/pages/transaction/widgets/my_address.dart';
 import 'package:getgoods/src/pages/transaction/widgets/payment_detail.dart';
 import 'package:getgoods/src/pages/transaction/widgets/shipping_sub.dart';
 import 'package:getgoods/src/services/stripe_service.dart';
+import 'package:getgoods/src/viewmodels/user_viewmodel.dart';
 
 import '../../models/product_model.dart';
 import '../../models/shop_model.dart';
@@ -29,8 +31,24 @@ class CheckOutPage extends StatefulWidget {
 class _CheckOutPageState extends State<CheckOutPage> {
   final double shippingFee = 40;
 
+  final UserViewModel userViewModel = UserViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserDetail();
+  }
+
+  _getUserDetail() async {
+    await userViewModel.fetchUser();
+    if (mounted) {
+      setState(() {}); // Rebuild the widget after fetching user details
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final UserDetail userDetail = userViewModel.userDetail;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
@@ -56,7 +74,18 @@ class _CheckOutPageState extends State<CheckOutPage> {
               ),
               child: Container(
                 decoration: BoxDecoration(boxShadow: [defaultShadow]),
-                child: const UserAddress(),
+                child: UserAddress(
+                    username: userViewModel.userDetail.name,
+                    phone: userViewModel.userDetail.phone,
+                    address: userDetail.address.detail +
+                        " " +
+                        userDetail.address.districtEn +
+                        " " +
+                        userViewModel.userDetail.address.subDistrictEn +
+                        " " +
+                        userViewModel.userDetail.address.provinceEn +
+                        " " +
+                        userViewModel.userDetail.address.postCode),
               ),
             ),
             MerchandiseSub(

@@ -3,7 +3,14 @@ import 'package:getgoods/src/constants/colors.dart';
 import 'package:getgoods/src/constants/constants.dart';
 
 class UserAddress extends StatelessWidget {
-  const UserAddress({super.key});
+  final String username;
+  final String phone;
+  final String address;
+  const UserAddress(
+      {super.key,
+      required this.username,
+      required this.phone,
+      required this.address});
 
   @override
   Widget build(BuildContext context) {
@@ -54,22 +61,10 @@ class UserAddress extends StatelessWidget {
                 height: defaultpadding,
               ),
               Row(
-                children: const [
+                children: [
                   Text(
-                    'Firstname',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                      fontFamily: 'SFTHONBURI',
-                    ),
-                  ),
-                  SizedBox(
-                    width: defaultpadding / 4,
-                  ),
-                  Text(
-                    'Lastname',
-                    style: TextStyle(
+                    username,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.w300,
@@ -78,18 +73,18 @@ class UserAddress extends StatelessWidget {
                   ),
                 ],
               ),
-              const Text(
-                '0987654321',
-                style: TextStyle(
+              Text(
+                phone,
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.w300,
                   fontFamily: 'SFTHONBURI',
                 ),
               ),
-              const Text(
-                '9876 Willow Lane Apartment 345, Building C Sunset City, Eastwood County Meadowville, USA 12345',
-                style: TextStyle(
+              Text(
+                address.toString(),
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.w300,
