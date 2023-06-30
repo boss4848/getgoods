@@ -6,9 +6,58 @@ import 'package:getgoods/src/pages/store_analytics/widgets/overall_bar.dart';
 import 'package:getgoods/src/pages/store_analytics/widgets/productrank_info.dart';
 import 'package:getgoods/src/pages/store_analytics/widgets/stat_chart2.dart';
 import 'package:getgoods/src/pages/store_analytics/widgets/summary_income.dart';
+import 'package:getgoods/src/services/api_service.dart';
 
-class StoreAnalyticsPage extends StatelessWidget {
-  const StoreAnalyticsPage({super.key});
+class StoreAnalyticsPage extends StatefulWidget {
+  final String shopId;
+  const StoreAnalyticsPage({
+    super.key,
+    required this.shopId,
+  });
+
+  @override
+  State<StoreAnalyticsPage> createState() => _StoreAnalyticsPageState();
+}
+
+class _StoreAnalyticsPageState extends State<StoreAnalyticsPage> {
+  @override
+  void initState() {
+    super.initState();
+    getStats();
+  }
+
+  dynamic stats = {
+    "sold": '',
+    "income": '',
+    "totalNetIncome": '',
+    'email': '',
+    'shopName': ''
+  };
+
+  getStats() async {
+    final url = '${ApiConstants.baseUrl}/transactions/stats/${widget.shopId}';
+    final res = await ApiService.request(
+      'GET',
+      url,
+      requiresAuth: true,
+    );
+
+    final updatedStats = res['data'];
+    print('stats: $updatedStats');
+
+    stats = {
+      "sold": updatedStats['sold'].toString(),
+      "income": updatedStats['income'].toString(),
+      "totalNetIncome": updatedStats['totalNetIncome'].toString(),
+      'email': updatedStats['email'].toString(),
+      'shopName': updatedStats['shopName'].toString()
+    };
+
+    print(updatedStats['sold']);
+    print(updatedStats['income']);
+    print(updatedStats['totalNetIncome']);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +79,18 @@ class StoreAnalyticsPage extends StatelessWidget {
                   backgroundImage: AssetImage('assets/images/logo_2.png'),
                   radius: 40,
                 ),
-                const Text(
-                  'User Stores name',
-                  style: TextStyle(
+                Text(
+                  stats['shopName'] ?? '',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 26,
                     fontWeight: FontWeight.w700,
                     fontFamily: 'SFTHONBURI',
                   ),
                 ),
-                const Text(
-                  'user@gmail.com',
-                  style: TextStyle(
+                Text(
+                  stats['email'] ?? '',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
@@ -68,42 +117,45 @@ class StoreAnalyticsPage extends StatelessWidget {
                             fontFamily: 'SFTHONBURI',
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.all(defaultpadding / 4),
-                          child: OverAllStoreBar(),
-                        ),
-                        const SizedBox(
-                          height: defaultpadding,
-                        ),
-                        const Text(
-                          'Weekly Revenue Accumulated',
-                          style: TextStyle(
-                            color: primaryTextColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'SFTHONBURI',
-                          ),
-                        ),
-                        const LineChartSample2(),
-                        const SizedBox(
-                          height: defaultpadding,
-                        ),
-                        const Text(
-                          'Product Ranking',
-                          style: TextStyle(
-                            color: primaryTextColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'SFTHONBURI',
-                          ),
-                        ),
                         Padding(
-                          padding: const EdgeInsets.all(defaultpadding / 4),
-                          child: ProductRankInfo(),
+                          padding: EdgeInsets.all(defaultpadding / 4),
+                          child: OverAllStoreBar(
+                            orders: stats['sold'],
+                            revenues: stats['income'],
+                          ),
                         ),
                         const SizedBox(
                           height: defaultpadding,
                         ),
+                        // const Text(
+                        //   'Weekly Revenue Accumulated',
+                        //   style: TextStyle(
+                        //     color: primaryTextColor,
+                        //     fontSize: 20,
+                        //     fontWeight: FontWeight.w700,
+                        //     fontFamily: 'SFTHONBURI',
+                        //   ),
+                        // ),
+                        // const LineChartSample2(),
+                        // const SizedBox(
+                        //   height: defaultpadding,
+                        // ),
+                        // const Text(
+                        //   'Product Ranking',
+                        //   style: TextStyle(
+                        //     color: primaryTextColor,
+                        //     fontSize: 20,
+                        //     fontWeight: FontWeight.w700,
+                        //     fontFamily: 'SFTHONBURI',
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(defaultpadding / 4),
+                        //   child: ProductRankInfo(),
+                        // ),
+                        // const SizedBox(
+                        //   height: defaultpadding,
+                        // ),
                         const Text(
                           'Total Monthly Income Summary',
                           style: TextStyle(
@@ -115,7 +167,14 @@ class StoreAnalyticsPage extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(defaultpadding / 4),
-                          child: SummaryIncomeInfo(),
+                          child: SummaryIncomeInfo(
+                            soldItems: stats['sold'] ?? '',
+                            totalIncome: stats['income'] ?? '',
+                            totalNetIncome: stats['totalNetIncome'] ?? '',
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 600,
                         )
                       ],
                     ),
