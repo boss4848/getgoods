@@ -9,7 +9,7 @@ To get started with the GetGoods app, follow these steps
 ## Prerequisites
 Before running the app, make sure you have the following installed:
 - .env file Please make sure that you have file named config.env (frontend and backend)
-- front_end/config.env
+- front_end/config.env (example)
 ```
 BASE_URL=http://<IP>:8000/api/v1
 LOCAL_HOST=127.0.0.1
@@ -20,7 +20,7 @@ IP_ADDRESS=
 #stripe
 STRIPE_PUBLISHABLE_KEY=
 ```
-- back_end/config.env
+- back_end/config.env (example)
 ```
 PORT=8000
 
