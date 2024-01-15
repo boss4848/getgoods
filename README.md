@@ -121,3 +121,8 @@ The base API URL for the backend is
 ```
 http://localhost:8000/api/v1
 ```
+
+## Screens Example
+![LoginPage](https://raw.githubusercontent.com/boss4848/getgoods/main/Login%20page-2.png)
+![HomePage](https://raw.githubusercontent.com/boss4848/getgoods/main/home%20page-4.png)
+
